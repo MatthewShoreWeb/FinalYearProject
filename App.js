@@ -5,6 +5,8 @@ import CustomButton from './components/CustomButton';
 import QuestionButton from './components/QuestionButton';
 import BackButton from './components/BackButton';
 
+// https://reactnative.dev/docs/dimensions
+
 export default function App() {
   // State changes.
   const [header, setHeader] = useState('Home Page');
@@ -66,6 +68,12 @@ export default function App() {
       display: aboutDisplay,
       margin: '20%'
     },
+    aboutText: {
+      padding: '20px',
+      borderWidth: 3,
+      borderColor: "#42adf5",
+      borderRadius: 10,
+    },
     questionText: {
       fontWeight: 'bold',
       fontSize: 25
@@ -105,10 +113,10 @@ export default function App() {
       {/* Component for the about section. */}
       {/* 'u2002' is the code for a bullet point, it is required to form an unordered list. */}
       <View style={styles.aboutComponent}>
-        <Text>
+        <Text style={styles.aboutText}>
           Thank you for using our app. This app has several features you can use: {'\n'}
           <Text>{'\u2022'} You can do a quiz which will contain a random selection of questions to practice.</Text> {'\n'}
-          <Text>{'\u2022'} You can also take tests on certain topics to test your knowledge. </Text> {'\n'} 
+          <Text>{'\u2022'} You can also take tests on certain topics to test your knowledge. </Text> {'\n'}
           <Text>{'\u2022'} You can see the results of the tests you do in the statistics page. </Text> {'\n'}
         </Text>
         <BackButton style={styles.backButton} onPress={backHandler}></BackButton>
