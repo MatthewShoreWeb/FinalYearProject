@@ -1,5 +1,9 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, Dimensions } from 'react-native';
+
+// Viewport width and height.
+const vw = Dimensions.get('window').width;
+const vh = Dimensions.get('window').height;
 
 export default function Header({ text }) {
     return (
@@ -13,8 +17,8 @@ const styles = StyleSheet.create({
     header: {
         position: 'absolute',
         top: 0, 
-        height: '8%',
-        width: '100%',
+        height: vh * 0.1,
+        width: vw,
         alignItems: 'center',
         backgroundColor: '#42adf5',
         justifyContent: 'center'

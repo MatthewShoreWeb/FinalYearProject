@@ -1,5 +1,9 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Text, Dimensions } from 'react-native';
+
+// Viewport width and height.
+const vw = Dimensions.get('window').width;
+const vh = Dimensions.get('window').height;
 
 export default function BackButton({ onPress }) {
     return (
@@ -15,9 +19,9 @@ const styles = StyleSheet.create({
     button: {
         justifyContent: 'center',
         backgroundColor: '#42adf5',
-        marginTop: vh(1),
-        height: '80px',
-        width: vw(80),
+        marginTop: vh * 0.1,
+        height: '80pt',
+        width: vw * 0.8,
         borderRadius: 100,
         marginHorizontal: 'auto'
     },
@@ -25,7 +29,7 @@ const styles = StyleSheet.create({
         color: 'white',
         fontWeight: 'bold',
         textTransform: 'uppercase',
-        fontSize: 16,
+        fontSize: 32,
         textAlign: 'center'
     }
         

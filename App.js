@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, Image } from 'react-native';
+
+// App components import.
+import { StyleSheet, Text, View } from 'react-native';
 import Header from './components/Header';
 import CustomButton from './components/CustomButton';
 import QuestionButton from './components/QuestionButton';
@@ -8,7 +10,7 @@ import BackButton from './components/BackButton';
 // https://reactnative.dev/docs/dimensions
 
 export default function App() {
-  // State changes.
+  // State changes for updating components in the app.
   const [header, setHeader] = useState('Home Page');
   const [homeDisplay, changeHomeDisplay] = useState('flex');
   const [questionDisplay, changeQuestionDisplay] = useState('none');
@@ -66,7 +68,8 @@ export default function App() {
     aboutComponent: {
       fontFamily: 'openSans',
       display: aboutDisplay,
-      margin: '20%'
+      margin: '20%',
+      fontSize: 20
     },
     aboutText: {
       padding: '20px',
