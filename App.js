@@ -3,12 +3,14 @@ import { StyleSheet, Text, View, Button, Image } from 'react-native';
 import Header from './components/Header';
 import CustomButton from './components/CustomButton';
 import QuestionButton from './components/QuestionButton';
+import BackButton from './components/BackButton';
 
 export default function App() {
   // State changes.
   const [header, setHeader] = useState('Home Page');
   const [homeDisplay, changeHomeDisplay] = useState('flex');
   const [questionDisplay, changeQuestionDisplay] = useState('none');
+  const [aboutDisplay, changeAboutDisplay] = useState('none');
 
 
   // When going from the home page to a question page.
@@ -35,17 +37,19 @@ export default function App() {
 
   // For when the user selects About.
   const aboutHandler = function () {
-
+    changeHomeDisplay('none');
+    changeAboutDisplay('flex');
   };
 
-  const testHandler = function () {
-    setHeader('Home Page');
+  // For when the user clicks a back button.
+  const backHandler = function () {
     changeHomeDisplay('flex');
-    changeQuestionDisplay('none');
-  }
+    changeAboutDisplay('none');
+  };
 
   const styles = StyleSheet.create({
     container: {
+      fontFamily: 'openSans',
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
@@ -56,10 +60,11 @@ export default function App() {
     questionComponent: {
       display: questionDisplay,
       alignItems: 'center',
-
     },
     aboutComponent: {
-
+      fontFamily: 'openSans',
+      display: aboutDisplay,
+      margin: '20%'
     },
     questionText: {
       fontWeight: 'bold',
@@ -98,10 +103,15 @@ export default function App() {
       </View>
 
       {/* Component for the about section. */}
+      {/* 'u2002' is the code for a bullet point, it is required to form an unordered list. */}
       <View style={styles.aboutComponent}>
-        <Text>Thank you for using our app. This app has several features. 
-          You can do a quiz which will contain a random selection of questions to practice. 
-          You can also take tests on certain topics to test your knowledge. You can see the results of the tests you do in the statistics page.</Text>
+        <Text>
+          Thank you for using our app. This app has several features you can use: {'\n'}
+          <Text>{'\u2022'} You can do a quiz which will contain a random selection of questions to practice.</Text> {'\n'}
+          <Text>{'\u2022'} You can also take tests on certain topics to test your knowledge. </Text> {'\n'} 
+          <Text>{'\u2022'} You can see the results of the tests you do in the statistics page. </Text> {'\n'}
+        </Text>
+        <BackButton style={styles.backButton} onPress={backHandler}></BackButton>
       </View>
 
     </View>
