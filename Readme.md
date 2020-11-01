@@ -1,2 +1,4 @@
 # Computer Science Dissertation
-## Educational App for client
+## What?
+## Why?
+## How?
