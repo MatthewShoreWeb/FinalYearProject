@@ -14,10 +14,11 @@ export default function CustomButton({ text, onPress }) {
 const styles = StyleSheet.create({
     button: {
         justifyContent: 'center',
-        backgroundColor: '#f01d71',
-        height: '100%',
-        width: '100vw',
-        
+        backgroundColor: '#42adf5',
+        marginTop: '1vh',
+        height: '10vh',
+        width: '80vw',
+        borderRadius: 50
     },
     buttonText: {
         color: 'gold',

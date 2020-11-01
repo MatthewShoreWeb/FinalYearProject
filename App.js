@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, Image} from 'react-native';
+import { StyleSheet, Text, View, Button, Image } from 'react-native';
 import Header from './components/Header';
 import CustomButton from './components/CustomButton';
 import QuestionButton from './components/QuestionButton';
@@ -17,7 +17,7 @@ export default function App() {
     changeHomeDisplay('none');
     changeQuestionDisplay('flex');
   };
-  
+
   // For when the user selects Quizzes.
   const quizHandler = function () {
 
@@ -25,17 +25,17 @@ export default function App() {
 
   // For when the user selects Tests.
   const testsHandler = function () {
-    
+
   };
 
   // For when the user selects Stats.
   const statsHandler = function () {
-    
+
   };
 
   // For when the user selects About.
   const aboutHandler = function () {
-    
+
   };
 
   const testHandler = function () {
@@ -47,33 +47,31 @@ export default function App() {
   const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: 'black',
       alignItems: 'center',
       justifyContent: 'center',
     },
     homeNav: {
-      display: homeDisplay,
-      width: '100vw',
-      height: '100vh',
-      marginTop: 160,
-      backgroundColor: 'blue'
+      display: homeDisplay
     },
     questionComponent: {
       display: questionDisplay,
       alignItems: 'center',
-      
+
+    },
+    aboutComponent: {
+
     },
     questionText: {
       fontWeight: 'bold',
       fontSize: 25
     },
     buttonContainer: {
-      flexDirection: 'row', 
+      flexDirection: 'row',
       flexWrap: 'wrap',
       justifyContent: 'space-evenly'
     }
   });
-  
+
 
   return (
     <View style={styles.container}>
@@ -85,10 +83,10 @@ export default function App() {
         <CustomButton text='Quizzes' onPress={quizHandler} />
         <CustomButton text='Tests' onPress={testsHandler} />
         <CustomButton text='Stats' onPress={statsHandler} />
-        <CustomButton text='About' onPress={aboutHandler}/>
+        <CustomButton text='About' onPress={aboutHandler} />
       </View>
 
-      {/* Component for loading questions. */}
+      {/* Component for loading questions. TO BE CHANGED...*/}
       <View style={styles.questionComponent}>
         <Text style={styles.questionText}>What is 1,486 + 948?</Text>
         <View style={styles.buttonContainer}>
@@ -97,8 +95,15 @@ export default function App() {
           <QuestionButton text='2,436' />
           <QuestionButton text='2,444' />
         </View>
-        
       </View>
+
+      {/* Component for the about section. */}
+      <View style={styles.aboutComponent}>
+        <Text>Thank you for using our app. This app has several features. 
+          You can do a quiz which will contain a random selection of questions to practice. 
+          You can also take tests on certain topics to test your knowledge. You can see the results of the tests you do in the statistics page.</Text>
+      </View>
+
     </View>
   );
 }
