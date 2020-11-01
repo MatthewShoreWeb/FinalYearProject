@@ -19,9 +19,9 @@ const styles = StyleSheet.create({
     button: {
         justifyContent: 'center',
         backgroundColor: '#42adf5',
-        marginTop: vh * 0.1,
+        marginTop: vh * 0.05,
         height: '80pt',
-        width: vw * 0.8,
+        width: vw * 0.3,
         borderRadius: 100,
         marginHorizontal: 'auto'
     },

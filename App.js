@@ -4,51 +4,40 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Header from './components/Header';
 import CustomButton from './components/CustomButton';
-import QuestionButton from './components/QuestionButton';
 import BackButton from './components/BackButton';
-
-// https://reactnative.dev/docs/dimensions
 
 export default function App() {
   // State changes for updating components in the app.
-  const [header, setHeader] = useState('Home Page');
+  const [header, setHeader] = useState('Home');
   const [homeDisplay, changeHomeDisplay] = useState('flex');
-  const [questionDisplay, changeQuestionDisplay] = useState('none');
+  const [quizMenuDisplay, changeQuizMenuDisplay] = useState('none');
+  const [testMenuDisplay, changeTestMenuDisplay] = useState('none');
   const [aboutDisplay, changeAboutDisplay] = useState('none');
-
-
-  // When going from the home page to a question page.
-  function toQuestionPage(type) {
-    setHeader(type);
-    changeHomeDisplay('none');
-    changeQuestionDisplay('flex');
-  };
 
   // For when the user selects Quizzes.
   const quizHandler = function () {
-
+    changeHomeDisplay('none');
+    changeQuizMenuDisplay('flex');
+    setHeader('Quizzes');
   };
 
   // For when the user selects Tests.
   const testsHandler = function () {
-
+    changeHomeDisplay('none');
+    changeTestMenuDisplay('flex');
+    setHeader('Tests');
   };
 
   // For when the user selects Stats.
   const statsHandler = function () {
-
+    setHeader('Stats');
   };
 
   // For when the user selects About.
   const aboutHandler = function () {
     changeHomeDisplay('none');
     changeAboutDisplay('flex');
-  };
-
-  // For when the user clicks a back button.
-  const backHandler = function () {
-    changeHomeDisplay('flex');
-    changeAboutDisplay('none');
+    setHeader('About');
   };
 
   const styles = StyleSheet.create({
@@ -61,9 +50,11 @@ export default function App() {
     homeNav: {
       display: homeDisplay
     },
-    questionComponent: {
-      display: questionDisplay,
-      alignItems: 'center',
+    quizComponent: {
+      display: quizMenuDisplay
+    },
+    testComponent: {
+      display: testMenuDisplay
     },
     aboutComponent: {
       fontFamily: 'openSans',
@@ -72,14 +63,10 @@ export default function App() {
       fontSize: 20
     },
     aboutText: {
-      padding: '20px',
+      padding: '10px',
       borderWidth: 3,
       borderColor: "#42adf5",
       borderRadius: 10,
-    },
-    questionText: {
-      fontWeight: 'bold',
-      fontSize: 25
     },
     buttonContainer: {
       flexDirection: 'row',
@@ -102,15 +89,28 @@ export default function App() {
         <CustomButton text='About' onPress={aboutHandler} />
       </View>
 
-      {/* Component for loading questions. TO BE CHANGED...*/}
-      <View style={styles.questionComponent}>
-        <Text style={styles.questionText}>What is 1,486 + 948?</Text>
-        <View style={styles.buttonContainer}>
-          <QuestionButton text='2,4342' />
-          <QuestionButton text='538' />
-          <QuestionButton text='2,436' />
-          <QuestionButton text='2,444' />
-        </View>
+      {/* Menu for selecting what quiz you would like to do. */}
+      <View style={styles.quizComponent}>
+        <CustomButton text='Maths'></CustomButton>
+        <CustomButton text='Verbal'></CustomButton>
+        <CustomButton text='Non-Verbal'></CustomButton>
+        <BackButton style={styles.backButton} onPress={function () {
+          changeHomeDisplay('flex');
+          changeQuizMenuDisplay('none');
+          setHeader('Home');
+        }}></BackButton>
+      </View>
+
+        {/* Menu for selecting what test you would like to do. */}
+        <View style={styles.testComponent}>
+        <CustomButton text='Maths'></CustomButton>
+        <CustomButton text='Verbal'></CustomButton>
+        <CustomButton text='Non-Verbal'></CustomButton>
+        <BackButton style={styles.backButton} onPress={function () {
+          changeHomeDisplay('flex');
+          changeTestMenuDisplay('none');
+          setHeader('Home');
+        }}></BackButton>
       </View>
 
       {/* Component for the about section. */}
@@ -122,7 +122,11 @@ export default function App() {
           <Text>{'\u2022'} You can also take tests on certain topics to test your knowledge. </Text> {'\n'}
           <Text>{'\u2022'} You can see the results of the tests you do in the statistics page. </Text> {'\n'}
         </Text>
-        <BackButton style={styles.backButton} onPress={backHandler}></BackButton>
+        <BackButton style={styles.backButton} onPress={function () {
+          changeHomeDisplay('flex');
+          changeAboutDisplay('none');
+          setHeader('Home');
+        }}></BackButton>
       </View>
 
     </View>
