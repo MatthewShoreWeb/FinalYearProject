@@ -1,5 +1,5 @@
 # Computer Science Dissertation
 ## What?
-Educational App. 
+Educational App.
 ## Why?
 ## How?
