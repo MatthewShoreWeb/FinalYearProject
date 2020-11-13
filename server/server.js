@@ -2,8 +2,10 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-//https://www.youtube.com/watch?v=S7Qxt9ncCv4&ab_channel=CODERSNEVERQUIT
+require('./question');
 const mongoURL = 'mongodb+srv://Matt_user:FL3eCPkEp0JOD2Bg@cluster0.7zutw.mongodb.net/Cluster0?retryWrites=true&w=majority';
+
+const question = mongoose.model('question');
 
 mongoose.connect(mongoURL, {
     useNewUrlParser: true,

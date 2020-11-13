@@ -9,3 +9,4 @@ const QuestionSchema = new mongoose.Schema({
     correctAnswer:String
 });
 
+mongoose.model('question', QuestionSchema);
