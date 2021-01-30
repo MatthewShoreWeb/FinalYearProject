@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useState } from 'react';
 import { StyleSheet, View, Text, Dimensions } from 'react-native';
 
 // Viewport width and height.
@@ -7,8 +8,7 @@ const vh = Dimensions.get('window').height;
 
 export default function Header({ text, homeFunction }) {
     return (
-        <View style={styles.header} onPress={homeFunction}>
-          
+        <View style={styles.header} onPress={homeFunction}>  
             <Text style={styles.headerText}>{text}</Text>
         </View>
     )

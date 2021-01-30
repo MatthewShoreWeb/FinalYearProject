@@ -3,7 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 require('./question');
-const mongoURL = 'mongodb+srv://Matt_user:FL3eCPkEp0JOD2Bg@cluster0.7zutw.mongodb.net/Cluster0?retryWrites=true&w=majority';
+const mongoURL = 'mongodb+srv://Matt_user:rSuc44wgdq84fb2Q@cluster0.7zutw.mongodb.net/Cluster0?retryWrites=true&w=majority';
 
 const question = mongoose.model('question');
 

@@ -5,6 +5,10 @@ import { StyleSheet, Text, View } from 'react-native';
 import Header from './components/Header';
 import CustomButton from './components/CustomButton';
 import BackButton from './components/BackButton';
+import MultiChoiceQuestion from './components/MultiChoiceQuestion';
+
+// Questions Test
+import testQuestions from './questions/testQuestions.json';
 
 export default function App() {
   // State changes for updating components in the app.
@@ -13,6 +17,7 @@ export default function App() {
   const [quizMenuDisplay, changeQuizMenuDisplay] = useState('none');
   const [testMenuDisplay, changeTestMenuDisplay] = useState('none');
   const [aboutDisplay, changeAboutDisplay] = useState('none');
+  const [multiChoiceQuestions, changeQuestionDisplay] = useState('none');
 
   // For when the user selects Quizzes.
   const quizHandler = function () {
@@ -40,6 +45,31 @@ export default function App() {
     setHeader('About');
   };
 
+  //Quiz/Test Functionality
+
+  let loadQuestions = function () {
+    // Generates a random key and accesses it from JSON.
+    let keys = Object.keys(testQuestions);
+    return testQuestions[keys[Math.floor(Math.random() * keys.length)]];
+  };
+
+  const [question, changeQuestion] = useState(loadQuestions());
+
+  let [questionCounter, changeCounter] = useState(1);
+  let [correct, changeCorrect] = useState(0);
+  let [wrong, changeWrong] = useState(0);
+
+  function checkAnswer(question, answer) {
+    if (question.correct === answer) {
+      changeCorrect(correct + 1);
+      changeCounter(questionCounter + 1);
+      changeQuestion(loadQuestions());
+    } else {
+      changeWrong(wrong + 1);
+    }
+    return question.correct === answer;
+  }
+
   const styles = StyleSheet.create({
     container: {
       fontFamily: 'openSans',
@@ -55,6 +85,34 @@ export default function App() {
     },
     testComponent: {
       display: testMenuDisplay
+    },
+    questionCountHeader: {
+      width: '100vw',
+      height: '5vh',
+      backgroundColor: '#68bbe3',
+      flexDirection: 'row',
+      justifyContent: 'space-between'
+    },
+    questionCount: {
+      fontWeight: 'bold',
+      fontSize: 20,
+      color: 'white',
+    },
+    correct: {
+      color: 'white',
+      fontWeight: 'bold',
+      backgroundColor: 'green',
+      width: '10vw',
+      textAlign: 'center',
+      fontSize: 20
+    },
+    wrong: {
+      color: 'white',
+      fontWeight: 'bold',
+      backgroundColor: 'red',
+      width: '10vw',
+      textAlign: 'center',
+      fontSize: 20
     },
     aboutComponent: {
       fontFamily: 'openSans',
@@ -72,6 +130,9 @@ export default function App() {
       flexDirection: 'row',
       flexWrap: 'wrap',
       justifyContent: 'space-evenly'
+    },
+    multiChoiceQuestions: {
+      display: multiChoiceQuestions,
     }
   });
 
@@ -79,7 +140,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       {/* Header component. */}
-      <Header text={header}></Header>
+      <Header text={header} style={styles.header}></Header>
 
       {/* Default home page component. */}
       <View style={styles.homeNav}>
@@ -91,9 +152,17 @@ export default function App() {
 
       {/* Menu for selecting what quiz you would like to do. */}
       <View style={styles.quizComponent}>
-        <CustomButton text='Maths'></CustomButton>
-        <CustomButton text='Verbal'></CustomButton>
-        <CustomButton text='Non-Verbal'></CustomButton>
+        <CustomButton text='Maths' onPress={function () {
+          setHeader('Maths Quiz');
+          changeQuizMenuDisplay('none');
+          changeQuestionDisplay('flex');
+        }}></CustomButton>
+        <CustomButton text='Verbal' onPress={function () {
+          setHeader('Verbal Quiz');
+        }}></CustomButton>
+        <CustomButton text='Non-Verbal' onPress={function () {
+          setHeader('Non-Verbal Quiz');
+        }}></CustomButton>
         <BackButton style={styles.backButton} onPress={function () {
           changeHomeDisplay('flex');
           changeQuizMenuDisplay('none');
@@ -101,11 +170,38 @@ export default function App() {
         }}></BackButton>
       </View>
 
-        {/* Menu for selecting what test you would like to do. */}
-        <View style={styles.testComponent}>
-        <CustomButton text='Maths'></CustomButton>
-        <CustomButton text='Verbal'></CustomButton>
-        <CustomButton text='Non-Verbal'></CustomButton>
+      <View style={styles.multiChoiceQuestions}>
+        <View style={styles.questionCountHeader}>
+          <Text style={styles.correct}> {correct} </Text>
+          <Text style={styles.questionCount}> Question {questionCounter}/50</Text>
+          <Text style={styles.wrong}> {wrong} </Text>
+        </View>
+        <Text style={{ fontWeight: 'bold' }}>{question.description}</Text>
+        <CustomButton text={question.A} onPress={function () {
+          checkAnswer(question, 'A');
+        }}></CustomButton>
+        <CustomButton text={question.B} onPress={function () {
+          checkAnswer(question, 'B');
+        }}></CustomButton>
+        <CustomButton text={question.C} onPress={function () {
+          checkAnswer(question, 'C');
+        }}></CustomButton>
+        <CustomButton text={question.D} onPress={function () {
+          checkAnswer(question, 'D',);
+        }}></CustomButton>
+      </View>
+
+      {/* Menu for selecting what test you would like to do. */}
+      <View style={styles.testComponent}>
+        <CustomButton text='Maths' onPress={function () {
+
+        }}></CustomButton>
+        <CustomButton text='Verbal' onPress={function () {
+
+        }}></CustomButton>
+        <CustomButton text='Non-Verbal' onPress={function () {
+
+        }}></CustomButton>
         <BackButton style={styles.backButton} onPress={function () {
           changeHomeDisplay('flex');
           changeTestMenuDisplay('none');
