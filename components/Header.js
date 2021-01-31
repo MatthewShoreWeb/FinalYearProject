@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#42adf5',
         justifyContent: 'center'
-
     },
     headerText: {
         color: 'white',

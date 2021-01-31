@@ -5,7 +5,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import Header from './components/Header';
 import CustomButton from './components/CustomButton';
 import BackButton from './components/BackButton';
-import MultiChoiceQuestion from './components/MultiChoiceQuestion';
+import QuizButton from './components/QuizButton';
 
 // Questions Test
 import testQuestions from './questions/testQuestions.json';
@@ -56,8 +56,36 @@ export default function App() {
   const [question, changeQuestion] = useState(loadQuestions());
 
   let [questionCounter, changeCounter] = useState(1);
+  let [accuracy, changeAccuracy] = useState(0);
+  let [accuracyColour, changeColour] = useState('red');
   let [correct, changeCorrect] = useState(0);
   let [wrong, changeWrong] = useState(0);
+
+  function calculateAccuracy() {
+    let accuracy
+    if (correct - wrong === 0) {
+      accuracy = 50;
+
+    } else {
+      accuracy = parseInt((correct / (correct + wrong) || 1) * 100);
+    }
+
+    if (accuracy > 100) {
+      accuracy = 100;
+    } else if (accuracy < 0) {
+      accuracy = 0;
+    }
+
+    if (accuracy > 70) {
+      changeColour('green');
+    } else if (accuracy > 40) {
+      changeColour('orange');
+    } else {
+      changeColour('red');
+    }
+
+    return accuracy;
+  }
 
   function checkAnswer(question, answer) {
     if (question.correct === answer) {
@@ -67,6 +95,7 @@ export default function App() {
     } else {
       changeWrong(wrong + 1);
     }
+    changeAccuracy(calculateAccuracy());
     return question.correct === answer;
   }
 
@@ -91,7 +120,7 @@ export default function App() {
       height: '5vh',
       backgroundColor: '#68bbe3',
       flexDirection: 'row',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
     },
     questionCount: {
       fontWeight: 'bold',
@@ -114,6 +143,11 @@ export default function App() {
       textAlign: 'center',
       fontSize: 20
     },
+    accuracy: {
+      color: accuracyColour,
+      fontWeight: 'bold',
+      fontSize: 20
+    },
     aboutComponent: {
       fontFamily: 'openSans',
       display: aboutDisplay,
@@ -133,6 +167,12 @@ export default function App() {
     },
     multiChoiceQuestions: {
       display: multiChoiceQuestions,
+      top: '10vh',
+      height: '100vh'
+    },
+    testbuttons: {
+      position: 'absolute',
+      bottom: '10vh'
     }
   });
 
@@ -174,21 +214,27 @@ export default function App() {
         <View style={styles.questionCountHeader}>
           <Text style={styles.correct}> {correct} </Text>
           <Text style={styles.questionCount}> Question {questionCounter}/50</Text>
+          <Text style={styles.accuracy}> Accuracy {accuracy}%</Text>
           <Text style={styles.wrong}> {wrong} </Text>
         </View>
-        <Text style={{ fontWeight: 'bold' }}>{question.description}</Text>
-        <CustomButton text={question.A} onPress={function () {
-          checkAnswer(question, 'A');
-        }}></CustomButton>
-        <CustomButton text={question.B} onPress={function () {
-          checkAnswer(question, 'B');
-        }}></CustomButton>
-        <CustomButton text={question.C} onPress={function () {
-          checkAnswer(question, 'C');
-        }}></CustomButton>
-        <CustomButton text={question.D} onPress={function () {
-          checkAnswer(question, 'D',);
-        }}></CustomButton>
+        <Text style={{ fontWeight: 'bold', fontSize: 30, textAlign: 'center' }}>{question.description}</Text>
+        <View style={styles.testbuttons}>
+          <QuizButton text={'A)  ' + question.A} onPress={function () {
+            checkAnswer(question, 'A');
+          }}></QuizButton>
+          <QuizButton text={'B)  ' + question.B} onPress={function () {
+            checkAnswer(question, 'B');
+          }}></QuizButton>
+          <QuizButton text={'C)  ' + question.C} onPress={function () {
+            checkAnswer(question, 'C');
+          }}></QuizButton>
+          <QuizButton text={'D)  ' + question.D} onPress={function () {
+            checkAnswer(question, 'D',);
+          }}></QuizButton>
+          <QuizButton text={'E)  ' + question.E} onPress={function () {
+            checkAnswer(question, 'E',);
+          }}></QuizButton>
+        </View>
       </View>
 
       {/* Menu for selecting what test you would like to do. */}

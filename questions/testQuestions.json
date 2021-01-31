@@ -10,7 +10,7 @@
     {"description": "Increase one million and fifty thousand by six hundred and seventy thousand and fourteen", "A": "16,2714", "B": "10,62714", "C": "112,3014", "D": "1,726,014", "E": "2,230,014", "correct": "D"},
     {"description": "Decrease four million and seven by four hundred and ninety six thousand and eleven", "A": "2,434", "B": "538", "C": "2,436", "D": "2,444", "E": "2,433", "correct": "A"},
     {"description": "248 x 317 =", "A": "78,616", "B": "92,008", "C": "565", "D": "78,615", "E": "78,161", "correct": "A"},
-    {"description": "14.25 x 25.5 =", "A": "363.375", "B": "3,633.75", "C": "363,,375", "D": "36,337.5", "E": "363.753", "correct": "A"},
+    {"description": "14.25 x 25.5 =", "A": "363.375", "B": "3,633.75", "C": "363,375", "D": "36,337.5", "E": "363.753", "correct": "A"},
     {"description": "3³ x 8² =", "A": "192", "B": "384", "C": "576", "D": "144", "E": "24", "correct": "C"},
     {"description": "228 ÷ 12 =", "A": "20", "B": "10", "C": "8", "D": "19", "E": "18", "correct": "D"},
     {"description": "344 ÷ 18 = (Express your answer to 2 decimal places)", "A": "11.11", "B": "15.12", "C": "18.12", "D": "19.12", "E": "19.11", "correct": "D"},
