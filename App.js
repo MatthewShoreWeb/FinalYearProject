@@ -20,35 +20,42 @@ export default function App() {
   const [displayOptions, changeOptionsDisplay] = useState('none');
 
   // Functions for navigation.
-  function backToHome() {
-    changeHomeDisplay('flex');
+  // General function for hiding all elements.
+  function hideAll() {
     changeQuizMenuDisplay('none');
     changeTestMenuDisplay('none');
     changeAboutDisplay('none');
+    hangeQuestionDisplay('none');
+    changeHomeDisplay('none');
+  }
+  // Return to the home page.
+  function backToHome() {
     setHeader('Home');
+    hideAll();
+    changeHomeDisplay('flex');  
   };
-
-  const quizHandler = function () {
-    changeQuestionDisplay('none');
-    changeHomeDisplay('none');
-    changeQuizMenuDisplay('flex');
+  // Go to the menu for quizzes.
+  function toQuizMenu() {
     setHeader('Quizzes');
+    hideAll();
+    changeQuizMenuDisplay('flex');
   };
-
-  const testsHandler = function () {
-    changeHomeDisplay('none');
-    changeTestMenuDisplay('flex');
+  // Go to the menu for tests.
+  function toTestMenu() {
     setHeader('Tests');
+    hideAll();
+    changeTestMenuDisplay('flex');
   };
-
-  const statsHandler = function () {
+  // Go to the menu for statistics.
+  function toStatsMenu() {
     setHeader('Stats');
   };
-
-  const aboutHandler = function () {
-    changeHomeDisplay('none');
-    changeAboutDisplay('flex');
+  // Go to the about page.
+  function toAboutPage() {
     setHeader('About');
+    hideAll();
+    changeAboutDisplay('flex');
+    
   };
 
   // Works out what page to go to when the back button is pressed.
@@ -61,7 +68,7 @@ export default function App() {
         backToHome();
         break;
       case 'maths quiz':
-        quizHandler();
+        toQuizMenu();
         break;
     };
   };
@@ -245,10 +252,10 @@ export default function App() {
 
       {/* Default home page component. */}
       <View style={styles.homeNav}>
-        <CustomButton text='Quizzes' onPress={quizHandler} />
-        <CustomButton text='Tests' onPress={testsHandler} />
-        <CustomButton text='Stats' onPress={statsHandler} />
-        <CustomButton text='About' onPress={aboutHandler} />
+        <CustomButton text='Quizzes' onPress={toQuizMenu} />
+        <CustomButton text='Tests' onPress={toTestMenu} />
+        <CustomButton text='Stats' onPress={toStatsMenu} />
+        <CustomButton text='About' onPress={toAboutPage} />
       </View>
 
       {/* Menu for selecting what quiz you would like to do. */}

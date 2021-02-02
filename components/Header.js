@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, View, Text, Dimensions } from 'react-native';
 
 // Viewport width and height.
