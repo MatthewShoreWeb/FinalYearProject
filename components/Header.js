@@ -6,9 +6,10 @@ import { StyleSheet, View, Text, Dimensions } from 'react-native';
 const vw = Dimensions.get('window').width;
 const vh = Dimensions.get('window').height;
 
-export default function Header({ text, homeFunction }) {
+export default function Header({ text, homeFunction, backButton }) {
     return (
         <View style={styles.header} onPress={homeFunction}>  
+            <Text style={styles.back} onPress={backButton}>⇦</Text>
             <Text style={styles.headerText}>{text}</Text>
         </View>
     )
@@ -22,11 +23,18 @@ const styles = StyleSheet.create({
         width: vw,
         alignItems: 'center',
         backgroundColor: '#42adf5',
-        justifyContent: 'center'
+        flexDirection: 'row',
+        justifyContent: 'space-evenly'
+
     },
     headerText: {
         color: 'white',
         fontWeight: 'bold',
         fontSize: 25
+    },
+    back: {
+        color: 'white',
+        fontSize: 60,
+        fontWeight: 'bold',
     }
 })

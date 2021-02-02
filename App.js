@@ -45,12 +45,26 @@ export default function App() {
     setHeader('About');
   };
 
+  // Works out what page to go to when the back button is pressed.
+  function backButtonPressed() {
+    console.log('hi')
+    switch (header.toLowerCase()) {
+      case 'quizzes':
+      case 'tests':
+      case 'stats':
+      case 'about':
+        setHeader('Home');
+        break;
+    };
+  };
+
   //Quiz/Test Functionality
 
-  let loadQuestions = function () {
+  let loadQuestions = function (usedKeys) {
     // Generates a random key and accesses it from JSON.
     let keys = Object.keys(testQuestions);
-    return testQuestions[keys[Math.floor(Math.random() * keys.length)]];
+    let randomKey = keys[Math.floor(Math.random() * keys.length)]
+    return testQuestions[randomKey];
   };
 
   const [question, changeQuestion] = useState(loadQuestions());
@@ -63,11 +77,15 @@ export default function App() {
 
   function calculateAccuracy() {
     let accuracy
-    if (correct - wrong === 0) {
-      accuracy = 50;
-
+    if (correct === 0) {
+      accuracy = 0;
     } else {
-      accuracy = parseInt((correct / (correct + wrong) || 1) * 100);
+      if (correct - wrong === 0) {
+        accuracy = 50;
+      }
+      else {
+        accuracy = parseInt((correct / (correct + wrong + 1) || 1) * 100);
+      }
     }
 
     if (accuracy > 100) {
@@ -115,13 +133,6 @@ export default function App() {
     testComponent: {
       display: testMenuDisplay
     },
-    questionCountHeader: {
-      width: '100vw',
-      height: '5vh',
-      backgroundColor: '#68bbe3',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-    },
     questionCount: {
       fontWeight: 'bold',
       fontSize: 20,
@@ -165,22 +176,45 @@ export default function App() {
       flexWrap: 'wrap',
       justifyContent: 'space-evenly'
     },
-    multiChoiceQuestions: {
+
+    quizContainer: {
       display: multiChoiceQuestions,
-      top: '10vh',
-      height: '100vh'
+      width: '100vw',
+      height: '90vh',
+      position: 'absolute',
+      bottom: 0
+    },
+    questionDescription: {
+      display: multiChoiceQuestions,
+      position: 'absolute',
+      top: 40,
+      textAlign: 'center'
     },
     testbuttons: {
+      display: multiChoiceQuestions,
+    },
+    multiChoiceQuestions: {
+      display: multiChoiceQuestions,
       position: 'absolute',
-      bottom: '10vh'
-    }
+      bottom: 0
+    },
+    questionCountHeader: {
+      width: '100vw',
+      height: '5vh',
+      backgroundColor: '#68bbe3',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      display: multiChoiceQuestions,
+      position: 'absolute',
+      top: 0
+    },
   });
 
 
   return (
     <View style={styles.container}>
       {/* Header component. */}
-      <Header text={header} style={styles.header}></Header>
+      <Header text={header} style={styles.header} backButton={backButtonPressed()}></Header>
 
       {/* Default home page component. */}
       <View style={styles.homeNav}>
@@ -193,7 +227,7 @@ export default function App() {
       {/* Menu for selecting what quiz you would like to do. */}
       <View style={styles.quizComponent}>
         <CustomButton text='Maths' onPress={function () {
-          setHeader('Maths Quiz');
+          setHeader('Math22s Quiz');
           changeQuizMenuDisplay('none');
           changeQuestionDisplay('flex');
         }}></CustomButton>
@@ -209,34 +243,39 @@ export default function App() {
           setHeader('Home');
         }}></BackButton>
       </View>
+      <View style={styles.quizContainer}>
 
-      <View style={styles.multiChoiceQuestions}>
         <View style={styles.questionCountHeader}>
           <Text style={styles.correct}> {correct} </Text>
           <Text style={styles.questionCount}> Question {questionCounter}/50</Text>
           <Text style={styles.accuracy}> Accuracy {accuracy}%</Text>
           <Text style={styles.wrong}> {wrong} </Text>
         </View>
-        <Text style={{ fontWeight: 'bold', fontSize: 30, textAlign: 'center' }}>{question.description}</Text>
-        <View style={styles.testbuttons}>
-          <QuizButton text={'A)  ' + question.A} onPress={function () {
-            checkAnswer(question, 'A');
-          }}></QuizButton>
-          <QuizButton text={'B)  ' + question.B} onPress={function () {
-            checkAnswer(question, 'B');
-          }}></QuizButton>
-          <QuizButton text={'C)  ' + question.C} onPress={function () {
-            checkAnswer(question, 'C');
-          }}></QuizButton>
-          <QuizButton text={'D)  ' + question.D} onPress={function () {
-            checkAnswer(question, 'D',);
-          }}></QuizButton>
-          <QuizButton text={'E)  ' + question.E} onPress={function () {
-            checkAnswer(question, 'E',);
-          }}></QuizButton>
+
+        <View style={styles.questionDescription}>
+          <Text style={{ fontWeight: 'bold', fontSize: 30, textAlign: 'center' }}>{question.description}</Text>
+        </View>
+
+        <View style={styles.multiChoiceQuestions}>
+          <View style={styles.testbuttons}>
+            <QuizButton text={'A)  ' + question.A} onPress={function () {
+              checkAnswer(question, 'A');
+            }}></QuizButton>
+            <QuizButton text={'B)  ' + question.B} onPress={function () {
+              checkAnswer(question, 'B');
+            }}></QuizButton>
+            <QuizButton text={'C)  ' + question.C} onPress={function () {
+              checkAnswer(question, 'C');
+            }}></QuizButton>
+            <QuizButton text={'D)  ' + question.D} onPress={function () {
+              checkAnswer(question, 'D',);
+            }}></QuizButton>
+            <QuizButton text={'E)  ' + question.E} onPress={function () {
+              checkAnswer(question, 'E',);
+            }}></QuizButton>
+          </View>
         </View>
       </View>
-
       {/* Menu for selecting what test you would like to do. */}
       <View style={styles.testComponent}>
         <CustomButton text='Maths' onPress={function () {
