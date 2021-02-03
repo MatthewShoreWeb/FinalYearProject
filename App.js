@@ -25,14 +25,14 @@ export default function App() {
     changeQuizMenuDisplay('none');
     changeTestMenuDisplay('none');
     changeAboutDisplay('none');
-    hangeQuestionDisplay('none');
+    changeQuestionDisplay('none');
     changeHomeDisplay('none');
-  }
+  };
   // Return to the home page.
   function backToHome() {
     setHeader('Home');
     hideAll();
-    changeHomeDisplay('flex');  
+    changeHomeDisplay('flex');
   };
   // Go to the menu for quizzes.
   function toQuizMenu() {
@@ -55,11 +55,13 @@ export default function App() {
     setHeader('About');
     hideAll();
     changeAboutDisplay('flex');
-    
   };
 
   // Works out what page to go to when the back button is pressed.
   function backButtonPressed() {
+    if (displayOptions === 'flex') {
+      optionsPressed();
+    } else {
     switch (header.toLowerCase()) {
       case 'quizzes':
       case 'tests':
@@ -68,23 +70,42 @@ export default function App() {
         backToHome();
         break;
       case 'maths quiz':
+      case 'verbal quiz':
+      case 'non-verbal quiz':
         toQuizMenu();
         break;
     };
+  }
   };
 
   // Options functionality - when the user clicks the gear icon in the top right.
-
   function optionsPressed() {
     if (displayOptions === 'none') {
+      hideAll();
       changeOptionsDisplay('flex');
     } else {
       changeOptionsDisplay('none');
+      switch (header.toLowerCase()) {
+        case 'home':
+          backToHome();
+          break;
+        case 'quizzes':
+          toQuizMenu();
+          break;
+        case 'tests':
+          toTestMenu();
+          break;
+        case 'stats':
+          toStatsMenu()
+          break;
+        case 'about':
+          toAboutPage()
+          break;
+      }
     }
   };
 
-  // Quiz/Test Functionality/
-
+  // Quiz/Test Functionality.
   let loadQuestions = function () {
     // Generates a random key and accesses it from JSON.
     let keys = Object.keys(testQuestions);
@@ -100,9 +121,9 @@ export default function App() {
   let [correct, changeCorrect] = useState(0);
   let [wrong, changeWrong] = useState(0);
 
-  // Calculates user's accuracy during a quiz.
+  // Calculates the user's accuracy during a quiz.
   function calculateAccuracy() {
-    let accuracy
+    let accuracy;
     if (correct === 0) {
       accuracy = 0;
     } else {
@@ -127,7 +148,6 @@ export default function App() {
     } else {
       changeColour('red');
     }
-
     return accuracy;
   }
 
@@ -150,8 +170,16 @@ export default function App() {
       alignItems: 'center',
       justifyContent: 'center',
     },
+    topText: {
+      fontWeight: 'bold',
+      fontSize: 30
+    },
     options: {
-      display: displayOptions
+      display: displayOptions,
+      width: '100vw',
+      height: '90vh',
+      position: 'absolute',
+      bottom: 0,
     },
     homeNav: {
       display: homeDisplay
@@ -205,7 +233,6 @@ export default function App() {
       flexWrap: 'wrap',
       justifyContent: 'space-evenly'
     },
-
     quizContainer: {
       display: multiChoiceQuestions,
       width: '100vw',
@@ -247,11 +274,13 @@ export default function App() {
 
       {/* Options */}
       <View style={styles.options}>
-        <Text text={'bonjour'}></Text>
+        <Text style={{fontWeight: 'bold'}}>Dark Theme</Text>
+        <Text style={{color: 'red', fontWeight: 'bold'}}>Erase Stored Data</Text>
       </View>
 
       {/* Default home page component. */}
       <View style={styles.homeNav}>
+        <Text style={styles.topText}>Select a learning tool...</Text>
         <CustomButton text='Quizzes' onPress={toQuizMenu} />
         <CustomButton text='Tests' onPress={toTestMenu} />
         <CustomButton text='Stats' onPress={toStatsMenu} />
@@ -260,6 +289,7 @@ export default function App() {
 
       {/* Menu for selecting what quiz you would like to do. */}
       <View style={styles.quizComponent}>
+        <Text style={styles.topText}>Select a topic...</Text>
         <CustomButton text='Maths' onPress={function () {
           setHeader('Maths Quiz');
           changeQuizMenuDisplay('none');
@@ -308,6 +338,7 @@ export default function App() {
 
       {/* Menu for selecting what test you would like to do. */}
       <View style={styles.testComponent}>
+        <Text style={styles.topText}>Select a topic...</Text>
         <CustomButton text='Maths' onPress={function () {
 
         }}></CustomButton>
@@ -329,7 +360,6 @@ export default function App() {
           <Text>{'\u2022'} You can see the results of the tests you do in the statistics page. </Text> {'\n'}
         </Text>
       </View>
-
     </View>
   );
 }

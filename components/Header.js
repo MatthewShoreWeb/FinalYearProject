@@ -9,7 +9,7 @@ const vh = Dimensions.get('window').height;
 export default function Header({ text, homeFunction, backButton, options }) {
     return (
         <View style={styles.header} onPress={homeFunction}>  
-            <Text style={styles.back} onPress={backButton}>◄</Text>
+            <Text style={styles.back} onPress={backButton}> ◄</Text>
             <Text style={styles.headerText}>{text}</Text>
             <Text style={styles.back} onPress={options}>⚙ </Text>
         </View>
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#42adf5',
         flexDirection: 'row',
-        justifyContent: 'space-evenly'
+        justifyContent: 'space-between'
 
     },
     headerText: {

@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
         height: vh * 0.1,
         width: vw,
         borderTopWidth: 4.5,
-        borderColor: 'gold',
+        borderColor: '#30106B',
     },
     buttonText: {
         color: 'white',
