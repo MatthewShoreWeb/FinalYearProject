@@ -5,6 +5,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import Header from './components/Header';
 import CustomButton from './components/CustomButton';
 import QuizButton from './components/QuizButton';
+import DotGraph from './components/DotGraph';
 
 // Questions Test Data
 import testQuestions from './questions/testQuestions.json';
@@ -18,6 +19,7 @@ export default function App() {
   const [aboutDisplay, changeAboutDisplay] = useState('none');
   const [multiChoiceQuestions, changeQuestionDisplay] = useState('none');
   const [displayOptions, changeOptionsDisplay] = useState('none');
+  const [displayStatistics, changeStatisticsDisplay] = useState('none');
 
   // Functions for navigation.
   // General function for hiding all elements.
@@ -27,6 +29,7 @@ export default function App() {
     changeAboutDisplay('none');
     changeQuestionDisplay('none');
     changeHomeDisplay('none');
+    changeStatisticsDisplay('none');
   };
   // Return to the home page.
   function backToHome() {
@@ -49,6 +52,8 @@ export default function App() {
   // Go to the menu for statistics.
   function toStatsMenu() {
     setHeader('Stats');
+    hideAll();
+    changeStatisticsDisplay('flex');
   };
   // Go to the about page.
   function toAboutPage() {
@@ -163,6 +168,8 @@ export default function App() {
     return question.correct === answer;
   }
 
+ 
+
   const styles = StyleSheet.create({
     container: {
       fontFamily: 'openSans',
@@ -176,8 +183,8 @@ export default function App() {
     },
     options: {
       display: displayOptions,
-      width: '100vw',
-      height: '90vh',
+      width: '100%',
+      height: '90%',
       position: 'absolute',
       bottom: 0,
     },
@@ -199,7 +206,7 @@ export default function App() {
       color: 'white',
       fontWeight: 'bold',
       backgroundColor: 'green',
-      width: '10vw',
+      width: '10%',
       textAlign: 'center',
       fontSize: 20
     },
@@ -207,7 +214,7 @@ export default function App() {
       color: 'white',
       fontWeight: 'bold',
       backgroundColor: 'red',
-      width: '10vw',
+      width: '10%',
       textAlign: 'center',
       fontSize: 20
     },
@@ -223,7 +230,7 @@ export default function App() {
       fontSize: 20
     },
     aboutText: {
-      padding: '10px',
+      padding: '10dp',
       borderWidth: 3,
       borderColor: "#42adf5",
       borderRadius: 10,
@@ -235,8 +242,8 @@ export default function App() {
     },
     quizContainer: {
       display: multiChoiceQuestions,
-      width: '100vw',
-      height: '90vh',
+      width: '100%',
+      height: '90%',
       position: 'absolute',
       bottom: 0
     },
@@ -255,8 +262,8 @@ export default function App() {
       bottom: 0
     },
     questionCountHeader: {
-      width: '100vw',
-      height: '5vh',
+      width: '100%',
+      height: '5%',
       backgroundColor: '#68bbe3',
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -264,6 +271,9 @@ export default function App() {
       position: 'absolute',
       top: 0
     },
+    statistics: {
+      display: displayStatistics
+    }
   });
 
 
@@ -349,6 +359,12 @@ export default function App() {
 
         }}></CustomButton>
       </View>
+
+      {/* Statistics */}
+      <View style={styles.statistics}>
+        <DotGraph input={[2, 4, 6, 7]}></DotGraph>
+      </View>
+
 
       {/* Component for the about section. */}
       {/* 'u2002' is the code for a bullet point, it is required to form an unordered list. */}

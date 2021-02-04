@@ -36,7 +36,6 @@ const styles = StyleSheet.create({
     back: {
         color: 'white',
         fontSize: 60,
-        fontWeight: 'bold',
-        flex: 'righ'
+        fontWeight: 'bold'
     }
 })
