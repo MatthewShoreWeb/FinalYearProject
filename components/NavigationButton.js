@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity, View, Text, Dimensions } from 'react-native';
 
 // Viewport width and height.
 const vw = Dimensions.get('window').width;
 const vh = Dimensions.get('window').height;
 
-export default function CustomButton({ text, onPress }) {
+export default function NavigationButton({ text, onPress }) {
+
+
     return (
         <TouchableOpacity onPress={onPress}>
             <View style={styles.button}>
-                <Text style={styles.buttonText}>{ text }</Text>
+                <Text style={styles.buttonText}>{text}</Text>
             </View>
         </TouchableOpacity>
     )
@@ -31,5 +33,4 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlign: 'center'
     }
-        
-})
+});

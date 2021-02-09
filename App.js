@@ -3,23 +3,33 @@ import React, { useState } from 'react';
 // App components import.
 import { StyleSheet, Text, View } from 'react-native';
 import Header from './components/Header';
-import CustomButton from './components/CustomButton';
+import NavigationButton from './components/NavigationButton';
 import QuizButton from './components/QuizButton';
 import DotGraph from './components/DotGraph';
 
 // Questions Test Data
 import testQuestions from './questions/testQuestions.json';
 
+
 export default function App() {
   // State changes for updating components in the app.
   const [header, setHeader] = useState('Home');
-  const [homeDisplay, changeHomeDisplay] = useState('flex');
+  const [headerDisplay, changeHeaderDisplay] = useState('flex');
+  const [splashDisplay, changeSplashDisplay] = useState('flex');
+  const [homeDisplay, changeHomeDisplay] = useState('none');
   const [quizMenuDisplay, changeQuizMenuDisplay] = useState('none');
   const [testMenuDisplay, changeTestMenuDisplay] = useState('none');
   const [aboutDisplay, changeAboutDisplay] = useState('none');
   const [multiChoiceQuestions, changeQuestionDisplay] = useState('none');
   const [displayOptions, changeOptionsDisplay] = useState('none');
   const [displayStatistics, changeStatisticsDisplay] = useState('none');
+
+
+  // setTimeout(function () {
+  //   changeSplashDisplay('none');
+  //   changeHomeDisplay('flex');
+  //   changeHeaderDisplay('flex');
+  // }, 3000);
 
   // Functions for navigation.
   // General function for hiding all elements.
@@ -67,20 +77,20 @@ export default function App() {
     if (displayOptions === 'flex') {
       optionsPressed();
     } else {
-    switch (header.toLowerCase()) {
-      case 'quizzes':
-      case 'tests':
-      case 'stats':
-      case 'about':
-        backToHome();
-        break;
-      case 'maths quiz':
-      case 'verbal quiz':
-      case 'non-verbal quiz':
-        toQuizMenu();
-        break;
-    };
-  }
+      switch (header.toLowerCase()) {
+        case 'quizzes':
+        case 'tests':
+        case 'stats':
+        case 'about':
+          backToHome();
+          break;
+        case 'maths quiz':
+        case 'verbal quiz':
+        case 'non-verbal quiz':
+          toQuizMenu();
+          break;
+      };
+    }
   };
 
   // Options functionality - when the user clicks the gear icon in the top right.
@@ -168,7 +178,46 @@ export default function App() {
     return question.correct === answer;
   }
 
- 
+  const splashStyle = StyleSheet.create({
+    background: {
+      display: splashDisplay,
+      width: '100%',
+      height: '100%',
+      backgroundColor: '#1528bd'
+    },
+    text: {
+      color: 'white',
+      fontWeight: 'bold',
+      fontSize: 40,
+      textAlign: 'center'
+    }
+  });
+
+  const navigationStyle = StyleSheet.create({
+
+  });
+
+  const quizStyle = StyleSheet.create({
+
+  });
+
+  const testStyle = StyleSheet.create({
+
+  });
+
+  const statisticsStyle = StyleSheet.create({
+
+  });
+
+  const aboutStyle = StyleSheet.create({
+    container: {
+
+    },
+    text: {
+
+    }
+  });
+
 
   const styles = StyleSheet.create({
     container: {
@@ -277,40 +326,45 @@ export default function App() {
   });
 
 
+
   return (
     <View style={styles.container}>
+      <View style={splashStyle.background} >
+        <Text style={splashStyle.text}>Set4SuccessTuition</Text>
+      </View>
+
       {/* Header component. */}
-      <Header text={header} style={styles.header} backButton={backButtonPressed} options={optionsPressed}></Header>
+      <Header text={header} style={styles.header} backButton={backButtonPressed} options={optionsPressed} headerStyle={{ display: headerDisplay }}></Header>
 
       {/* Options */}
       <View style={styles.options}>
-        <Text style={{fontWeight: 'bold'}}>Dark Theme</Text>
-        <Text style={{color: 'red', fontWeight: 'bold'}}>Erase Stored Data</Text>
+        <Text style={{ fontWeight: 'bold' }}>Dark Theme</Text>
+        <Text style={{ color: 'red', fontWeight: 'bold' }}>Erase Stored Data</Text>
       </View>
 
       {/* Default home page component. */}
       <View style={styles.homeNav}>
         <Text style={styles.topText}>Select a learning tool...</Text>
-        <CustomButton text='Quizzes' onPress={toQuizMenu} />
-        <CustomButton text='Tests' onPress={toTestMenu} />
-        <CustomButton text='Stats' onPress={toStatsMenu} />
-        <CustomButton text='About' onPress={toAboutPage} />
+        <NavigationButton text='Quizzes' onPress={toQuizMenu} />
+        <NavigationButton text='Tests' onPress={toTestMenu} />
+        <NavigationButton text='Stats' onPress={toStatsMenu} />
+        <NavigationButton text='About' onPress={toAboutPage} />
       </View>
 
       {/* Menu for selecting what quiz you would like to do. */}
       <View style={styles.quizComponent}>
         <Text style={styles.topText}>Select a topic...</Text>
-        <CustomButton text='Maths' onPress={function () {
+        <NavigationButton text='Maths' onPress={function () {
           setHeader('Maths Quiz');
           changeQuizMenuDisplay('none');
           changeQuestionDisplay('flex');
-        }}></CustomButton>
-        <CustomButton text='Verbal' onPress={function () {
+        }}></NavigationButton>
+        <NavigationButton text='Verbal' onPress={function () {
           setHeader('Verbal Quiz');
-        }}></CustomButton>
-        <CustomButton text='Non-Verbal' onPress={function () {
+        }}></NavigationButton>
+        <NavigationButton text='Non-Verbal' onPress={function () {
           setHeader('Non-Verbal Quiz');
-        }}></CustomButton>
+        }}></NavigationButton>
       </View>
       <View style={styles.quizContainer}>
 
@@ -349,15 +403,15 @@ export default function App() {
       {/* Menu for selecting what test you would like to do. */}
       <View style={styles.testComponent}>
         <Text style={styles.topText}>Select a topic...</Text>
-        <CustomButton text='Maths' onPress={function () {
+        <NavigationButton text='Maths' onPress={function () {
 
-        }}></CustomButton>
-        <CustomButton text='Verbal' onPress={function () {
+        }}></NavigationButton>
+        <NavigationButton text='Verbal' onPress={function () {
 
-        }}></CustomButton>
-        <CustomButton text='Non-Verbal' onPress={function () {
+        }}></NavigationButton>
+        <NavigationButton text='Non-Verbal' onPress={function () {
 
-        }}></CustomButton>
+        }}></NavigationButton>
       </View>
 
       {/* Statistics */}

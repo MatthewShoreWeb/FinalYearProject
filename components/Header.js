@@ -1,17 +1,16 @@
+import React, { useState } from 'react';
+import { StyleSheet, View, Text } from 'react-native';
 
-import React from 'react';
-import { StyleSheet, View, Text, Dimensions } from 'react-native';
 
-// Viewport width and height.
-const vw = Dimensions.get('window').width;
-const vh = Dimensions.get('window').height;
 
-export default function Header({ text, homeFunction, backButton, options }) {
+export default function Header({ text, backButton, options, headerStyle }) { 
     return (
-        <View style={styles.header} onPress={homeFunction}>  
-            <Text style={styles.back} onPress={backButton}> ◄</Text>
-            <Text style={styles.headerText}>{text}</Text>
-            <Text style={styles.back} onPress={options}>⚙ </Text>
+        <View style={headerStyle}>
+            <View style={styles.header}>
+                <Text style={styles.back} onPress={backButton}> ◄</Text>
+                <Text style={styles.headerText}>{text}</Text>
+                <Text style={styles.back} onPress={options}>⚙ </Text>
+            </View>
         </View>
     )
 }
@@ -20,13 +19,13 @@ const styles = StyleSheet.create({
     header: {
         position: 'absolute',
         top: 0,
-        height: vh * 0.1,
-        width: vw,
+        height: '10%',
+        width: '100%',
         alignItems: 'center',
         backgroundColor: '#42adf5',
         flexDirection: 'row',
-        justifyContent: 'space-between'
-
+        justifyContent: 'space-between',
+        display: 'none'
     },
     headerText: {
         color: 'white',
