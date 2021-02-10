@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 
 // App components import.
 import { StyleSheet, Text, View } from 'react-native';
-import Header from './components/Header';
 import NavigationButton from './components/NavigationButton';
 import QuizButton from './components/QuizButton';
 import DotGraph from './components/DotGraph';
@@ -14,7 +13,7 @@ import testQuestions from './questions/testQuestions.json';
 export default function App() {
   // State changes for updating components in the app.
   const [header, setHeader] = useState('Home');
-  const [headerDisplay, changeHeaderDisplay] = useState('flex');
+  const [headerDisplay, changeHeaderDisplay] = useState('none');
   const [splashDisplay, changeSplashDisplay] = useState('flex');
   const [homeDisplay, changeHomeDisplay] = useState('flex');
   const [quizMenuDisplay, changeQuizMenuDisplay] = useState('none');
@@ -61,7 +60,7 @@ export default function App() {
   };
   // Go to the menu for statistics.
   function toStatsMenu() {
-    setHeader('Stats');
+    setHeader('Progress Tracker');
     hideAll();
     changeStatisticsDisplay('flex');
   };
@@ -201,10 +200,18 @@ export default function App() {
   // Stylesheet for navigation.
   const navigationStyles = StyleSheet.create({
     home: {
-      display: homeDisplay
+      display: homeDisplay,
+      width: '100%',
+      height: '90%',
+      position: 'absolute',
+      bottom: 0
     },
     quizzes: {
-      display: quizMenuDisplay
+      display: quizMenuDisplay,
+      width: '100%',
+      height: '90%',
+      position: 'absolute',
+      bottom: 0
     },
     tests: {
       display: testMenuDisplay
@@ -257,7 +264,7 @@ export default function App() {
       fontSize: 20
     },
     text: {
-      padding: '10dp',
+      padding: '10%',
       borderWidth: 3,
       borderColor: "#42adf5",
       borderRadius: 10,
@@ -331,6 +338,28 @@ export default function App() {
     }
   });
 
+  const headers = StyleSheet.create({
+    header: {
+      position: 'absolute',
+      top: 0,
+      height: '10%',
+      width: '100%',
+      alignItems: 'center',
+      backgroundColor: '#3A41C6',
+      flexDirection: 'row',
+      justifyContent: 'space-between'
+  },
+  headerText: {
+      color: 'white',
+      fontWeight: 'bold',
+      fontSize: 25
+  },
+  back: {
+      color: 'white',
+      fontSize: 60,
+      fontWeight: 'bold'
+  }
+  });
 
 
   return (
@@ -340,7 +369,11 @@ export default function App() {
       </View>
 
       {/* Header component. */}
-      <Header text={header} backButton={backButtonPressed} options={optionsPressed}></Header>
+      <View style={headers.header}>
+                <Text style={headers.back} onPress={backButtonPressed}> 🠔</Text>
+                <Text style={headers.headerText}>{header}</Text>
+                <Text style={headers.back} onPress={optionsPressed}>☰ </Text>
+      </View>
 
       {/* Options */}
       <View style={styles.options}>
@@ -350,26 +383,28 @@ export default function App() {
 
       {/* Default home page component. */}
       <View style={navigationStyles.home}>
-        <Text style={styles.topText}>Select a learning tool...</Text>
-        <NavigationButton text='Quizzes' onPress={toQuizMenu} />
-        <NavigationButton text='Tests' onPress={toTestMenu} />
-        <NavigationButton text='Stats' onPress={toStatsMenu} />
-        <NavigationButton text='About' onPress={toAboutPage} />
+        <NavigationButton text='Practice Quizzes' onPress={toQuizMenu} colour={'#3D3BBB'}/>
+        <NavigationButton text='Timed Tests' onPress={toTestMenu} colour={'#4634A7'}/>
+        <NavigationButton text='Progress Tracker' onPress={toStatsMenu} colour={'#4C2C96'}/>
+        <NavigationButton text='About' onPress={toAboutPage} colour={'#512888'}/>
       </View>
 
       {/* Menu for selecting what quiz you would like to do. */}
       <View style={navigationStyles.quizzes}>
-        <Text style={styles.topText}>Select a topic...</Text>
-        <NavigationButton text='Maths' onPress={function () {
+        <Text style={styles.topText}></Text>
+        <NavigationButton text='Maths' colour={'#3D3BBB'} onPress={function () {
           setHeader('Maths Quiz');
           changeQuizMenuDisplay('none');
           changeQuestionDisplay('flex');
         }}></NavigationButton>
-        <NavigationButton text='Verbal' onPress={function () {
+        <NavigationButton text='Verbal' colour={'#4634A7'} onPress={function () {
           setHeader('Verbal Quiz');
         }}></NavigationButton>
-        <NavigationButton text='Non-Verbal' onPress={function () {
+        <NavigationButton text='Non-Verbal' colour={'#4C2C96'} onPress={function () {
           setHeader('Non-Verbal Quiz');
+        }}></NavigationButton>
+        <NavigationButton text='Mistakes' colour={'#512888'} onPress={function () {
+          setHeader('Mistakes');
         }}></NavigationButton>
       </View>
       <View style={styles.quizContainer}>
@@ -408,7 +443,6 @@ export default function App() {
 
       {/* Menu for selecting what test you would like to do. */}
       <View style={navigationStyles.tests}>
-        <Text style={styles.topText}>Select a topic...</Text>
         <NavigationButton text='Maths' onPress={function () {
 
         }}></NavigationButton>
