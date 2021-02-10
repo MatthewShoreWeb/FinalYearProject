@@ -16,7 +16,7 @@ export default function App() {
   const [header, setHeader] = useState('Home');
   const [headerDisplay, changeHeaderDisplay] = useState('flex');
   const [splashDisplay, changeSplashDisplay] = useState('flex');
-  const [homeDisplay, changeHomeDisplay] = useState('none');
+  const [homeDisplay, changeHomeDisplay] = useState('flex');
   const [quizMenuDisplay, changeQuizMenuDisplay] = useState('none');
   const [testMenuDisplay, changeTestMenuDisplay] = useState('none');
   const [aboutDisplay, changeAboutDisplay] = useState('none');
@@ -138,32 +138,36 @@ export default function App() {
 
   // Calculates the user's accuracy during a quiz.
   function calculateAccuracy() {
-    let accuracy;
-    if (correct === 0) {
-      accuracy = 0;
-    } else {
-      if (correct - wrong === 0) {
-        accuracy = 50;
+    try {
+      let accuracy;
+      if (correct === 0) {
+        accuracy = 0;
+      } else {
+        if (correct - wrong === 0) {
+          accuracy = 50;
+        }
+        else {
+          accuracy = parseInt((correct / (correct + wrong + 1) || 1) * 100);
+        }
       }
-      else {
-        accuracy = parseInt((correct / (correct + wrong + 1) || 1) * 100);
+
+      if (accuracy > 100) {
+        accuracy = 100;
+      } else if (accuracy < 0) {
+        accuracy = 0;
       }
-    }
 
-    if (accuracy > 100) {
-      accuracy = 100;
-    } else if (accuracy < 0) {
-      accuracy = 0;
-    }
+      if (accuracy > 70) {
+        changeColour('green');
+      } else if (accuracy > 40) {
+        changeColour('orange');
+      } else {
+        changeColour('red');
+      }
+      return accuracy;
+    } catch (e) {
 
-    if (accuracy > 70) {
-      changeColour('green');
-    } else if (accuracy > 40) {
-      changeColour('orange');
-    } else {
-      changeColour('red');
     }
-    return accuracy;
   }
 
   function checkAnswer(question, answer) {
@@ -178,9 +182,10 @@ export default function App() {
     return question.correct === answer;
   }
 
+  // Stylesheet for splashscreen.
   const splashStyle = StyleSheet.create({
-    background: {
-      display: splashDisplay,
+    cpntainer: {
+      display: 'none',
       width: '100%',
       height: '100%',
       backgroundColor: '#1528bd'
@@ -193,28 +198,69 @@ export default function App() {
     }
   });
 
-  const navigationStyle = StyleSheet.create({
-
+  // Stylesheet for navigation.
+  const navigationStyles = StyleSheet.create({
+    home: {
+      display: homeDisplay
+    },
+    quizzes: {
+      display: quizMenuDisplay
+    },
+    tests: {
+      display: testMenuDisplay
+    }
   });
 
-  const quizStyle = StyleSheet.create({
-
-  });
-
-  const testStyle = StyleSheet.create({
-
-  });
-
-  const statisticsStyle = StyleSheet.create({
-
-  });
-
-  const aboutStyle = StyleSheet.create({
+  // Stylesheet for quizzes.
+  const quizStyles = StyleSheet.create({
     container: {
+     
+    },
+    correct: {
+      color: 'white',
+      fontWeight: 'bold',
+      backgroundColor: 'green',
+      width: '10%',
+      textAlign: 'center',
+      fontSize: 20
+    },
+    wrong: {
+      color: 'white',
+      fontWeight: 'bold',
+      backgroundColor: 'red',
+      width: '10%',
+      textAlign: 'center',
+      fontSize: 20
+    },
+  });
 
+  // Stylesheet for tests.
+  const testStyles = StyleSheet.create({
+    container: {
+      
+    }
+  });
+
+  // Stylesheet for statistics.
+  const statisticsStyles = StyleSheet.create({
+    container: {
+      display: displayStatistics
+    }
+  });
+
+  // Stylesheet for about page.
+  const aboutStyles = StyleSheet.create({
+    container: {
+      display: aboutDisplay,
+      fontFamily: 'openSans', 
+      margin: '20%',
+      fontSize: 20
     },
     text: {
-
+      padding: '10dp',
+      borderWidth: 3,
+      borderColor: "#42adf5",
+      borderRadius: 10,
     }
   });
 
@@ -237,52 +283,15 @@ export default function App() {
       position: 'absolute',
       bottom: 0,
     },
-    homeNav: {
-      display: homeDisplay
-    },
-    quizComponent: {
-      display: quizMenuDisplay
-    },
-    testComponent: {
-      display: testMenuDisplay
-    },
     questionCount: {
       fontWeight: 'bold',
       fontSize: 20,
       color: 'white',
     },
-    correct: {
-      color: 'white',
-      fontWeight: 'bold',
-      backgroundColor: 'green',
-      width: '10%',
-      textAlign: 'center',
-      fontSize: 20
-    },
-    wrong: {
-      color: 'white',
-      fontWeight: 'bold',
-      backgroundColor: 'red',
-      width: '10%',
-      textAlign: 'center',
-      fontSize: 20
-    },
     accuracy: {
       color: accuracyColour,
       fontWeight: 'bold',
       fontSize: 20
-    },
-    aboutComponent: {
-      fontFamily: 'openSans',
-      display: aboutDisplay,
-      margin: '20%',
-      fontSize: 20
-    },
-    aboutText: {
-      padding: '10dp',
-      borderWidth: 3,
-      borderColor: "#42adf5",
-      borderRadius: 10,
     },
     buttonContainer: {
       flexDirection: 'row',
@@ -319,9 +328,6 @@ export default function App() {
       display: multiChoiceQuestions,
       position: 'absolute',
       top: 0
-    },
-    statistics: {
-      display: displayStatistics
     }
   });
 
@@ -329,12 +335,12 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <View style={splashStyle.background} >
+      <View style={splashStyle.container} >
         <Text style={splashStyle.text}>Set4SuccessTuition</Text>
       </View>
 
       {/* Header component. */}
-      <Header text={header} style={styles.header} backButton={backButtonPressed} options={optionsPressed} headerStyle={{ display: headerDisplay }}></Header>
+      <Header text={header} backButton={backButtonPressed} options={optionsPressed}></Header>
 
       {/* Options */}
       <View style={styles.options}>
@@ -343,7 +349,7 @@ export default function App() {
       </View>
 
       {/* Default home page component. */}
-      <View style={styles.homeNav}>
+      <View style={navigationStyles.home}>
         <Text style={styles.topText}>Select a learning tool...</Text>
         <NavigationButton text='Quizzes' onPress={toQuizMenu} />
         <NavigationButton text='Tests' onPress={toTestMenu} />
@@ -352,7 +358,7 @@ export default function App() {
       </View>
 
       {/* Menu for selecting what quiz you would like to do. */}
-      <View style={styles.quizComponent}>
+      <View style={navigationStyles.quizzes}>
         <Text style={styles.topText}>Select a topic...</Text>
         <NavigationButton text='Maths' onPress={function () {
           setHeader('Maths Quiz');
@@ -401,7 +407,7 @@ export default function App() {
       </View>
 
       {/* Menu for selecting what test you would like to do. */}
-      <View style={styles.testComponent}>
+      <View style={navigationStyles.tests}>
         <Text style={styles.topText}>Select a topic...</Text>
         <NavigationButton text='Maths' onPress={function () {
 
@@ -415,15 +421,15 @@ export default function App() {
       </View>
 
       {/* Statistics */}
-      <View style={styles.statistics}>
+      <View style={statisticsStyles.container}>
         <DotGraph input={[2, 4, 6, 7]}></DotGraph>
       </View>
 
 
       {/* Component for the about section. */}
       {/* 'u2002' is the code for a bullet point, it is required to form an unordered list. */}
-      <View style={styles.aboutComponent}>
-        <Text style={styles.aboutText}>
+      <View style={aboutStyles.container}>
+        <Text style={aboutStyles.text}>
           Thank you for using our app. This app has several features you can use: {'\n'}
           <Text>{'\u2022'} You can do a quiz which will contain a random selection of questions to practice.</Text> {'\n'}
           <Text>{'\u2022'} You can also take tests on certain topics to test your knowledge. </Text> {'\n'}

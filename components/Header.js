@@ -3,15 +3,13 @@ import { StyleSheet, View, Text } from 'react-native';
 
 
 
-export default function Header({ text, backButton, options, headerStyle }) { 
+export default function Header({ text, backButton, options }) { 
     return (
-        <View style={headerStyle}>
             <View style={styles.header}>
                 <Text style={styles.back} onPress={backButton}> ◄</Text>
                 <Text style={styles.headerText}>{text}</Text>
                 <Text style={styles.back} onPress={options}>⚙ </Text>
             </View>
-        </View>
     )
 }
 
@@ -24,8 +22,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#42adf5',
         flexDirection: 'row',
-        justifyContent: 'space-between',
-        display: 'none'
+        justifyContent: 'space-between'
     },
     headerText: {
         color: 'white',
