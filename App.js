@@ -5,6 +5,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import NavigationButton from './components/NavigationButton';
 import QuizButton from './components/QuizButton';
 import DotGraph from './components/DotGraph';
+import TestTopicSelector from './components/TestTopicSelector';
 
 // Questions Test Data
 import testQuestions from './questions/testQuestions.json';
@@ -80,13 +81,14 @@ export default function App() {
         switch (header.toLowerCase()) {
           case 'quizzes':
           case 'tests':
-          case 'stats':
+          case 'progress tracker':
           case 'about':
             backToHome();
             break;
           case 'maths quiz':
           case 'verbal quiz':
           case 'non-verbal quiz':
+          case 'mistakes':
             toQuizMenu();
             break;
         };
@@ -204,9 +206,44 @@ export default function App() {
     } catch (e) { }
   };
 
+  const [testTopicTitle, changeTestTopicTitle] = useState('Maths');
+
+  function onLeftPress() {
+    try {
+      switch (testTopicTitle.toLowerCase()) {
+        case 'maths':
+          changeTestTopicTitle('Non-Verbal');
+          break;
+        case 'verbal':
+          changeTestTopicTitle('Maths');
+          break;
+        case 'non-verbal':
+          changeTestTopicTitle('Verbal');
+          break;
+      }
+    } catch (e) {}
+  };
+
+  function onRightPress() {
+    try {
+      switch (testTopicTitle.toLowerCase()) {
+        case 'maths':
+          changeTestTopicTitle('Verbal');
+          break;
+        case 'verbal':
+          changeTestTopicTitle('Non-Verbal');
+          break;
+        case 'non-verbal':
+          changeTestTopicTitle('Maths');
+          break;
+      }
+    } catch (e) {}
+  };
+
+
   // Stylesheet for splashscreen.
   const splashStyle = StyleSheet.create({
-    cpntainer: {
+    container: {
       display: 'none',
       width: '100%',
       height: '100%',
@@ -269,8 +306,12 @@ export default function App() {
 
   // Stylesheet for tests.
   const testStyles = StyleSheet.create({
-    container: {
-
+    selection: {
+      display: testMenuDisplay,
+      width: '100%',
+      height: '90%',
+      position: 'absolute',
+      bottom: 0
     }
   });
 
@@ -422,16 +463,16 @@ export default function App() {
           setHeader('Maths Quiz');
           changeQuizMenuDisplay('none');
           changeQuestionDisplay('flex');
-        }}></NavigationButton>
+        }} />
         <NavigationButton text='Verbal' explainText='Lorem ipsum dolor sit amet, consectetur.' colour={'#4634A7'} onPress={function () {
           setHeader('Verbal Quiz');
-        }}></NavigationButton>
+        }} />
         <NavigationButton text='Non-Verbal' explainText='Lorem ipsum dolor sit amet, consectetur' colour={'#4C2C96'} onPress={function () {
           setHeader('Non-Verbal Quiz');
-        }}></NavigationButton>
+        }} />
         <NavigationButton text='Mistakes' explainText='Practice the questions you have been having difficulty with.' colour={'#512888'} onPress={function () {
           setHeader('Mistakes');
-        }}></NavigationButton>
+        }} />
       </View>
       <View style={styles.quizContainer}>
 
@@ -465,17 +506,13 @@ export default function App() {
         </View>
       </View>
 
-      {/* Menu for selecting what test you would like to do. */}
-      <View style={navigationStyles.tests}>
-        <NavigationButton text='Maths' onPress={function () {
-
-        }}></NavigationButton>
-        <NavigationButton text='Verbal' onPress={function () {
-
-        }}></NavigationButton>
-        <NavigationButton text='Non-Verbal' onPress={function () {
-
-        }}></NavigationButton>
+      {/* Test selection */}
+      <View style={testStyles.selection}>
+        <TestTopicSelector text={testTopicTitle} leftPress={onLeftPress} rightPress={onRightPress}></TestTopicSelector>
+        <NavigationButton text={testTopicTitle + ' Test 1'} colour={'#3D3BBB'} />
+        <NavigationButton text={testTopicTitle + ' Test 2'} colour={'#4634A7'} />
+        <NavigationButton text={testTopicTitle + ' Test 3'} colour={'#4C2C96'} />
+        <NavigationButton text={testTopicTitle + ' Test 4'} colour={'#512888'} />
       </View>
 
       {/* Statistics */}

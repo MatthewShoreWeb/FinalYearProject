@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 
-export default function NavigationButton({ text, explainText, onPress, colour }) {
+export default function NavigationButton({ text, explainText, onPress, colour, previousScore }) {
 
     const styles = StyleSheet.create({
         button: {
@@ -29,6 +29,7 @@ export default function NavigationButton({ text, explainText, onPress, colour })
             <View>
                 <Text style={styles.buttonText}>{text}</Text>
                 <Text style={styles.explainText}>{explainText}</Text>
+                <Text>{previousScore}</Text>
             </View>
         </TouchableOpacity>
     )

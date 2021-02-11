@@ -28,8 +28,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'lightgrey'
     },
     data: {
-        width: '10dp',
-        height: '10dp',
+        width: '10%',
+        height: '10%',
         backgroundColor: 'blue'
     }
 })
