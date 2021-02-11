@@ -1,35 +1,31 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View, Text, Dimensions } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 
-// Viewport width and height.
-const vw = Dimensions.get('window').width;
-const vh = Dimensions.get('window').height;
 
-export default function QuizButton({ text, onPress }) {
+export default function QuizButton({ text, onPress, colour }) {
+
+    const styles = StyleSheet.create({
+        button: {
+            justifyContent: 'center',
+            backgroundColor: colour,
+            height: '20%',
+            width: '100%'
+        },
+        buttonText: {
+            color: 'white',
+            fontWeight: 'bold',
+            textTransform: 'uppercase',
+            fontSize: 16,
+            textAlign: 'center'
+        }
+    });
+
     return (
-        <TouchableOpacity onPress={onPress}>
-            <View style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={onPress}>
+            <View>
                 <Text style={styles.buttonText}>{ text }</Text>
             </View>
         </TouchableOpacity>
     )
 }
 
-const styles = StyleSheet.create({
-    button: {
-        justifyContent: 'center',
-        backgroundColor: '#42adf5',
-        height: vh * 0.1,
-        width: vw,
-        borderTopWidth: 4.5,
-        borderColor: '#30106B',
-    },
-    buttonText: {
-        color: 'white',
-        fontWeight: 'bold',
-        textTransform: 'uppercase',
-        fontSize: 16,
-        textAlign: 'center'
-    }
-        
-})

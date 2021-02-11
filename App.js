@@ -123,6 +123,20 @@ export default function App() {
     } catch (e) { }
   };
 
+  const [questionColour1, changeColour1] = useState('#3A41C6');
+  const [questionColour2, changeColour2] = useState('#3D3BBB');
+  const [questionColour3, changeColour3] = useState('#4634A7');
+  const [questionColour4, changeColour4] = useState('#4C2C96');
+  const [questionColour5, changeColour5] = useState('#512888');
+
+  function resetColours () {
+      changeColour1('#3A41C6');
+      changeColour2('#3D3BBB');
+      changeColour3('#4634A7');
+      changeColour4('#4C2C96');
+      changeColour5('#512888');
+  };
+
   // Quiz/Test Functionality.
   let loadQuestions = function () {
     try {
@@ -141,7 +155,7 @@ export default function App() {
   let [correct, changeCorrect] = useState(0);
   let [wrong, changeWrong] = useState(0);
 
-  // Calculates the user's accuracy during a quiz.
+  // Calculates the user's accuracy during a test.
   function calculateAccuracy() {
     try {
       let accuracy;
@@ -154,13 +168,13 @@ export default function App() {
         else {
           accuracy = parseInt((correct / (correct + wrong + 1) || 1) * 100);
         }
-      }
+      };
 
       if (accuracy > 100) {
         accuracy = 100;
       } else if (accuracy < 0) {
         accuracy = 0;
-      }
+      };
 
       if (accuracy > 70) {
         changeColour('green');
@@ -170,22 +184,25 @@ export default function App() {
         changeColour('red');
       }
       return accuracy;
-    } catch (e) {
-
-    }
-  }
+    } catch (e) { }
+  };
 
   function checkAnswer(question, answer) {
-    if (question.correct === answer) {
-      changeCorrect(correct + 1);
-      changeCounter(questionCounter + 1);
-      changeQuestion(loadQuestions());
-    } else {
-      changeWrong(wrong + 1);
-    }
-    changeAccuracy(calculateAccuracy());
-    return question.correct === answer;
-  }
+    try {
+      if (question.correct === answer) {
+        changeCorrect(correct + 1);
+        changeCounter(questionCounter + 1);
+        setTimeout(function () {
+          resetColours();
+          changeQuestion(loadQuestions());
+        }, 1500);        
+      } else {
+        changeWrong(wrong + 1);
+      }
+      changeAccuracy(calculateAccuracy());
+      return question.correct === answer;
+    } catch (e) { }
+  };
 
   // Stylesheet for splashscreen.
   const splashStyle = StyleSheet.create({
@@ -227,7 +244,10 @@ export default function App() {
   // Stylesheet for quizzes.
   const quizStyles = StyleSheet.create({
     container: {
-
+      width: '100%',
+      height: '50%',
+      position: 'absolute',
+      bottom: 0
     },
     correct: {
       color: 'white',
@@ -426,24 +446,22 @@ export default function App() {
           <Text style={{ fontWeight: 'bold', fontSize: 30, textAlign: 'center' }}>{question.description}</Text>
         </View>
 
-        <View style={styles.multiChoiceQuestions}>
-          <View style={styles.testbuttons}>
-            <QuizButton text={'A)  ' + question.A} onPress={function () {
-              checkAnswer(question, 'A');
-            }}></QuizButton>
-            <QuizButton text={'B)  ' + question.B} onPress={function () {
-              checkAnswer(question, 'B');
-            }}></QuizButton>
-            <QuizButton text={'C)  ' + question.C} onPress={function () {
-              checkAnswer(question, 'C');
-            }}></QuizButton>
-            <QuizButton text={'D)  ' + question.D} onPress={function () {
-              checkAnswer(question, 'D',);
-            }}></QuizButton>
-            <QuizButton text={'E)  ' + question.E} onPress={function () {
-              checkAnswer(question, 'E',);
-            }}></QuizButton>
-          </View>
+        <View style={quizStyles.container}>
+          <QuizButton text={'A)  ' + question.A} colour={questionColour1} onPress={function () {
+            checkAnswer(question, 'A') ? changeColour1('#95F985') : changeColour1('#E45045');
+          }}></QuizButton>
+          <QuizButton text={'B)  ' + question.B} colour={questionColour2} onPress={function () {
+            checkAnswer(question, 'B') ? changeColour2('#4DED30') : changeColour2('#D74136');
+          }}></QuizButton>
+          <QuizButton text={'C)  ' + question.C} colour={questionColour3} onPress={function () {
+            checkAnswer(question, 'C') ? changeColour3('#26D701') : changeColour3('#C93128');
+          }}></QuizButton>
+          <QuizButton text={'D)  ' + question.D} colour={questionColour4} onPress={function () {
+            checkAnswer(question, 'D') ? changeColour4('#00C301') : changeColour4('#BC1E19');
+          }}></QuizButton>
+          <QuizButton text={'E)  ' + question.E} colour={questionColour5} onPress={function () {
+            checkAnswer(question, 'E') ? changeColour5('#00AB08') : changeColour5('#AE0009');
+          }}></QuizButton>
         </View>
       </View>
 
