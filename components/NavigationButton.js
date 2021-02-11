@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 
-export default function NavigationButton({ text, onPress, colour }) {
-
+export default function NavigationButton({ text, explainText, onPress, colour }) {
 
     const styles = StyleSheet.create({
         button: {
@@ -19,7 +18,9 @@ export default function NavigationButton({ text, onPress, colour }) {
             textAlign: 'center'
         },
         explainText: {
-    
+            color: 'white',
+            fontSize: 12,
+            textAlign: 'center'
         }
     });
     
@@ -27,7 +28,7 @@ export default function NavigationButton({ text, onPress, colour }) {
         <TouchableOpacity style={styles.button} onPress={onPress}>
             <View>
                 <Text style={styles.buttonText}>{text}</Text>
-                <Text style={styles.explainText}></Text>
+                <Text style={styles.explainText}>{explainText}</Text>
             </View>
         </TouchableOpacity>
     )
