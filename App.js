@@ -487,6 +487,9 @@ export default function App() {
           <Text style={{ fontWeight: 'bold', fontSize: 30, textAlign: 'center' }}>{question.description}</Text>
         </View>
 
+        <View onPress={function() {
+
+        }}><Text>Skip Question</Text></View>
         <View style={quizStyles.container}>
           <QuizButton text={'A)  ' + question.A} colour={questionColour1} onPress={function () {
             checkAnswer(question, 'A') ? changeColour1('#95F985') : changeColour1('#E45045');
