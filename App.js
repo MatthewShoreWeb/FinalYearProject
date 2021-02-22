@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 
 // App components import.
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import NavigationButton from './components/NavigationButton';
 import QuizButton from './components/QuizButton';
 import DotGraph from './components/DotGraph';
 import SubHeadingSelector from './components/SubHeadingSelector';
 import Popup from './components/Popup';
+import ColourButton from './components/ColourSchemeButton';
 
 
 // Questions Test Data
@@ -245,7 +246,6 @@ export default function App() {
   const [displaySkipPopup, changeSkipPopup] = useState('none');
 
   function displayPopup() {
-    console.log('hlelo');
     changeSkipPopup('flex');
   };
 
@@ -327,6 +327,42 @@ export default function App() {
       fontWeight: 'bold',
       fontSize: 40,
       textAlign: 'center'
+    }
+  });
+
+  const optionStyles = StyleSheet.create({
+    container: {
+      width: '100%',
+      height: '90%',
+      bottom: 0,
+      position: 'absolute',
+      display: displayOptions
+    },
+    subheading: {
+      fontWeight: 'bold',
+      fontSize: 30,
+      textAlign: 'center',
+      marginBottom: '5%'
+    },
+    colourContainer: {
+      width: '100%',
+      height: '10%',
+      flexDirection: 'row',
+      justifyContent: 'space-evenly'
+    },
+    eraseDataButton: {
+      backgroundColor: '#ff1447',
+      height: '10%',
+      width: '50%',
+      marginHorizontal: '25%',
+      borderRadius: 40
+    },
+    eraseText: {
+      color: 'white',
+      fontWeight: 'bold',
+      fontSize: 20,
+      margin: 'auto'
+     
     }
   });
 
@@ -523,9 +559,19 @@ export default function App() {
       </View>
 
       {/* Options */}
-      <View style={styles.options}>
-        <Text style={{ fontWeight: 'bold' }}>Dark Theme</Text>
-        <Text style={{ color: 'red', fontWeight: 'bold' }}>Erase Stored Data</Text>
+      <View style={optionStyles.container}>
+        <Text style={optionStyles.subheading}>Colour Scheme</Text>
+        <View style={optionStyles.colourContainer}>
+          <ColourButton colour='#fcba03' />
+          <ColourButton colour='#0388fc' />
+          <ColourButton colour='#03fc39' />
+          <ColourButton colour='pink' />
+          <ColourButton colour='black' />
+        </View>
+
+        <TouchableOpacity style={optionStyles.eraseDataButton}>
+            <Text style={optionStyles.eraseText}>Erase Stored Data</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Default home page component. */}
@@ -555,13 +601,6 @@ export default function App() {
         }} />
       </View>
       <View style={styles.quizContainer}>
-
-        {/* <View style={styles.questionCountHeader}>
-          <Text style={styles.correct}> {correct} </Text>
-          <Text style={styles.questionCount}> Question {questionCounter}/50</Text>
-          <Text style={styles.accuracy}> Accuracy {accuracy}%</Text>
-          <Text style={styles.wrong}> {wrong} </Text>
-        </View> */}
 
         <View style={styles.questionDescription}>
           <Text style={{ fontWeight: 'bold', fontSize: 30, textAlign: 'center' }}>{question.description}</Text>
@@ -608,8 +647,6 @@ export default function App() {
       <View style={aboutStyles.container}>
       <SubHeadingSelector text={aboutHeader} leftPress={aboutLeftPress} rightPress={aboutRightPress}></SubHeadingSelector>
         <Text style={aboutStyles.text}>{aboutText}</Text>
-      
-      
       </View>
     </View>
   );
