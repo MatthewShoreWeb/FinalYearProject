@@ -5,7 +5,9 @@ import { StyleSheet, Text, View } from 'react-native';
 import NavigationButton from './components/NavigationButton';
 import QuizButton from './components/QuizButton';
 import DotGraph from './components/DotGraph';
-import TestTopicSelector from './components/TestTopicSelector';
+import SubHeadingSelector from './components/SubHeadingSelector';
+import Popup from './components/Popup';
+
 
 // Questions Test Data
 import testQuestions from './questions/testQuestions.json';
@@ -131,12 +133,12 @@ export default function App() {
   const [questionColour4, changeColour4] = useState('#4C2C96');
   const [questionColour5, changeColour5] = useState('#512888');
 
-  function resetColours () {
-      changeColour1('#3A41C6');
-      changeColour2('#3D3BBB');
-      changeColour3('#4634A7');
-      changeColour4('#4C2C96');
-      changeColour5('#512888');
+  function resetColours() {
+    changeColour1('#3A41C6');
+    changeColour2('#3D3BBB');
+    changeColour3('#4634A7');
+    changeColour4('#4C2C96');
+    changeColour5('#512888');
   };
 
   // Quiz/Test Functionality.
@@ -197,7 +199,7 @@ export default function App() {
         setTimeout(function () {
           resetColours();
           changeQuestion(loadQuestions());
-        }, 1500);        
+        }, 1500);
       } else {
         changeWrong(wrong + 1);
       }
@@ -221,7 +223,7 @@ export default function App() {
           changeTestTopicTitle('Verbal');
           break;
       }
-    } catch (e) {}
+    } catch (e) { }
   };
 
   function onRightPress() {
@@ -237,9 +239,80 @@ export default function App() {
           changeTestTopicTitle('Maths');
           break;
       }
-    } catch (e) {}
+    } catch (e) { }
   };
 
+  const [displaySkipPopup, changeSkipPopup] = useState('none');
+
+  function displayPopup() {
+    console.log('hlelo');
+    changeSkipPopup('flex');
+  };
+
+
+  // About page functionality.
+  // Help text.
+  const aboutGeneralText = 'Hello, thank you for using this app. This app is designed to help individuals study material found in the 11+ or similar level.';
+  const aboutQuizText = 'You can do a quiz in a chosen subject by selecting the quizzes option on the main menu. ' +
+  'Quizzes are designed to allow for casual practice at your own pace. \n The results of quizzes are not recorded however, ' +
+  'mistakes you make here will go into a personalised quiz which you can take to practice the questions you have previously got wrong.'
+  const aboutTestText = 'You can also do tests by selecting the tests option in the main menu. ' + 
+  'Tests are a series of 50 set questions which you will recieve marked feedback for.' +
+  'The results of tests are displayed on the test selection menu and in the progress tracker.'
+  const aboutProgressTrackerText = 'The progress tracker is a tool which allows you to track your performance.' + 
+  'The results from the tests you have done are displayed here in graphs so you can clearly see how you have been improving.'
+
+  // State updates.
+  const [aboutHeader, changeAboutHeader] = useState('General');
+  const [aboutText, changeAboutText] = useState(aboutGeneralText);
+
+  // Update the about page for a left arrow press.
+  function aboutLeftPress () {
+    try {
+      switch (aboutHeader.toLowerCase()) {
+        case 'general':
+          changeAboutHeader('About Progress Tracker');
+          changeAboutText(aboutProgressTrackerText);
+          break;
+        case 'about quizzes':
+          changeAboutHeader('General');
+          changeAboutText(aboutGeneralText);
+          break;
+        case 'about tests':
+          changeAboutHeader('About Quizzes');
+          changeAboutText(aboutQuizText);
+          break;
+        case 'about progress tracker':
+          changeAboutHeader('About Tests');
+          changeAboutText(aboutTestText);
+          break;
+      }
+    } catch (e) { }
+  };
+
+  // Update the about page for a right arrow press.
+  function aboutRightPress () {
+    try {
+      switch (aboutHeader.toLowerCase()) {
+        case 'general':
+          changeAboutHeader('About Quizzes');
+          changeAboutText(aboutQuizText);
+          break;
+        case 'about quizzes':
+          changeAboutHeader('About Tests');
+          changeAboutText(aboutTestText);
+          break;
+        case 'about tests':
+          changeAboutHeader('About Progress Tracker');
+          changeAboutText(aboutProgressTrackerText);
+          break;
+        case 'about progress tracker':
+          changeAboutHeader('General');
+          changeAboutText(aboutGeneralText);
+          break;
+      }
+    } catch (e) { }
+  };
 
   // Stylesheet for splashscreen.
   const splashStyle = StyleSheet.create({
@@ -326,22 +399,29 @@ export default function App() {
   const aboutStyles = StyleSheet.create({
     container: {
       display: aboutDisplay,
-      fontFamily: 'openSans',
-      margin: '20%',
-      fontSize: 20
+      width: '100%',
+      height: '90%',
+      position: 'absolute',
+      bottom: 0
     },
     text: {
-      padding: '10%',
-      borderWidth: 3,
-      borderColor: "#42adf5",
-      borderRadius: 10,
+      fontFamily: 'Verdana',
+      fontSize: 20,
+      fontWeight: 'bold',
+      paddingHorizontal: '7.5%'
     }
   });
 
 
   const styles = StyleSheet.create({
+    test: {
+      backgroundColor: 'red',
+      width: '20%',
+      height: '10%'
+    },
     container: {
-      fontFamily: 'openSans',
+      fontFamily: 'Monospace',
+      fontSize: 100,
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
@@ -487,9 +567,8 @@ export default function App() {
           <Text style={{ fontWeight: 'bold', fontSize: 30, textAlign: 'center' }}>{question.description}</Text>
         </View>
 
-        <View onPress={function() {
-
-        }}><Text>Skip Question</Text></View>
+        <Popup display={displaySkipPopup} text='Are you sure you want to skip the question?' />
+        <View onPress={displayPopup} style={styles.test} text='SKIPPP'></View>
         <View style={quizStyles.container}>
           <QuizButton text={'A)  ' + question.A} colour={questionColour1} onPress={function () {
             checkAnswer(question, 'A') ? changeColour1('#95F985') : changeColour1('#E45045');
@@ -511,7 +590,7 @@ export default function App() {
 
       {/* Test selection */}
       <View style={testStyles.selection}>
-        <TestTopicSelector text={testTopicTitle} leftPress={onLeftPress} rightPress={onRightPress}></TestTopicSelector>
+        <SubHeadingSelector text={testTopicTitle} leftPress={onLeftPress} rightPress={onRightPress}></SubHeadingSelector>
         <NavigationButton text={testTopicTitle + ' Test 1'} colour={'#3D3BBB'} />
         <NavigationButton text={testTopicTitle + ' Test 2'} colour={'#4634A7'} />
         <NavigationButton text={testTopicTitle + ' Test 3'} colour={'#4C2C96'} />
@@ -527,12 +606,10 @@ export default function App() {
       {/* Component for the about section. */}
       {/* 'u2002' is the code for a bullet point, it is required to form an unordered list. */}
       <View style={aboutStyles.container}>
-        <Text style={aboutStyles.text}>
-          Thank you for using our app. This app has several features you can use: {'\n'}
-          <Text>{'\u2022'} You can do a quiz which will contain a random selection of questions to practice.</Text> {'\n'}
-          <Text>{'\u2022'} You can also take tests on certain topics to test your knowledge. </Text> {'\n'}
-          <Text>{'\u2022'} You can see the results of the tests you do in the statistics page. </Text> {'\n'}
-        </Text>
+      <SubHeadingSelector text={aboutHeader} leftPress={aboutLeftPress} rightPress={aboutRightPress}></SubHeadingSelector>
+        <Text style={aboutStyles.text}>{aboutText}</Text>
+      
+      
       </View>
     </View>
   );
