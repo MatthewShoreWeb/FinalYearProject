@@ -27,7 +27,6 @@ export default function App() {
   const [displayOptions, changeOptionsDisplay] = useState('none');
   const [displayStatistics, changeStatisticsDisplay] = useState('none');
 
-
   // setTimeout(function () {
   //   changeSplashDisplay('none');
   //   changeHomeDisplay('flex');
@@ -75,11 +74,22 @@ export default function App() {
     changeAboutDisplay('flex');
   };
 
+  function toTests(testHeader) {
+    setHeader(testHeader);
+    hideAll();
+    changeQuestionDisplay('flex');
+    setInterval(function () {
+      updateTimer();
+    }, 1000)
+  };
+
   // Works out what page to go to when the back button is pressed.
   function backButtonPressed() {
     try {
       if (displayOptions === 'flex') {
         optionsPressed();
+      } else if (header.includes(' Test ')) {
+        toTestMenu();
       } else {
         switch (header.toLowerCase()) {
           case 'quizzes':
@@ -93,6 +103,9 @@ export default function App() {
           case 'non-verbal quiz':
           case 'mistakes':
             toQuizMenu();
+            break;
+          case header.includes('Test '):
+            toTestMenu();
             break;
         };
       }
@@ -250,24 +263,38 @@ export default function App() {
   };
 
 
+  // Test page functionality.
+  const [timer, changeTimer] = useState(1000);
+
+  function updateTimer() {
+    try {
+      if (timer > 0) {
+        changeTimer(timer - 1);
+      };
+    } catch (e) { }
+  };
+
+
+
+
   // About page functionality.
   // Help text.
   const aboutGeneralText = 'Hello, thank you for using this app. This app is designed to help individuals study material found in the 11+ or similar level.';
   const aboutQuizText = 'You can do a quiz in a chosen subject by selecting the quizzes option on the main menu. ' +
-  'Quizzes are designed to allow for casual practice at your own pace. \n The results of quizzes are not recorded however, ' +
-  'mistakes you make here will go into a personalised quiz which you can take to practice the questions you have previously got wrong.'
-  const aboutTestText = 'You can also do tests by selecting the tests option in the main menu. ' + 
-  'Tests are a series of 50 set questions which you will recieve marked feedback for.' +
-  'The results of tests are displayed on the test selection menu and in the progress tracker.'
-  const aboutProgressTrackerText = 'The progress tracker is a tool which allows you to track your performance.' + 
-  'The results from the tests you have done are displayed here in graphs so you can clearly see how you have been improving.'
+    'Quizzes are designed to allow for casual practice at your own pace. \n The results of quizzes are not recorded however, ' +
+    'mistakes you make here will go into a personalised quiz which you can take to practice the questions you have previously got wrong.'
+  const aboutTestText = 'You can also do tests by selecting the tests option in the main menu. ' +
+    'Tests are a series of 50 set questions which you will recieve marked feedback for.' +
+    'The results of tests are displayed on the test selection menu and in the progress tracker.'
+  const aboutProgressTrackerText = 'The progress tracker is a tool which allows you to track your performance.' +
+    'The results from the tests you have done are displayed here in graphs so you can clearly see how you have been improving.'
 
   // State updates.
   const [aboutHeader, changeAboutHeader] = useState('General');
   const [aboutText, changeAboutText] = useState(aboutGeneralText);
 
   // Update the about page for a left arrow press.
-  function aboutLeftPress () {
+  function aboutLeftPress() {
     try {
       switch (aboutHeader.toLowerCase()) {
         case 'general':
@@ -291,7 +318,7 @@ export default function App() {
   };
 
   // Update the about page for a right arrow press.
-  function aboutRightPress () {
+  function aboutRightPress() {
     try {
       switch (aboutHeader.toLowerCase()) {
         case 'general':
@@ -362,7 +389,6 @@ export default function App() {
       fontWeight: 'bold',
       fontSize: 20,
       margin: 'auto'
-     
     }
   });
 
@@ -394,23 +420,7 @@ export default function App() {
       height: '50%',
       position: 'absolute',
       bottom: 0
-    },
-    correct: {
-      color: 'white',
-      fontWeight: 'bold',
-      backgroundColor: 'green',
-      width: '10%',
-      textAlign: 'center',
-      fontSize: 20
-    },
-    wrong: {
-      color: 'white',
-      fontWeight: 'bold',
-      backgroundColor: 'red',
-      width: '10%',
-      textAlign: 'center',
-      fontSize: 20
-    },
+    }
   });
 
   // Stylesheet for tests.
@@ -419,6 +429,12 @@ export default function App() {
       display: testMenuDisplay,
       width: '100%',
       height: '90%',
+      position: 'absolute',
+      bottom: 0
+    },
+    questions: {
+      width: '100%',
+      height: '50%',
       position: 'absolute',
       bottom: 0
     }
@@ -570,7 +586,7 @@ export default function App() {
         </View>
 
         <TouchableOpacity style={optionStyles.eraseDataButton}>
-            <Text style={optionStyles.eraseText}>Erase Stored Data</Text>
+          <Text style={optionStyles.eraseText}>Erase Stored Data</Text>
         </TouchableOpacity>
       </View>
 
@@ -606,8 +622,8 @@ export default function App() {
           <Text style={{ fontWeight: 'bold', fontSize: 30, textAlign: 'center' }}>{question.description}</Text>
         </View>
 
-        <Popup display={displaySkipPopup} text='Are you sure you want to skip the question?' />
-        <View onPress={displayPopup} style={styles.test} text='SKIPPP'></View>
+        {/* <Popup display={displaySkipPopup} text='Are you sure you want to skip the question?' />
+        <View onPress={displayPopup} style={styles.test} text='SKIPPP'></View> */}
         <View style={quizStyles.container}>
           <QuizButton text={'A)  ' + question.A} colour={questionColour1} onPress={function () {
             checkAnswer(question, 'A') ? changeColour1('#95F985') : changeColour1('#E45045');
@@ -630,10 +646,49 @@ export default function App() {
       {/* Test selection */}
       <View style={testStyles.selection}>
         <SubHeadingSelector text={testTopicTitle} leftPress={onLeftPress} rightPress={onRightPress}></SubHeadingSelector>
-        <NavigationButton text={testTopicTitle + ' Test 1'} colour={'#3D3BBB'} />
-        <NavigationButton text={testTopicTitle + ' Test 2'} colour={'#4634A7'} />
-        <NavigationButton text={testTopicTitle + ' Test 3'} colour={'#4C2C96'} />
-        <NavigationButton text={testTopicTitle + ' Test 4'} colour={'#512888'} />
+        <NavigationButton text={testTopicTitle + ' Test 1'} colour={'#3D3BBB'} onPress={function () {
+          toTests(testTopicTitle + ' Test 1');
+        }} />
+        <NavigationButton text={testTopicTitle + ' Test 2'} colour={'#4634A7'} onPress={function () {
+          toTests(testTopicTitle + ' Test 2');
+        }} />
+        <NavigationButton text={testTopicTitle + ' Test 3'} colour={'#4C2C96'} onPress={function () {
+          toTests(testTopicTitle + ' Test 3');
+        }} />
+        <NavigationButton text={testTopicTitle + ' Test 4'} colour={'#512888'} onPress={function () {
+          toTests(testTopicTitle + ' Test 4');
+        }} />
+      </View>
+
+      {/* TODO delete repeated components => more efficient */}
+
+      {/* Test component */}
+      <View style={testStyles.container}>
+        <View>
+          <Text>{timer}</Text>
+        </View>
+
+        <View style={styles.questionDescription}>
+          <Text style={{ fontWeight: 'bold', fontSize: 30, textAlign: 'center' }}>{question.description}</Text>
+        </View>
+
+
+        <QuizButton text={'A)  ' + question.A} colour={questionColour1} onPress={function () {
+          checkAnswer(question, 'A') ? changeColour1('#95F985') : changeColour1('#E45045');
+        }}></QuizButton>
+        <QuizButton text={'B)  ' + question.B} colour={questionColour2} onPress={function () {
+          checkAnswer(question, 'B') ? changeColour2('#4DED30') : changeColour2('#D74136');
+        }}></QuizButton>
+        <QuizButton text={'C)  ' + question.C} colour={questionColour3} onPress={function () {
+          checkAnswer(question, 'C') ? changeColour3('#26D701') : changeColour3('#C93128');
+        }}></QuizButton>
+        <QuizButton text={'D)  ' + question.D} colour={questionColour4} onPress={function () {
+          checkAnswer(question, 'D') ? changeColour4('#00C301') : changeColour4('#BC1E19');
+        }}></QuizButton>
+        <QuizButton text={'E)  ' + question.E} colour={questionColour5} onPress={function () {
+          checkAnswer(question, 'E') ? changeColour5('#00AB08') : changeColour5('#AE0009');
+        }}></QuizButton>
+
       </View>
 
       {/* Statistics */}
@@ -645,7 +700,7 @@ export default function App() {
       {/* Component for the about section. */}
       {/* 'u2002' is the code for a bullet point, it is required to form an unordered list. */}
       <View style={aboutStyles.container}>
-      <SubHeadingSelector text={aboutHeader} leftPress={aboutLeftPress} rightPress={aboutRightPress}></SubHeadingSelector>
+        <SubHeadingSelector text={aboutHeader} leftPress={aboutLeftPress} rightPress={aboutRightPress}></SubHeadingSelector>
         <Text style={aboutStyles.text}>{aboutText}</Text>
       </View>
     </View>
