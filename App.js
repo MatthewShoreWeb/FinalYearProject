@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 // App components import.
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import NavigationButton from './components/NavigationButton';
 import QuizButton from './components/QuizButton';
 import DotGraph from './components/DotGraph';
@@ -26,6 +26,7 @@ export default function App() {
   const [multiChoiceQuestions, changeQuestionDisplay] = useState('none');
   const [displayOptions, changeOptionsDisplay] = useState('none');
   const [displayStatistics, changeStatisticsDisplay] = useState('none');
+  const [displayTest, changeTestDisplay] = useState('none');
 
   // setTimeout(function () {
   //   changeSplashDisplay('none');
@@ -42,6 +43,7 @@ export default function App() {
     changeQuestionDisplay('none');
     changeHomeDisplay('none');
     changeStatisticsDisplay('none');
+    changeTestDisplay('none');
   };
   // Return to the home page.
   function backToHome() {
@@ -77,10 +79,8 @@ export default function App() {
   function toTests(testHeader) {
     setHeader(testHeader);
     hideAll();
-    changeQuestionDisplay('flex');
-    setInterval(function () {
-      updateTimer();
-    }, 1000)
+    changeTestDisplay('flex');
+    testStarted();
   };
 
   // Works out what page to go to when the back button is pressed.
@@ -167,13 +167,8 @@ export default function App() {
 
   const [question, changeQuestion] = useState(loadQuestions());
 
-  let [questionCounter, changeCounter] = useState(1);
-  let [accuracy, changeAccuracy] = useState(0);
-  let [accuracyColour, changeColour] = useState('red');
-  let [correct, changeCorrect] = useState(0);
-  let [wrong, changeWrong] = useState(0);
-
   // Calculates the user's accuracy during a test.
+  // Needs changing later.
   function calculateAccuracy() {
     try {
       let accuracy;
@@ -205,19 +200,25 @@ export default function App() {
     } catch (e) { }
   };
 
-  function checkAnswer(question, answer) {
+  function checkAnswer(question, answer, test) {
     try {
-      if (question.correct === answer) {
-        changeCorrect(correct + 1);
-        changeCounter(questionCounter + 1);
+      // For a test we want to move to the next question regarless of if the answer is irhgt.
+      if (test) {
         setTimeout(function () {
           resetColours();
           changeQuestion(loadQuestions());
-        }, 1500);
+          // Only tests have question numbers.
+          changeQuestionNumber(questionNumber + 1)
+        }, 1000);
       } else {
-        changeWrong(wrong + 1);
+        // For a quiz we want to move to the next question only if the answer is right.
+        if (question.correct === answer) {
+          setTimeout(function () {
+            resetColours();
+            changeQuestion(loadQuestions());
+          }, 1000);
+        }
       }
-      changeAccuracy(calculateAccuracy());
       return question.correct === answer;
     } catch (e) { }
   };
@@ -262,20 +263,24 @@ export default function App() {
     changeSkipPopup('flex');
   };
 
-
   // Test page functionality.
-  const [timer, changeTimer] = useState(1000);
+  // Timer state set initially to 1 hour.
+  const [timerState, changeTimer] = useState(new Date(3600 * 1000).toISOString().substr(11, 8));
+  const [questionNumber, changeQuestionNumber] = useState(1);
 
-  function updateTimer() {
-    try {
-      if (timer > 0) {
-        changeTimer(timer - 1);
-      };
-    } catch (e) { }
+  function testStarted() {
+    // Makes the timer tick at the right speed.
+    let timerVariable = 3600;
+    setInterval(function () {
+      timerVariable--;
+      changeTimer(new Date(timerVariable * 1000).toISOString().substr(11, 8));
+    }, 1000);
   };
 
+  // For when a test is exited or completed.
+  function testComplete() {
 
-
+  };
 
   // About page functionality.
   // Help text.
@@ -432,11 +437,31 @@ export default function App() {
       position: 'absolute',
       bottom: 0
     },
-    questions: {
+    questionsContainer: {
+      display: displayTest,
       width: '100%',
-      height: '50%',
+      height: '90%',
       position: 'absolute',
       bottom: 0
+    },
+    secondaryHeader: {
+      width: '100%',
+      height: '6%',
+      backgroundColor: 'purple',
+      flexDirection: 'row',
+      justifyContent: 'space-between'
+    },
+    secondaryHeaderText: {
+      color: 'white',
+      fontWeight: 'bold',
+      fontSize: 25,
+      paddingHorizontal: 10
+    },
+    questions: {
+      height: '50%',
+      width: '100%',
+      bottom: 0,
+      position: 'absolute'
     }
   });
 
@@ -488,16 +513,6 @@ export default function App() {
       height: '90%',
       position: 'absolute',
       bottom: 0,
-    },
-    questionCount: {
-      fontWeight: 'bold',
-      fontSize: 20,
-      color: 'white',
-    },
-    accuracy: {
-      color: accuracyColour,
-      fontWeight: 'bold',
-      fontSize: 20
     },
     buttonContainer: {
       flexDirection: 'row',
@@ -663,32 +678,30 @@ export default function App() {
       {/* TODO delete repeated components => more efficient */}
 
       {/* Test component */}
-      <View style={testStyles.container}>
-        <View>
-          <Text>{timer}</Text>
+      <View style={testStyles.questionsContainer}>
+        <View style={testStyles.secondaryHeader}>
+          <Text style={testStyles.secondaryHeaderText}>Question {questionNumber}/50 </Text>
+          <Text style={testStyles.secondaryHeaderText}>{timerState}</Text>
         </View>
 
-        <View style={styles.questionDescription}>
-          <Text style={{ fontWeight: 'bold', fontSize: 30, textAlign: 'center' }}>{question.description}</Text>
+        <Text style={{ fontWeight: 'bold', fontSize: 30, textAlign: 'center' }}>{question.description}</Text>
+        <View style={testStyles.questions}>
+          <QuizButton text={'A)  ' + question.A} colour={questionColour1} onPress={function () {
+            checkAnswer(question, 'A', true) ? changeColour1('#95F985') : changeColour1('#E45045');
+          }}></QuizButton>
+          <QuizButton text={'B)  ' + question.B} colour={questionColour2} onPress={function () {
+            checkAnswer(question, 'B', true) ? changeColour2('#4DED30') : changeColour2('#D74136');
+          }}></QuizButton>
+          <QuizButton text={'C)  ' + question.C} colour={questionColour3} onPress={function () {
+            checkAnswer(question, 'C', true) ? changeColour3('#26D701') : changeColour3('#C93128');
+          }}></QuizButton>
+          <QuizButton text={'D)  ' + question.D} colour={questionColour4} onPress={function () {
+            checkAnswer(question, 'D', true) ? changeColour4('#00C301') : changeColour4('#BC1E19');
+          }}></QuizButton>
+          <QuizButton text={'E)  ' + question.E} colour={questionColour5} onPress={function () {
+            checkAnswer(question, 'E', true) ? changeColour5('#00AB08') : changeColour5('#AE0009');
+          }}></QuizButton>
         </View>
-
-
-        <QuizButton text={'A)  ' + question.A} colour={questionColour1} onPress={function () {
-          checkAnswer(question, 'A') ? changeColour1('#95F985') : changeColour1('#E45045');
-        }}></QuizButton>
-        <QuizButton text={'B)  ' + question.B} colour={questionColour2} onPress={function () {
-          checkAnswer(question, 'B') ? changeColour2('#4DED30') : changeColour2('#D74136');
-        }}></QuizButton>
-        <QuizButton text={'C)  ' + question.C} colour={questionColour3} onPress={function () {
-          checkAnswer(question, 'C') ? changeColour3('#26D701') : changeColour3('#C93128');
-        }}></QuizButton>
-        <QuizButton text={'D)  ' + question.D} colour={questionColour4} onPress={function () {
-          checkAnswer(question, 'D') ? changeColour4('#00C301') : changeColour4('#BC1E19');
-        }}></QuizButton>
-        <QuizButton text={'E)  ' + question.E} colour={questionColour5} onPress={function () {
-          checkAnswer(question, 'E') ? changeColour5('#00AB08') : changeColour5('#AE0009');
-        }}></QuizButton>
-
       </View>
 
       {/* Statistics */}
