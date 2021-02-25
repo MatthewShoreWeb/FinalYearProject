@@ -274,11 +274,20 @@ export default function App() {
     setInterval(function () {
       timerVariable--;
       changeTimer(new Date(timerVariable * 1000).toISOString().substr(11, 8));
+
+      if (timerVariable === 0) {
+        testComplete(true);
+      }
+
     }, 1000);
   };
 
   // For when a test is exited or completed.
-  function testComplete() {
+  function testComplete(time) {
+    try {
+      if (time) {
+      }
+    } catch (e) { }
 
   };
 
@@ -286,7 +295,7 @@ export default function App() {
   // Help text.
   const aboutGeneralText = 'Hello, thank you for using this app. This app is designed to help individuals study material found in the 11+ or similar level.';
   const aboutQuizText = 'You can do a quiz in a chosen subject by selecting the quizzes option on the main menu. ' +
-    'Quizzes are designed to allow for casual practice at your own pace. \n The results of quizzes are not recorded however, ' +
+    'Quizzes are designed to allow for casual practice at your own pace. The results of quizzes are not recorded however, ' +
     'mistakes you make here will go into a personalised quiz which you can take to practice the questions you have previously got wrong.'
   const aboutTestText = 'You can also do tests by selecting the tests option in the main menu. ' +
     'Tests are a series of 50 set questions which you will recieve marked feedback for.' +
