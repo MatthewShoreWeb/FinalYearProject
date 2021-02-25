@@ -89,7 +89,7 @@ export default function App() {
       if (displayOptions === 'flex') {
         optionsPressed();
       } else if (header.includes(' Test ')) {
-        toTestMenu();
+        testComplete(false, true);
       } else {
         switch (header.toLowerCase()) {
           case 'quizzes':
@@ -103,9 +103,6 @@ export default function App() {
           case 'non-verbal quiz':
           case 'mistakes':
             toQuizMenu();
-            break;
-          case header.includes('Test '):
-            toTestMenu();
             break;
         };
       }
@@ -264,31 +261,46 @@ export default function App() {
   };
 
   // Test page functionality.
+  const [questionNumber, changeQuestionNumber] = useState(1);
+  const [displayBackPopup, changeBackPopup] = useState('none');
+  let wipeTimer = false;
+
+  function yesPressBack() {
+    changeBackPopup('none');
+    toTestMenu();
+    changeQuestionNumber(1);
+  };
+
+  function noPressBack() {
+    changeBackPopup('none');
+  };
+
+
   // Timer state set initially to 1 hour.
   const [timerState, changeTimer] = useState(new Date(3600 * 1000).toISOString().substr(11, 8));
-  const [questionNumber, changeQuestionNumber] = useState(1);
 
-  function testStarted() {
-    // Makes the timer tick at the right speed.
-    let timerVariable = 3600;
-    setInterval(function () {
-      timerVariable--;
-      changeTimer(new Date(timerVariable * 1000).toISOString().substr(11, 8));
+  function testStarted() {  
+      // Makes the timer tick at the right speed.
+      let timerVariable = 3600;
+      let timeInterval = setInterval(function () {
+        timerVariable--;
+        changeTimer(new Date(timerVariable * 1000).toISOString().substr(11, 8));
 
-      if (timerVariable === 0) {
-        testComplete(true);
-      }
-
-    }, 1000);
+        if (timerVariable === 0) {
+          testComplete(true);
+        }
+      }, 1000);
   };
 
   // For when a test is exited or completed.
-  function testComplete(time) {
+  function testComplete(time, back) {
     try {
       if (time) {
+
+      } else if (back) {
+        changeBackPopup('flex');
       }
     } catch (e) { }
-
   };
 
   // About page functionality.
@@ -687,7 +699,9 @@ export default function App() {
       {/* TODO delete repeated components => more efficient */}
 
       {/* Test component */}
+      
       <View style={testStyles.questionsContainer}>
+      <Popup text='Going back will end your test are you sure you want to do this?' yesPress={yesPressBack} noPress={noPressBack} display={displayBackPopup} />
         <View style={testStyles.secondaryHeader}>
           <Text style={testStyles.secondaryHeaderText}>Question {questionNumber}/50 </Text>
           <Text style={testStyles.secondaryHeaderText}>{timerState}</Text>

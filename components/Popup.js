@@ -6,34 +6,42 @@ export default function Popup({ text, yesPress, noPress, display }) {
 
     const styles = StyleSheet.create({
         container: {
-            width: '50%',
+            margin: 'auto',
+            width: '70%',
             height: '25%',
-            backgroundColor: 'red',
-            display: display
+            backgroundColor: '#3A41C6',
+            display: display,
+            borderStyle: 'solid',
+            borderWidth: 3,
+            borderColor: 'black'
+        },
+        buttonContainer: {
+            flexDirection: 'row',
+            justifyContent: 'space-evenly'
         },
         button: {
             width: '20%',
-            flexDirection: 'row',
-            justifyContent: 'space-evenly',
-            backgroundColor: 'white',
-            borderColor: 'black',
-            borderStyle: 'solid'
+            backgroundColor: 'black'
         },
         text: {
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            color: 'white',
+            padding: 10
         }
     });
 
     return (
-        <TouchableOpacity style={styles.container}>
-            <Text>{text}</Text>
-            <View style={styles.button} onPress={yesPress}>
-                <Text style={styles.text}>Yes</Text>
+        <View style={styles.container}>
+            <Text style={styles.text}>{text}</Text>
+            <View style={styles.buttonContainer}>
+                <TouchableOpacity style={styles.button} onPress={yesPress}>
+                    <Text style={styles.text}>Yes</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={noPress}>
+                    <Text style={styles.text}>No</Text>
+                </TouchableOpacity>
             </View>
-            <View style={styles.button} onPress={noPress}>
-                <Text style={styles.text}>No</Text>
-            </View>
-        </TouchableOpacity>
+        </View>
     )
 }
 
