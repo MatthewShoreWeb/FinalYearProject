@@ -109,7 +109,7 @@ export default function App() {
     } catch (e) { }
   };
 
-  // Options functionality - when the user clicks the gear icon in the top right.
+  // Options functionality - when the user clicks the stack icon in the top right.
   function optionsPressed() {
     try {
       if (displayOptions === 'none') {
@@ -152,7 +152,7 @@ export default function App() {
     changeColour5('#512888');
   };
 
-  // Quiz/Test Functionality.
+  // Quiz question generator.
   let loadQuestions = function () {
     try {
       // Generates a random key and accesses it from JSON.
@@ -279,17 +279,17 @@ export default function App() {
   // Timer state set initially to 1 hour.
   const [timerState, changeTimer] = useState(new Date(3600 * 1000).toISOString().substr(11, 8));
 
-  function testStarted() {  
-      // Makes the timer tick at the right speed.
-      let timerVariable = 3600;
-      let timeInterval = setInterval(function () {
-        timerVariable--;
-        changeTimer(new Date(timerVariable * 1000).toISOString().substr(11, 8));
+  function testStarted() {
+    // Makes the timer tick at the right speed.
+    let timerVariable = 3600;
+    let timeInterval = setInterval(function () {
+      timerVariable--;
+      changeTimer(new Date(timerVariable * 1000).toISOString().substr(11, 8));
 
-        if (timerVariable === 0) {
-          testComplete(true);
-        }
-      }, 1000);
+      if (timerVariable === 0) {
+        testComplete(true);
+      }
+    }, 1000);
   };
 
   // For when a test is exited or completed.
@@ -458,6 +458,12 @@ export default function App() {
       position: 'absolute',
       bottom: 0
     },
+    testNavButtons: {
+      bottom: 0,
+      position: 'absolute',
+      width: '100%',
+      height: '90%'
+    },
     questionsContainer: {
       display: displayTest,
       width: '100%',
@@ -468,7 +474,7 @@ export default function App() {
     secondaryHeader: {
       width: '100%',
       height: '6%',
-      backgroundColor: 'purple',
+      backgroundColor: '#3A41C6',
       flexDirection: 'row',
       justifyContent: 'space-between'
     },
@@ -551,7 +557,7 @@ export default function App() {
       display: multiChoiceQuestions,
       position: 'absolute',
       top: 40,
-      textAlign: 'center'
+      margin: 'auto'
     },
     testbuttons: {
       display: multiChoiceQuestions,
@@ -582,7 +588,10 @@ export default function App() {
       alignItems: 'center',
       backgroundColor: '#3A41C6',
       flexDirection: 'row',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
+      borderBottomStyle: 'solid',
+      borderBottomColor: 'white',
+      borderBottomWidth: 3
     },
     headerText: {
       color: 'white',
@@ -682,26 +691,28 @@ export default function App() {
       {/* Test selection */}
       <View style={testStyles.selection}>
         <SubHeadingSelector text={testTopicTitle} leftPress={onLeftPress} rightPress={onRightPress}></SubHeadingSelector>
-        <NavigationButton text={testTopicTitle + ' Test 1'} colour={'#3D3BBB'} onPress={function () {
-          toTests(testTopicTitle + ' Test 1');
-        }} />
-        <NavigationButton text={testTopicTitle + ' Test 2'} colour={'#4634A7'} onPress={function () {
-          toTests(testTopicTitle + ' Test 2');
-        }} />
-        <NavigationButton text={testTopicTitle + ' Test 3'} colour={'#4C2C96'} onPress={function () {
-          toTests(testTopicTitle + ' Test 3');
-        }} />
-        <NavigationButton text={testTopicTitle + ' Test 4'} colour={'#512888'} onPress={function () {
-          toTests(testTopicTitle + ' Test 4');
-        }} />
+        <View style={testStyles.testNavButtons}>
+          <NavigationButton text={testTopicTitle + ' Test 1'} colour={'#3D3BBB'} onPress={function () {
+            toTests(testTopicTitle + ' Test 1');
+          }} explainText='Previous score: -' />
+          <NavigationButton text={testTopicTitle + ' Test 2'} colour={'#4634A7'} onPress={function () {
+            toTests(testTopicTitle + ' Test 2');
+          }} explainText='Previous score: -' />
+          <NavigationButton text={testTopicTitle + ' Test 3'} colour={'#4C2C96'} onPress={function () {
+            toTests(testTopicTitle + ' Test 3');
+          }} explainText='Previous score: -' />
+          <NavigationButton text={testTopicTitle + ' Test 4'} colour={'#512888'} onPress={function () {
+            toTests(testTopicTitle + ' Test 4');
+          }} explainText='Previous score: -' />
+        </View>
       </View>
 
       {/* TODO delete repeated components => more efficient */}
 
       {/* Test component */}
-      
+
       <View style={testStyles.questionsContainer}>
-      <Popup text='Going back will end your test are you sure you want to do this?' yesPress={yesPressBack} noPress={noPressBack} display={displayBackPopup} />
+        <Popup text='Going back will end your test are you sure you want to do this?' yesPress={yesPressBack} noPress={noPressBack} display={displayBackPopup} />
         <View style={testStyles.secondaryHeader}>
           <Text style={testStyles.secondaryHeaderText}>Question {questionNumber}/50 </Text>
           <Text style={testStyles.secondaryHeaderText}>{timerState}</Text>
