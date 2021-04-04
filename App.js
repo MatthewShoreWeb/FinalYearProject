@@ -2,6 +2,7 @@
 // Test functionality - feedback, timer, storage.
 // Options functionality.
 // Progress tracker.
+// Improve code quality and file structure.
 
 
 
@@ -12,19 +13,14 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import NavigationButton from './components/NavigationButton';
 import QuizButton from './components/QuizButton';
-import DotGraph from './components/DotGraph';
 import SubHeadingSelector from './components/SubHeadingSelector';
 import Popup from './components/Popup';
 import ColourButton from './components/ColourSchemeButton';
 
 import {
   LineChart,
-  BarChart,
-  PieChart,
-  ProgressChart,
-  ContributionGraph,
-  StackedBarChart
-} from "react-native-chart-kit"; 
+  BarChart
+} from "react-native-chart-kit";
 // Questions Test Data
 import testQuestions from './questions/testQuestions.json';
 
@@ -237,6 +233,7 @@ export default function App() {
 
   const [testTopicTitle, changeTestTopicTitle] = useState('Maths');
 
+
   function onLeftPress() {
     try {
       switch (testTopicTitle.toLowerCase()) {
@@ -253,17 +250,25 @@ export default function App() {
     } catch (e) { }
   };
 
+  //Statistics test data.
+  const [chartData, changeChartData] = useState([10, 20, 50]);
   function onRightPress() {
+
+    console.log('hi');
+
     try {
       switch (testTopicTitle.toLowerCase()) {
         case 'maths':
           changeTestTopicTitle('Verbal');
+          changeChartData([100, 80, 50]);
           break;
         case 'verbal':
           changeTestTopicTitle('Non-Verbal');
+          changeChartData([25, 40, 70]);
           break;
         case 'non-verbal':
           changeTestTopicTitle('Maths');
+          changeChartData([40, 50, 80]);
           break;
       }
     } catch (e) { }
@@ -382,7 +387,21 @@ export default function App() {
     } catch (e) { }
   };
 
-  let chartData = [10, 20, 30]
+  const [lineGraphDisplay, changeLineGraphDisplay] = useState('none');
+  const [barGraphDisplay, changeBarGraphDisplay] = useState('flex');
+
+  // Function for going between a line graph and a bar graph.
+  function changeGraph() {
+    try {
+      if (lineGraphDisplay === 'none') {
+        changeBarGraphDisplay('none');
+        changeLineGraphDisplay('flex');
+      } else {
+        changeLineGraphDisplay('none');
+        changeBarGraphDisplay('flex');
+      }
+    } catch (e) { }
+  };
 
   // Stylesheet for splashscreen.
   const splashStyle = StyleSheet.create({
@@ -512,7 +531,41 @@ export default function App() {
   // Stylesheet for statistics.
   const statisticsStyles = StyleSheet.create({
     container: {
-      display: displayStatistics
+      display: displayStatistics,
+      width: '100%',
+      height: '90%',
+      position: 'absolute',
+      bottom: 0
+    },
+    graphs: {
+      justifyContent: 'center',
+      marginHorizontal: 'auto',
+      marginTop: '15%'
+    },
+    lineGraph: {
+      marginVertical: 8,
+      borderRadius: 16,
+      display: lineGraphDisplay
+    },
+    barGraph: {
+      marginVertical: 8,
+      borderRadius: 16,
+      display: barGraphDisplay,
+      backgroundColor: '#3A41C6'
+    },
+    buttonContainer: {
+      width: '100%',
+      height: '50%',
+      flexDirection: 'row',
+      justifyContent: 'space-evenly',
+      color: 'white'
+    },
+    button: {
+      margin: '10%',
+      width: 100,
+      height: 50,
+      backgroundColor: '#3A41C6',
+      borderRadius: 16
     }
   });
 
@@ -654,45 +707,6 @@ export default function App() {
         </TouchableOpacity>
       </View>
 
-
-      <View>
-      <LineChart
-        data={{
-          labels: ['Test #1', 'Test #2', 'Test #3'],
-          datasets: [
-            {
-              data: chartData
-            }
-          ]
-        }}
-        width={300} // from react-native
-        height={220}
-        yAxisSuffix='%'
-        yAxisInterval={1} // optional, defaults to 1
-        chartConfig={{
-          backgroundColor: '#3A41C6',
-          backgroundGradientFrom: "#3A41C6",
-          backgroundGradientTo: "#3A41C6",
-          decimalPlaces: 2, // optional, defaults to 2dp
-          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          style: {
-            borderRadius: 16
-          },
-          propsForDots: {
-            r: "6",
-            strokeWidth: "2",
-            stroke: "#ffa726"
-          }
-        }}
-        bezier
-        style={{
-          marginVertical: 8,
-          borderRadius: 16
-        }}
-      />
-    </View>
-
       {/* Default home page component. */}
       <View style={navigationStyles.home}>
         <NavigationButton text='Practice Quizzes' explainText='Practice topics at your own pace.' onPress={toQuizMenu} colour={'#3D3BBB'} />
@@ -796,11 +810,90 @@ export default function App() {
         </View>
       </View>
 
-      {/* Statistics */}
+      {/* Progress Tracker */}
       <View style={statisticsStyles.container}>
-        <DotGraph input={[2, 4, 6, 7]}></DotGraph>
-      </View>
+        <SubHeadingSelector text={testTopicTitle} leftPress={onLeftPress} rightPress={onRightPress}></SubHeadingSelector>
+        <View style={statisticsStyles.graphs}>
 
+          {/* View statistics as a line graph. */}
+          <View style={statisticsStyles.lineGraph}>
+            <LineChart
+              data={{
+                labels: ['Test #1', 'Test #2', 'Test #3'],
+                datasets: [
+                  {
+                    data: chartData
+                  }
+                ]
+              }}
+              width={300} // from react-native
+              height={220}
+              yAxisSuffix='%'
+              yAxisInterval={1} // optional, defaults to 1
+              chartConfig={{
+                backgroundColor: '#3A41C6',
+                backgroundGradientFrom: "#3A41C6",
+                backgroundGradientTo: "#3A41C6",
+                decimalPlaces: 0, // optional, defaults to 2dp
+                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                style: {
+                  borderRadius: 16
+                },
+                propsForDots: {
+                  r: "6",
+                  strokeWidth: "2",
+                  stroke: "#ffa726"
+                }
+              }}
+              bezier
+
+            />
+          </View>
+          {/* View statistics as a bar graph. */}
+          <View style={statisticsStyles.barGraph}>
+            <BarChart
+              data={{
+                labels: ['Test #1', 'Test #2', 'Test #3'],
+                datasets: [
+                  {
+                    data: chartData
+                  }
+                ]
+              }}
+              width={300} // from react-native
+              height={220}
+              yAxisSuffix='%'
+              yAxisInterval={1} // optional, defaults to 1
+              chartConfig={{
+                backgroundColor: '#3A41C6',
+                backgroundGradientFrom: "#3A41C6",
+                backgroundGradientTo: "#3A41C6",
+                decimalPlaces: 0, // optional, defaults to 2dp
+                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                style: {
+                  borderRadius: 16
+                },
+                propsForDots: {
+                  r: "6",
+                  strokeWidth: "2",
+                  stroke: "#ffa726"
+                }
+              }}
+              bezier
+
+            />
+          </View>
+        </View>
+
+
+
+        <View style={statisticsStyles.buttonContainer}>
+          <View style={statisticsStyles.button}><Text style={{ color: 'white', margin: 'auto', fontWeight: 'bold' }} onPress={changeGraph}>Line Graph</Text></View>
+          <View style={statisticsStyles.button}><Text style={{ color: 'white', margin: 'auto', fontWeight: 'bold' }} onPress={changeGraph}>Bar Graph</Text></View>
+        </View>
+      </View>
 
       {/* Component for the about section. */}
       {/* 'u2002' is the code for a bullet point, it is required to form an unordered list. */}
