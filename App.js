@@ -1,3 +1,11 @@
+// Todo:
+// Test functionality - feedback, timer, storage.
+// Options functionality.
+// Progress tracker.
+
+
+
+
 import React, { useState } from 'react';
 
 // App components import.
@@ -9,7 +17,14 @@ import SubHeadingSelector from './components/SubHeadingSelector';
 import Popup from './components/Popup';
 import ColourButton from './components/ColourSchemeButton';
 
-
+import {
+  LineChart,
+  BarChart,
+  PieChart,
+  ProgressChart,
+  ContributionGraph,
+  StackedBarChart
+} from "react-native-chart-kit"; 
 // Questions Test Data
 import testQuestions from './questions/testQuestions.json';
 
@@ -199,7 +214,7 @@ export default function App() {
 
   function checkAnswer(question, answer, test) {
     try {
-      // For a test we want to move to the next question regarless of if the answer is irhgt.
+      // For a test we want to move to the next question regarless of if the answer is right.
       if (test) {
         setTimeout(function () {
           resetColours();
@@ -366,6 +381,8 @@ export default function App() {
       }
     } catch (e) { }
   };
+
+  let chartData = [10, 20, 30]
 
   // Stylesheet for splashscreen.
   const splashStyle = StyleSheet.create({
@@ -607,6 +624,8 @@ export default function App() {
 
 
   return (
+
+
     <View style={styles.container}>
       <View style={splashStyle.container} >
         <Text style={splashStyle.text}>Set4SuccessTuition</Text>
@@ -634,6 +653,45 @@ export default function App() {
           <Text style={optionStyles.eraseText}>Erase Stored Data</Text>
         </TouchableOpacity>
       </View>
+
+
+      <View>
+      <LineChart
+        data={{
+          labels: ['Test #1', 'Test #2', 'Test #3'],
+          datasets: [
+            {
+              data: chartData
+            }
+          ]
+        }}
+        width={300} // from react-native
+        height={220}
+        yAxisSuffix='%'
+        yAxisInterval={1} // optional, defaults to 1
+        chartConfig={{
+          backgroundColor: '#3A41C6',
+          backgroundGradientFrom: "#3A41C6",
+          backgroundGradientTo: "#3A41C6",
+          decimalPlaces: 2, // optional, defaults to 2dp
+          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+          style: {
+            borderRadius: 16
+          },
+          propsForDots: {
+            r: "6",
+            strokeWidth: "2",
+            stroke: "#ffa726"
+          }
+        }}
+        bezier
+        style={{
+          marginVertical: 8,
+          borderRadius: 16
+        }}
+      />
+    </View>
 
       {/* Default home page component. */}
       <View style={navigationStyles.home}>
