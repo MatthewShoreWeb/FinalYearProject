@@ -1,8 +1,10 @@
 // Todo:
 // Test functionality - feedback, timer, storage.
 // Options functionality.
-// Progress tracker.
+// Progress tracker improvements.
 // Improve code quality and file structure.
+// Progress tracker components?
+// Test resets
 
 
 
@@ -16,6 +18,7 @@ import QuizButton from './components/QuizButton';
 import SubHeadingSelector from './components/SubHeadingSelector';
 import Popup from './components/Popup';
 import ColourButton from './components/ColourSchemeButton';
+import TestFeedback from './components/TestFeedback';
 
 import {
   LineChart,
@@ -208,6 +211,15 @@ export default function App() {
     } catch (e) { }
   };
 
+  let testRecording = [];
+  let testData = {
+    "score": 22.5,
+    "questions": ["correct", "wrong", "correct", "wrong"]
+  }
+  const [testTopicTitle, changeTestTopicTitle] = useState('Maths');
+  const [testFeedbackDisplay, changeTestFeedbackDisplay] = useState('none')
+
+  
   function checkAnswer(question, answer, test) {
     try {
       // For a test we want to move to the next question regarless of if the answer is right.
@@ -217,6 +229,15 @@ export default function App() {
           changeQuestion(loadQuestions());
           // Only tests have question numbers.
           changeQuestionNumber(questionNumber + 1)
+          if (question.correct === answer) {
+            testRecording.push('correct');
+          } else {
+            testRecording.push('wrong');
+          };
+
+          if (questionNumber === 2) {
+            changeTestFeedbackDisplay('flex');
+          }
         }, 1000);
       } else {
         // For a quiz we want to move to the next question only if the answer is right.
@@ -230,9 +251,6 @@ export default function App() {
       return question.correct === answer;
     } catch (e) { }
   };
-
-  const [testTopicTitle, changeTestTopicTitle] = useState('Maths');
-
 
   function onLeftPress() {
     try {
@@ -251,24 +269,36 @@ export default function App() {
   };
 
   //Statistics test data.
-  const [chartData, changeChartData] = useState([10, 20, 50]);
+  const [chartData, changeChartData] = useState([65, 69, 80, 87, 58, 41]);
+  const [chartLabels, changeChartLabels] = useState(getLabels());
+  function getLabels(param) {
+    let labels = [];
+    if (!param) {
+      param = chartData
+    }
+    for (let i = 1; i <= param.length; i++) {
+      labels.push('Test' + i);
+    }
+    return labels;
+  };
+
   function onRightPress() {
-
-    console.log('hi');
-
     try {
       switch (testTopicTitle.toLowerCase()) {
         case 'maths':
           changeTestTopicTitle('Verbal');
-          changeChartData([100, 80, 50]);
+          changeChartData([65, 69, 80, 87, 58, 41]);
+          changeChartLabels(getLabels([65, 69, 80, 87, 58, 41]));
           break;
         case 'verbal':
           changeTestTopicTitle('Non-Verbal');
-          changeChartData([25, 40, 70]);
+          changeChartData([25, 40, 70, 80]);
+          changeChartLabels(getLabels([25, 40, 70, 80]));
           break;
         case 'non-verbal':
           changeTestTopicTitle('Maths');
           changeChartData([40, 50, 80]);
+          changeChartLabels(getLabels([40, 50, 80]));
           break;
       }
     } catch (e) { }
@@ -387,8 +417,8 @@ export default function App() {
     } catch (e) { }
   };
 
-  const [lineGraphDisplay, changeLineGraphDisplay] = useState('none');
-  const [barGraphDisplay, changeBarGraphDisplay] = useState('flex');
+  const [lineGraphDisplay, changeLineGraphDisplay] = useState('flex');
+  const [barGraphDisplay, changeBarGraphDisplay] = useState('none');
 
   // Function for going between a line graph and a bar graph.
   function changeGraph() {
@@ -677,9 +707,8 @@ export default function App() {
 
 
   return (
-
-
     <View style={styles.container}>
+
       <View style={splashStyle.container} >
         <Text style={splashStyle.text}>Set4SuccessTuition</Text>
       </View>
@@ -808,6 +837,9 @@ export default function App() {
             checkAnswer(question, 'E', true) ? changeColour5('#00AB08') : changeColour5('#AE0009');
           }}></QuizButton>
         </View>
+
+
+        <TestFeedback data={testData} display={testFeedbackDisplay}></TestFeedback>
       </View>
 
       {/* Progress Tracker */}
@@ -819,7 +851,7 @@ export default function App() {
           <View style={statisticsStyles.lineGraph}>
             <LineChart
               data={{
-                labels: ['Test #1', 'Test #2', 'Test #3'],
+                labels: chartLabels,
                 datasets: [
                   {
                     data: chartData

@@ -13,7 +13,8 @@ export default function Popup({ text, yesPress, noPress, display }) {
             display: display,
             borderStyle: 'solid',
             borderWidth: 3,
-            borderColor: 'black'
+            borderColor: 'black',
+            zIndex: 999
         },
         buttonContainer: {
             flexDirection: 'row',
