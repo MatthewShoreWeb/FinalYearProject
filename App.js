@@ -27,8 +27,10 @@ import {
 // Questions Test Data
 import testQuestions from './questions/testQuestions.json';
 
+let tempRecord = [];
 
 export default function App() {
+
   // State changes for updating components in the app.
   const [header, setHeader] = useState('Home');
   const [headerDisplay, changeHeaderDisplay] = useState('none');
@@ -210,11 +212,11 @@ export default function App() {
       return accuracy;
     } catch (e) { }
   };
-
-  let testRecording = [];
+ 
+  const [testRecording, updateTestRecording] = useState([]);
   let testData = {
     "score": 22.5,
-    "questions": ["correct", "wrong", "correct", "wrong"]
+    "questions": testRecording
   }
   const [testTopicTitle, changeTestTopicTitle] = useState('Maths');
   const [testFeedbackDisplay, changeTestFeedbackDisplay] = useState('none')
@@ -230,12 +232,14 @@ export default function App() {
           // Only tests have question numbers.
           changeQuestionNumber(questionNumber + 1)
           if (question.correct === answer) {
-            testRecording.push('correct');
+            tempRecord.push('Question ' + questionNumber + ' was correct!');
           } else {
-            testRecording.push('wrong');
+            tempRecord.push('Question ' + questionNumber + ' was incorrect, you put: ' + answer + '. Answer: ' + question.correct);
           };
 
-          if (questionNumber === 2) {
+          if (questionNumber === 4) {
+            console.log(tempRecord)
+            updateTestRecording(tempRecord);
             changeTestFeedbackDisplay('flex');
           }
         }, 1000);

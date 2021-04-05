@@ -3,7 +3,7 @@ import { StyleSheet, View, Text } from 'react-native';
 
 // Component to display test feedback. 
 // Takes a JSON object as a parameter.
-export default function TestFeedback({data, display}) {
+export default function TestFeedback({data, display, testCompleteFunction}) {
 
     function getMessage() {
         try {
@@ -36,13 +36,24 @@ export default function TestFeedback({data, display}) {
     const styles = StyleSheet.create({
         container: {
           display: display,
-          width: 300,
-          height: 300,
-          backgroundColor: 'red'
+          width: '100%',
+          height: '100%',
+          position: 'absolute',
+          bottom: 0,
+          backgroundColor: 'white'
         },
         text: {
           fontWeight: 'bold',
-          color: 'white'
+          marginLeft: '5%'
+        },
+        button: {
+            width: 150,
+            height: 50,
+            backgroundColor: 'yellow',
+            margin: 'auto'
+        }, 
+        buttonText: {
+            margin: 'auto'
         }
       });
  
@@ -50,6 +61,7 @@ export default function TestFeedback({data, display}) {
         <View style={styles.container}>
             <Text style={styles.text}>{topMessage}</Text>
             <Text style={styles.text}>{feedbackText}</Text>
+            <View style={styles.button}><Text style={styles.buttonText} onPress={testCompleteFunction}>Complete Test</Text></View>
         </View>
     )
 }
