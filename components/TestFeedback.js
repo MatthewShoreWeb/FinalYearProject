@@ -2,25 +2,38 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 
 // Component to display test feedback. 
-// Takes a JSON object as a parameter.
+// Takes a JSON object, string and function as parameters.
 export default function TestFeedback({data, display, testCompleteFunction}) {
+    function getScore() {
+        let correctAns = [];
+        for (let index = 0; index < data.questions.length; index++) {
+            if (data.questions[index].toLowerCase().includes('correct!')) {
+                correctAns.push('.');
+            }
+        };
 
+        return (correctAns.length / data.questions.length) * 100;
+    };
+
+    // Function generates a summary message for the user based on their score.
     function getMessage() {
         try {
-            if (data.score === 100) {
+            let score = getScore();
+            if (score === 100) {
                 return 'You scored 100%. Perfect!'
-            } else if (data.score > 80) {
-                return 'You scored' + data.score + '%. Well done!'
-            } else if (data.score > 50) {
-                return 'You scored ' + data.score + '%. Well done!'
+            } else if (score > 80) {
+                return 'You scored' + score + '%. Well done!'
+            } else if (score > 50) {
+                return 'You scored ' + score + '%. Well done!'
             } else {
-                return 'You scored ' + data.score + '%. Keep trying!'
+                return 'You scored ' + score + '%. Keep trying!'
             }
         } catch (e) { }
     };
 
     let topMessage = getMessage();
 
+    // Generates text for each question based on the input.
     function generateText() {
         try {
             let text = '';

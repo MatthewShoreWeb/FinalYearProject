@@ -440,7 +440,7 @@ export default function App() {
     } catch (e) { }
   };
 
-  // IMPROVE EFFICIENCY
+  // TODO IMPROVE EFFICIENCY
   function getPreviousScore(testTitle) {
     switch (testTitle.toLowerCase()) {
       case 'maths1':
