@@ -5,6 +5,7 @@
 // Improve code quality and file structure.
 // Progress tracker components?
 // Test resets
+// Reformat stylesheets.
 
 import React, { useState } from 'react';
 
@@ -27,14 +28,22 @@ import {
 // Questions Test Data
 import testQuestions from './questions/testQuestions.json';
 
+// Change to storage.
 let tempRecord = [];
+
 
 export default function App() {
 
+  //SETTINGS FUNCTIONALITY. This will need to be updated to work with persistent storage.
+  const [colourScheme, updateColourScheme] = useState(['#3A41C6', '#3D3BBB', '#4634A7', '#4C2C96', '#512888']);
+  const [navigationText, updateNavigationText] = useState('white');
+
+
+  // DISPLAY STATES.
   // State changes for updating components in the app.
   const [header, setHeader] = useState('Home');
-  const [headerDisplay, changeHeaderDisplay] = useState('none');
-  const [splashDisplay, changeSplashDisplay] = useState('flex');
+  // const [headerDisplay, changeHeaderDisplay] = useState('none');
+  // const [splashDisplay, changeSplashDisplay] = useState('flex');
   const [homeDisplay, changeHomeDisplay] = useState('flex');
   const [quizMenuDisplay, changeQuizMenuDisplay] = useState('none');
   const [testMenuDisplay, changeTestMenuDisplay] = useState('none');
@@ -154,18 +163,18 @@ export default function App() {
 
   // QUIZ FUNCTIONALITY.
 
-  const [questionColour1, changeColour1] = useState('#3A41C6');
-  const [questionColour2, changeColour2] = useState('#3D3BBB');
-  const [questionColour3, changeColour3] = useState('#4634A7');
-  const [questionColour4, changeColour4] = useState('#4C2C96');
-  const [questionColour5, changeColour5] = useState('#512888');
+  const [questionColour1, changeColour1] = useState(colourScheme[0]);
+  const [questionColour2, changeColour2] = useState(colourScheme[1]);
+  const [questionColour3, changeColour3] = useState(colourScheme[2]);
+  const [questionColour4, changeColour4] = useState(colourScheme[3]);
+  const [questionColour5, changeColour5] = useState(colourScheme[4]);
 
   function resetColours() {
-    changeColour1('#3A41C6');
-    changeColour2('#3D3BBB');
-    changeColour3('#4634A7');
-    changeColour4('#4C2C96');
-    changeColour5('#512888');
+    changeColour1(colourScheme[0]);
+    changeColour2(colourScheme[1]);
+    changeColour3(colourScheme[2]);
+    changeColour4(colourScheme[3]);
+    changeColour5(colourScheme[4]);
   };
 
   // Quiz question generator.
@@ -539,7 +548,7 @@ export default function App() {
     secondaryHeader: {
       width: '100%',
       height: '6%',
-      backgroundColor: '#3A41C6',
+      backgroundColor: colourScheme[0],
       flexDirection: 'row',
       justifyContent: 'space-between'
     },
@@ -580,7 +589,7 @@ export default function App() {
       marginVertical: 8,
       borderRadius: 16,
       display: barGraphDisplay,
-      backgroundColor: '#3A41C6'
+      backgroundColor: colourScheme[0]
     },
     buttonContainer: {
       width: '100%',
@@ -593,7 +602,7 @@ export default function App() {
       margin: '10%',
       width: 100,
       height: 50,
-      backgroundColor: '#3A41C6',
+      backgroundColor: colourScheme[0],
       borderRadius: 16
     }
   });
@@ -685,7 +694,7 @@ export default function App() {
       height: '10%',
       width: '100%',
       alignItems: 'center',
-      backgroundColor: '#3A41C6',
+      backgroundColor: colourScheme[0],
       flexDirection: 'row',
       justifyContent: 'space-between',
       borderBottomStyle: 'solid',
@@ -723,11 +732,21 @@ export default function App() {
       <View style={optionStyles.container}>
         <Text style={optionStyles.subheading}>Colour Scheme</Text>
         <View style={optionStyles.colourContainer}>
-          <ColourButton colour='#fcba03' />
-          <ColourButton colour='#0388fc' />
-          <ColourButton colour='#03fc39' />
-          <ColourButton colour='pink' />
-          <ColourButton colour='black' />
+          <ColourButton colour='#fcba03' onPress={function () {
+            updateColourScheme(['#ebc807', '#f0ce13', '#ffd400', '#ffdd3c', '#ffea61']);
+          }}/>
+          <ColourButton colour='#0388fc' onPress={function () {
+            updateColourScheme(['blue', colourScheme[1], colourScheme[2], colourScheme[3], colourScheme[4]]);
+          }}/>
+          <ColourButton colour='#03fc39' onPress={function () {
+            updateColourScheme(['green', colourScheme[1], colourScheme[2], colourScheme[3], colourScheme[4]]);
+          }}/>
+          <ColourButton colour='pink' onPress={function () {
+            updateColourScheme(['pink', colourScheme[1], colourScheme[2], colourScheme[3], colourScheme[4]]);
+          }}/>
+          <ColourButton colour='black' onPress={function () {
+            updateColourScheme(['black', colourScheme[1], colourScheme[2], colourScheme[3], colourScheme[4]]);
+          }}/>
         </View>
 
         <TouchableOpacity style={optionStyles.eraseDataButton}>
@@ -737,27 +756,27 @@ export default function App() {
 
       {/* Default home page component. */}
       <View style={navigationStyles.home}>
-        <NavigationButton text='Practice Quizzes' explainText='Practice topics at your own pace.' onPress={toQuizMenu} colour={'#3D3BBB'} />
-        <NavigationButton text='Timed Tests' explainText='Take a timed test to test your abilities.' onPress={toTestMenu} colour={'#4634A7'} />
-        <NavigationButton text='Progress Tracker' explainText='Track your past performance and see how you have improved.' onPress={toStatsMenu} colour={'#4C2C96'} />
-        <NavigationButton text='About' explainText='Additional information for using the app.' onPress={toAboutPage} colour={'#512888'} />
+        <NavigationButton text='Practice Quizzes' explainText='Practice topics at your own pace.' onPress={toQuizMenu} colour={colourScheme[1]} />
+        <NavigationButton text='Timed Tests' explainText='Take a timed test to test your abilities.' onPress={toTestMenu} colour={colourScheme[2]} />
+        <NavigationButton text='Progress Tracker' explainText='Track your past performance and see how you have improved.' onPress={toStatsMenu} colour={colourScheme[3]} />
+        <NavigationButton text='About' explainText='Additional information for using the app.' onPress={toAboutPage} colour={colourScheme[4]} />
       </View>
 
       {/* Menu for selecting what quiz you would like to do. */}
       <View style={navigationStyles.quizzes}>
         <Text style={styles.topText}></Text>
-        <NavigationButton text='Maths' explainText='Lorem ipsum dolor sit amet, consectetur.' colour={'#3D3BBB'} onPress={function () {
+        <NavigationButton text='Maths' explainText='Lorem ipsum dolor sit amet, consectetur.' colour={colourScheme[1]} onPress={function () {
           setHeader('Maths Quiz');
           changeQuizMenuDisplay('none');
           changeQuestionDisplay('flex');
         }} />
-        <NavigationButton text='Verbal' explainText='Lorem ipsum dolor sit amet, consectetur.' colour={'#4634A7'} onPress={function () {
+        <NavigationButton text='Verbal' explainText='Lorem ipsum dolor sit amet, consectetur.' colour={colourScheme[2]} onPress={function () {
           setHeader('Verbal Quiz');
         }} />
-        <NavigationButton text='Non-Verbal' explainText='Lorem ipsum dolor sit amet, consectetur' colour={'#4C2C96'} onPress={function () {
+        <NavigationButton text='Non-Verbal' explainText='Lorem ipsum dolor sit amet, consectetur' colour={colourScheme[3]} onPress={function () {
           setHeader('Non-Verbal Quiz');
         }} />
-        <NavigationButton text='Mistakes' explainText='Practice the questions you have been having difficulty with.' colour={'#512888'} onPress={function () {
+        <NavigationButton text='Mistakes' explainText='Practice the questions you have been having difficulty with.' colour={colourScheme[4]} onPress={function () {
           setHeader('Mistakes');
         }} />
       </View>
@@ -766,6 +785,7 @@ export default function App() {
         <View style={styles.questionDescription}>
           <Text style={{ fontWeight: 'bold', fontSize: 30, textAlign: 'center' }}>{question.description}</Text>
         </View>
+
 
         {/* <Popup display={displaySkipPopup} text='Are you sure you want to skip the question?' />
         <View onPress={displayPopup} style={styles.test} text='SKIPPP'></View> */}
@@ -787,23 +807,23 @@ export default function App() {
           }}></QuizButton>
         </View>
       </View>
-
+     
       {/* Test selection */}
       <View style={testStyles.selection}>
         <SubHeadingSelector text={testTopicTitle} leftPress={onLeftPress} rightPress={onRightPress}></SubHeadingSelector>
         <View style={testStyles.testNavButtons}>
-          <NavigationButton text={testTopicTitle + ' Test 1'} colour={'#3D3BBB'} onPress={function () {
+          <NavigationButton text={testTopicTitle + ' Test 1'} colour={colourScheme[1]} onPress={function () {
             toTests(testTopicTitle + ' Test 1');
-          }} explainText={'Previous score: - ' + getPreviousScore(testTopicTitle + '1') + '%.'} />
-          <NavigationButton text={testTopicTitle + ' Test 2'} colour={'#4634A7'} onPress={function () {
+          }} explainText={'Best score: - ' + getPreviousScore(testTopicTitle + '1') + '%.'} />
+          <NavigationButton text={testTopicTitle + ' Test 2'} colour={colourScheme[2]} onPress={function () {
             toTests(testTopicTitle + ' Test 2');
-          }} explainText={'Previous score: - ' + getPreviousScore(testTopicTitle + '2') + '%.'} />
-          <NavigationButton text={testTopicTitle + ' Test 3'} colour={'#4C2C96'} onPress={function () {
+          }} explainText={'Best score: - ' + getPreviousScore(testTopicTitle + '2') + '%.'} />
+          <NavigationButton text={testTopicTitle + ' Test 3'} colour={colourScheme[3]} onPress={function () {
             toTests(testTopicTitle + ' Test 3');
-          }} explainText={'Previous score: - ' + getPreviousScore(testTopicTitle + '3') + '%.'} />
-          <NavigationButton text={testTopicTitle + ' Test 4'} colour={'#512888'} onPress={function () {
+          }} explainText={'Best score: - ' + getPreviousScore(testTopicTitle + '3') + '%.'} />
+          <NavigationButton text={testTopicTitle + ' Test 4'} colour={colourScheme[4]} onPress={function () {
             toTests(testTopicTitle + ' Test 4');
-          }} explainText={'Previous score: - ' + getPreviousScore(testTopicTitle + '4') + '%.'} />
+          }} explainText={'Best score: - ' + getPreviousScore(testTopicTitle + '4') + '%.'} />
         </View>
       </View>
 
@@ -862,7 +882,7 @@ export default function App() {
               yAxisSuffix='%'
               yAxisInterval={1} // optional, defaults to 1
               chartConfig={{
-                backgroundColor: '#3A41C6',
+                backgroundColor: colourScheme[0],
                 backgroundGradientFrom: "#3A41C6",
                 backgroundGradientTo: "#3A41C6",
                 decimalPlaces: 0, // optional, defaults to 2dp
@@ -897,7 +917,7 @@ export default function App() {
               yAxisSuffix='%'
               yAxisInterval={1} // optional, defaults to 1
               chartConfig={{
-                backgroundColor: '#3A41C6',
+                backgroundColor: colourScheme[0],
                 backgroundGradientFrom: "#3A41C6",
                 backgroundGradientTo: "#3A41C6",
                 decimalPlaces: 0, // optional, defaults to 2dp

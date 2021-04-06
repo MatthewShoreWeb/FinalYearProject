@@ -9,7 +9,8 @@ export default function ColourButton({ onPress, colour }) {
             justifyContent: 'center',
             backgroundColor: colour,
             height: '40px',
-            width: '40px'
+            width: '40px',
+            borderRadius: '50%'
         },
       
     });
