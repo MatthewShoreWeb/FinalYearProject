@@ -20,10 +20,13 @@ import Popup from './components/Popup';
 import ColourButton from './components/ColourSchemeButton';
 import TestFeedback from './components/TestFeedback';
 
+import lastTestScores from './storage/lastTestScores.json';
+
 import {
   LineChart,
   BarChart
 } from "react-native-chart-kit";
+
 // Questions Test Data
 import testQuestions from './questions/testQuestions.json';
 
@@ -212,7 +215,7 @@ export default function App() {
       return accuracy;
     } catch (e) { }
   };
- 
+
   const [testRecording, updateTestRecording] = useState([]);
   let testData = {
     "score": 22.5,
@@ -221,7 +224,18 @@ export default function App() {
   const [testTopicTitle, changeTestTopicTitle] = useState('Maths');
   const [testFeedbackDisplay, changeTestFeedbackDisplay] = useState('none')
 
-  
+  // For when a test is exited or completed.
+  function testComplete() {
+    // reset Ui
+    setHeader('Tests');
+    changeTestFeedbackDisplay('none');
+    changeTestDisplay('none');
+    changeTestMenuDisplay('flex');
+
+    // write to db
+    // reset timer and questions.
+  };
+
   function checkAnswer(question, answer, test) {
     try {
       // For a test we want to move to the next question regarless of if the answer is right.
@@ -346,17 +360,6 @@ export default function App() {
     }, 1000);
   };
 
-  // For when a test is exited or completed.
-  function testComplete(time, back) {
-    try {
-      if (time) {
-
-      } else if (back) {
-        changeBackPopup('flex');
-      }
-    } catch (e) { }
-  };
-
   // About page functionality.
   // Help text.
   const aboutGeneralText = 'Hello, thank you for using this app. This app is designed to help individuals study material found in the 11+ or similar level.';
@@ -435,6 +438,36 @@ export default function App() {
         changeBarGraphDisplay('flex');
       }
     } catch (e) { }
+  };
+
+  // IMPROVE EFFICIENCY
+  function getPreviousScore(testTitle) {
+    switch (testTitle.toLowerCase()) {
+      case 'maths1':
+        return lastTestScores.mathsScores[0];
+      case 'maths2':
+        return lastTestScores.mathsScores[1];
+      case 'maths3':
+        return lastTestScores.mathsScores[2];
+      case 'maths4':
+        return lastTestScores.mathsScores[3];
+      case 'verbal1':
+        return lastTestScores.verbalScores[0];
+      case 'verbal2':
+        return lastTestScores.verbalScores[1];
+      case 'verbal3':
+        return lastTestScores.verbalScores[2];
+      case 'verbal4':
+        return lastTestScores.verbalScores[3];
+      case 'non-verbal1':
+        return lastTestScores.nonVerbalScores[0];
+      case 'non-verbal2':
+        return lastTestScores.nonVerbalScores[1];
+      case 'non-verbal3':
+        return lastTestScores.nonVerbalScores[2];
+      case 'non-verbal4':
+        return lastTestScores.nonVerbalScores[3];
+    }
   };
 
   // Stylesheet for splashscreen.
@@ -799,16 +832,16 @@ export default function App() {
         <View style={testStyles.testNavButtons}>
           <NavigationButton text={testTopicTitle + ' Test 1'} colour={'#3D3BBB'} onPress={function () {
             toTests(testTopicTitle + ' Test 1');
-          }} explainText='Previous score: -' />
+          }} explainText={'Previous score: - ' + getPreviousScore(testTopicTitle + '1') + '%.'} />
           <NavigationButton text={testTopicTitle + ' Test 2'} colour={'#4634A7'} onPress={function () {
             toTests(testTopicTitle + ' Test 2');
-          }} explainText='Previous score: -' />
+          }} explainText={'Previous score: - ' + getPreviousScore(testTopicTitle + '2') + '%.'} />
           <NavigationButton text={testTopicTitle + ' Test 3'} colour={'#4C2C96'} onPress={function () {
             toTests(testTopicTitle + ' Test 3');
-          }} explainText='Previous score: -' />
+          }} explainText={'Previous score: - ' + getPreviousScore(testTopicTitle + '3') + '%.'} />
           <NavigationButton text={testTopicTitle + ' Test 4'} colour={'#512888'} onPress={function () {
             toTests(testTopicTitle + ' Test 4');
-          }} explainText='Previous score: -' />
+          }} explainText={'Previous score: - ' + getPreviousScore(testTopicTitle + '4') + '%.'} />
         </View>
       </View>
 
@@ -843,7 +876,7 @@ export default function App() {
         </View>
 
 
-        <TestFeedback data={testData} display={testFeedbackDisplay}></TestFeedback>
+        <TestFeedback data={testData} display={testFeedbackDisplay} testCompleteFunction={testComplete}></TestFeedback>
       </View>
 
       {/* Progress Tracker */}
