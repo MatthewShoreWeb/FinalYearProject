@@ -6,13 +6,10 @@
 // Progress tracker components?
 // Test resets
 
-
-
-
 import React, { useState } from 'react';
 
 // App components import.
-import { StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import NavigationButton from './components/NavigationButton';
 import QuizButton from './components/QuizButton';
 import SubHeadingSelector from './components/SubHeadingSelector';
@@ -47,13 +44,10 @@ export default function App() {
   const [displayStatistics, changeStatisticsDisplay] = useState('none');
   const [displayTest, changeTestDisplay] = useState('none');
 
-  // setTimeout(function () {
-  //   changeSplashDisplay('none');
-  //   changeHomeDisplay('flex');
-  //   changeHeaderDisplay('flex');
-  // }, 3000);
+  // SPASH GOES HERE
 
-  // Functions for navigation.
+  // NAVIGATION FUNCTIONALITY.
+
   // General function for hiding all elements.
   function hideAll() {
     changeQuizMenuDisplay('none');
@@ -157,6 +151,9 @@ export default function App() {
     } catch (e) { }
   };
 
+
+  // QUIZ FUNCTIONALITY.
+
   const [questionColour1, changeColour1] = useState('#3A41C6');
   const [questionColour2, changeColour2] = useState('#3D3BBB');
   const [questionColour3, changeColour3] = useState('#4634A7');
@@ -181,59 +178,84 @@ export default function App() {
     } catch (e) { }
   };
 
-  const [question, changeQuestion] = useState(loadQuestions());
+  // TEST FUNCTIONALITY.
 
-  // Calculates the user's accuracy during a test.
-  // Needs changing later.
-  function calculateAccuracy() {
+  // Functions for changing the subject of the tests.
+  function onLeftPress() {
     try {
-      let accuracy;
-      if (correct === 0) {
-        accuracy = 0;
-      } else {
-        if (correct - wrong === 0) {
-          accuracy = 50;
-        }
-        else {
-          accuracy = parseInt((correct / (correct + wrong + 1) || 1) * 100);
-        }
-      };
-
-      if (accuracy > 100) {
-        accuracy = 100;
-      } else if (accuracy < 0) {
-        accuracy = 0;
-      };
-
-      if (accuracy > 70) {
-        changeColour('green');
-      } else if (accuracy > 40) {
-        changeColour('orange');
-      } else {
-        changeColour('red');
+      switch (testTopicTitle.toLowerCase()) {
+        case 'maths':
+          changeTestTopicTitle('Non-Verbal');
+          break;
+        case 'verbal':
+          changeTestTopicTitle('Maths');
+          break;
+        case 'non-verbal':
+          changeTestTopicTitle('Verbal');
+          break;
       }
-      return accuracy;
     } catch (e) { }
   };
 
+  function onRightPress() {
+    try {
+      switch (testTopicTitle.toLowerCase()) {
+        case 'maths':
+          changeTestTopicTitle('Verbal');
+          changeChartData([65, 69, 80, 87, 58, 41]);
+          changeChartLabels(getLabels([65, 69, 80, 87, 58, 41]));
+          break;
+        case 'verbal':
+          changeTestTopicTitle('Non-Verbal');
+          changeChartData([25, 40, 70, 80]);
+          changeChartLabels(getLabels([25, 40, 70, 80]));
+          break;
+        case 'non-verbal':
+          changeTestTopicTitle('Maths');
+          changeChartData([40, 50, 80]);
+          changeChartLabels(getLabels([40, 50, 80]));
+          break;
+      }
+    } catch (e) { }
+  };
+
+   // TODO IMPROVE EFFICIENCY
+   function getPreviousScore(testTitle) {
+    switch (testTitle.toLowerCase()) {
+      case 'maths1':
+        return lastTestScores.mathsScores[0];
+      case 'maths2':
+        return lastTestScores.mathsScores[1];
+      case 'maths3':
+        return lastTestScores.mathsScores[2];
+      case 'maths4':
+        return lastTestScores.mathsScores[3];
+      case 'verbal1':
+        return lastTestScores.verbalScores[0];
+      case 'verbal2':
+        return lastTestScores.verbalScores[1];
+      case 'verbal3':
+        return lastTestScores.verbalScores[2];
+      case 'verbal4':
+        return lastTestScores.verbalScores[3];
+      case 'non-verbal1':
+        return lastTestScores.nonVerbalScores[0];
+      case 'non-verbal2':
+        return lastTestScores.nonVerbalScores[1];
+      case 'non-verbal3':
+        return lastTestScores.nonVerbalScores[2];
+      case 'non-verbal4':
+        return lastTestScores.nonVerbalScores[3];
+    }
+  };
+
+  const [question, changeQuestion] = useState(loadQuestions());
+  const [testTopicTitle, changeTestTopicTitle] = useState('Maths');
+  const [testFeedbackDisplay, changeTestFeedbackDisplay] = useState('none');
   const [testRecording, updateTestRecording] = useState([]);
   let testData = {
     "score": 22.5,
     "questions": testRecording
-  }
-  const [testTopicTitle, changeTestTopicTitle] = useState('Maths');
-  const [testFeedbackDisplay, changeTestFeedbackDisplay] = useState('none')
-
-  // For when a test is exited or completed.
-  function testComplete() {
-    // reset Ui
-    setHeader('Tests');
-    changeTestFeedbackDisplay('none');
-    changeTestDisplay('none');
-    changeTestMenuDisplay('flex');
-
-    // write to db
-    // reset timer and questions.
   };
 
   function checkAnswer(question, answer, test) {
@@ -270,65 +292,18 @@ export default function App() {
     } catch (e) { }
   };
 
-  function onLeftPress() {
-    try {
-      switch (testTopicTitle.toLowerCase()) {
-        case 'maths':
-          changeTestTopicTitle('Non-Verbal');
-          break;
-        case 'verbal':
-          changeTestTopicTitle('Maths');
-          break;
-        case 'non-verbal':
-          changeTestTopicTitle('Verbal');
-          break;
-      }
-    } catch (e) { }
+  // For when a test is exited or completed.
+  function testComplete() {
+    // reset Ui
+    setHeader('Tests');
+    changeTestFeedbackDisplay('none');
+    changeTestDisplay('none');
+    changeTestMenuDisplay('flex');
+
+    // write to db
+    // reset timer and questions.
   };
 
-  //Statistics test data.
-  const [chartData, changeChartData] = useState([65, 69, 80, 87, 58, 41]);
-  const [chartLabels, changeChartLabels] = useState(getLabels());
-  function getLabels(param) {
-    let labels = [];
-    if (!param) {
-      param = chartData
-    }
-    for (let i = 1; i <= param.length; i++) {
-      labels.push('Test' + i);
-    }
-    return labels;
-  };
-
-  function onRightPress() {
-    try {
-      switch (testTopicTitle.toLowerCase()) {
-        case 'maths':
-          changeTestTopicTitle('Verbal');
-          changeChartData([65, 69, 80, 87, 58, 41]);
-          changeChartLabels(getLabels([65, 69, 80, 87, 58, 41]));
-          break;
-        case 'verbal':
-          changeTestTopicTitle('Non-Verbal');
-          changeChartData([25, 40, 70, 80]);
-          changeChartLabels(getLabels([25, 40, 70, 80]));
-          break;
-        case 'non-verbal':
-          changeTestTopicTitle('Maths');
-          changeChartData([40, 50, 80]);
-          changeChartLabels(getLabels([40, 50, 80]));
-          break;
-      }
-    } catch (e) { }
-  };
-
-  const [displaySkipPopup, changeSkipPopup] = useState('none');
-
-  function displayPopup() {
-    changeSkipPopup('flex');
-  };
-
-  // Test page functionality.
   const [questionNumber, changeQuestionNumber] = useState(1);
   const [displayBackPopup, changeBackPopup] = useState('none');
   let wipeTimer = false;
@@ -360,19 +335,40 @@ export default function App() {
     }, 1000);
   };
 
-  // About page functionality.
-  // Help text.
-  const aboutGeneralText = 'Hello, thank you for using this app. This app is designed to help individuals study material found in the 11+ or similar level.';
-  const aboutQuizText = 'You can do a quiz in a chosen subject by selecting the quizzes option on the main menu. ' +
-    'Quizzes are designed to allow for casual practice at your own pace. The results of quizzes are not recorded however, ' +
-    'mistakes you make here will go into a personalised quiz which you can take to practice the questions you have previously got wrong.'
-  const aboutTestText = 'You can also do tests by selecting the tests option in the main menu. ' +
-    'Tests are a series of 50 set questions which you will recieve marked feedback for.' +
-    'The results of tests are displayed on the test selection menu and in the progress tracker.'
-  const aboutProgressTrackerText = 'The progress tracker is a tool which allows you to track your performance.' +
-    'The results from the tests you have done are displayed here in graphs so you can clearly see how you have been improving.'
 
-  // State updates.
+  // PROGRESS TRACKER FUNCTIONALITY.
+
+  //Statistics test data.
+  const [chartData, changeChartData] = useState([65, 69, 80, 87, 58, 41]);
+  const [chartLabels, changeChartLabels] = useState(getLabels());
+  function getLabels(param) {
+    let labels = [];
+    if (!param) {
+      param = chartData
+    }
+    for (let i = 1; i <= param.length; i++) {
+      labels.push('Test' + i);
+    }
+    return labels;
+  };
+  
+  const [lineGraphDisplay, changeLineGraphDisplay] = useState('flex');
+  const [barGraphDisplay, changeBarGraphDisplay] = useState('none');
+
+  // Function for going between a line graph and a bar graph.
+  function changeGraph() {
+    try {
+      if (lineGraphDisplay === 'none') {
+        changeBarGraphDisplay('none');
+        changeLineGraphDisplay('flex');
+      } else {
+        changeLineGraphDisplay('none');
+        changeBarGraphDisplay('flex');
+      }
+    } catch (e) { }
+  };
+
+  // ABOUT PAGE FUCNTIONALITY.
   const [aboutHeader, changeAboutHeader] = useState('General');
   const [aboutText, changeAboutText] = useState(aboutGeneralText);
 
@@ -424,51 +420,17 @@ export default function App() {
     } catch (e) { }
   };
 
-  const [lineGraphDisplay, changeLineGraphDisplay] = useState('flex');
-  const [barGraphDisplay, changeBarGraphDisplay] = useState('none');
+  // Help text.
+  const aboutGeneralText = 'Hello, thank you for using this app. This app is designed to help individuals study material found in the 11+ or similar level.';
+  const aboutQuizText = 'You can do a quiz in a chosen subject by selecting the quizzes option on the main menu. ' +
+    'Quizzes are designed to allow for casual practice at your own pace. The results of quizzes are not recorded however, ' +
+    'mistakes you make here will go into a personalised quiz which you can take to practice the questions you have previously got wrong.';
+  const aboutTestText = 'You can also do tests by selecting the tests option in the main menu. ' +
+    'Tests are a series of 50 set questions which you will recieve marked feedback for.' +
+    'The results of tests are displayed on the test selection menu and in the progress tracker.';
+  const aboutProgressTrackerText = 'The progress tracker is a tool which allows you to track your performance.' +
+    'The results from the tests you have done are displayed here in graphs so you can clearly see how you have been improving.';
 
-  // Function for going between a line graph and a bar graph.
-  function changeGraph() {
-    try {
-      if (lineGraphDisplay === 'none') {
-        changeBarGraphDisplay('none');
-        changeLineGraphDisplay('flex');
-      } else {
-        changeLineGraphDisplay('none');
-        changeBarGraphDisplay('flex');
-      }
-    } catch (e) { }
-  };
-
-  // TODO IMPROVE EFFICIENCY
-  function getPreviousScore(testTitle) {
-    switch (testTitle.toLowerCase()) {
-      case 'maths1':
-        return lastTestScores.mathsScores[0];
-      case 'maths2':
-        return lastTestScores.mathsScores[1];
-      case 'maths3':
-        return lastTestScores.mathsScores[2];
-      case 'maths4':
-        return lastTestScores.mathsScores[3];
-      case 'verbal1':
-        return lastTestScores.verbalScores[0];
-      case 'verbal2':
-        return lastTestScores.verbalScores[1];
-      case 'verbal3':
-        return lastTestScores.verbalScores[2];
-      case 'verbal4':
-        return lastTestScores.verbalScores[3];
-      case 'non-verbal1':
-        return lastTestScores.nonVerbalScores[0];
-      case 'non-verbal2':
-        return lastTestScores.nonVerbalScores[1];
-      case 'non-verbal3':
-        return lastTestScores.nonVerbalScores[2];
-      case 'non-verbal4':
-        return lastTestScores.nonVerbalScores[3];
-    }
-  };
 
   // Stylesheet for splashscreen.
   const splashStyle = StyleSheet.create({
