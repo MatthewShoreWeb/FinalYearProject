@@ -169,12 +169,12 @@ export default function App() {
   const [questionColour4, changeColour4] = useState(colourScheme[3]);
   const [questionColour5, changeColour5] = useState(colourScheme[4]);
 
-  function resetColours() {
-    changeColour1(colourScheme[0]);
-    changeColour2(colourScheme[1]);
-    changeColour3(colourScheme[2]);
-    changeColour4(colourScheme[3]);
-    changeColour5(colourScheme[4]);
+  function resetColours(colourArray) {
+    changeColour1(colourArray[0]);
+    changeColour2(colourArray[1]);
+    changeColour3(colourArray[2]);
+    changeColour4(colourArray[3]);
+    changeColour5(colourArray[4]);
   };
 
   // Quiz question generator.
@@ -228,8 +228,8 @@ export default function App() {
     } catch (e) { }
   };
 
-   // TODO IMPROVE EFFICIENCY
-   function getPreviousScore(testTitle) {
+  // TODO IMPROVE EFFICIENCY
+  function getPreviousScore(testTitle) {
     switch (testTitle.toLowerCase()) {
       case 'maths1':
         return lastTestScores.mathsScores[0];
@@ -360,7 +360,7 @@ export default function App() {
     }
     return labels;
   };
-  
+
   const [lineGraphDisplay, changeLineGraphDisplay] = useState('flex');
   const [barGraphDisplay, changeBarGraphDisplay] = useState('none');
 
@@ -440,6 +440,14 @@ export default function App() {
   const aboutProgressTrackerText = 'The progress tracker is a tool which allows you to track your performance.' +
     'The results from the tests you have done are displayed here in graphs so you can clearly see how you have been improving.';
 
+
+  function updateColours(array, string) {
+    let originalColour = colourScheme[0];
+    updateColourScheme(array);
+    updateNavigationText(string);
+    resetColours(array);
+
+  };
 
   // Stylesheet for splashscreen.
   const splashStyle = StyleSheet.create({
@@ -733,21 +741,20 @@ export default function App() {
         <Text style={optionStyles.subheading}>Colour Scheme</Text>
         <View style={optionStyles.colourContainer}>
           <ColourButton colour='#fcba03' onPress={function () {
-            updateColourScheme(['#ebc807', '#f0ce13', '#ffd400', '#ffdd3c', '#ffea61']);
-            updateNavigationText('black');
-          }}/>
+            updateColours(['#ebc807', '#f0ce13', '#ffd400', '#ffdd3c', '#ffea61'], 'black');
+          }} />
           <ColourButton colour='#0388fc' onPress={function () {
-            updateColourScheme(['blue', colourScheme[1], colourScheme[2], colourScheme[3], colourScheme[4]]);
-          }}/>
+            updateColours(['#0000ff', '#1f1fff', '#4949ff', '#7879ff', '#a3a3ff'], 'white');
+          }} />
           <ColourButton colour='#03fc39' onPress={function () {
-            updateColourScheme(['green', colourScheme[1], colourScheme[2], colourScheme[3], colourScheme[4]]);
-          }}/>
+            updateColours(['#ebc807', '#f0ce13', '#ffd400', '#ffdd3c', '#ffea61'], 'white');
+          }} />
           <ColourButton colour='pink' onPress={function () {
-            updateColourScheme(['pink', colourScheme[1], colourScheme[2], colourScheme[3], colourScheme[4]]);
-          }}/>
+            updateColours(['#C63287', '#D44C9C', '#E366B1', '#F17FC5', '#FF99DA'], 'black');
+          }} />
           <ColourButton colour='black' onPress={function () {
-            updateColourScheme(['black', colourScheme[1], colourScheme[2], colourScheme[3], colourScheme[4]]);
-          }}/>
+            updateColours(['#000000', '#090909', '#131313', '#1a1a1a', '#202020'], 'white');
+          }} />
         </View>
 
         <TouchableOpacity style={optionStyles.eraseDataButton}>
@@ -808,7 +815,7 @@ export default function App() {
           }}></QuizButton>
         </View>
       </View>
-     
+
       {/* Test selection */}
       <View style={testStyles.selection}>
         <SubHeadingSelector text={testTopicTitle} leftPress={onLeftPress} rightPress={onRightPress} colour={colourScheme[0]} textColour={navigationText}></SubHeadingSelector>
