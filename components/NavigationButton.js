@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 
-export default function NavigationButton({ text, explainText, onPress, colour, previousScore }) {
+export default function NavigationButton({ text, explainText, onPress, colour, previousScore, textColour }) {
 
     const styles = StyleSheet.create({
         button: {
@@ -11,7 +11,7 @@ export default function NavigationButton({ text, explainText, onPress, colour, p
             width: '100%',
         },
         buttonText: {
-            color: 'white',
+            color: textColour,
             fontWeight: 'bold',
             textTransform: 'uppercase',
             fontSize: 20,
@@ -19,7 +19,7 @@ export default function NavigationButton({ text, explainText, onPress, colour, p
             fontFamily: 'Verdana'
         },
         explainText: {
-            color: 'white',
+            color: textColour,
             fontSize: 12,
             textAlign: 'center'
         }

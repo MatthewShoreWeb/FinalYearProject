@@ -1,13 +1,13 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 
-export default function SubHeadingSelector({ text, leftPress, rightPress }) {
+export default function SubHeadingSelector({ text, leftPress, rightPress, colour, textColour }) {
 
     const styles = StyleSheet.create({
         container: {
             width: '100%',
             height: '10%',
-            backgroundColor: '#3A41C6',
+            backgroundColor: colour,
             justifyContent: 'space-between',
             flexDirection: 'row',
             alignItems: 'center',
@@ -15,7 +15,7 @@ export default function SubHeadingSelector({ text, leftPress, rightPress }) {
         },
         text: {
             fontWeight: 'bold',
-            color: 'white',
+            color: textColour,
             fontSize: 20
         }
     });
