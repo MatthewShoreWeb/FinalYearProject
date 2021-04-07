@@ -7,7 +7,7 @@
 // Test resets
 // Reformat stylesheets.
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // App components import.
@@ -48,8 +48,8 @@ export default function App() {
   const [displayStatistics, changeStatisticsDisplay] = useState('none');
   const [displayTest, changeTestDisplay] = useState('none');
 
+  //STORAGE.
 
-  //SETTINGS FUNCTIONALITY. 
   const [colourScheme, updateColourScheme] = useState(['#3A41C6', '#3D3BBB', '#4634A7', '#4C2C96', '#512888']);
   const [navigationText, updateNavigationText] = useState('white');
 
@@ -87,13 +87,60 @@ export default function App() {
     } catch (e) { }
   };
 
-  (async function(){
+  (async function () {
     updateNavigationText(await getTextPreferences());
   })()
 
   // (async function(){
   //   updateColourScheme(await getStylePreferences());
   // })()
+
+
+  //Progress tracker storage
+  // Saves the new style preference to asynchronous storage.
+  async function setPreviousTests(testsObject) {
+    try {
+      let jsonObject = JSON.stringify(testsObject);
+      await AsyncStorage.setItem('previousTests', jsonObject);
+    } catch (e) { }
+  };
+
+//   setPreviousTests( {
+//     "mathsScores": [
+//       10,
+//       90,
+//       10,
+//       90
+//   ],
+//   "verbalScores": [
+//       76,
+//       59,
+//       78,
+//       60
+//   ],
+//   "nonVerbalScores": [
+//       100,
+//       90,
+//       80,
+//       70
+//   ]
+// })
+
+  const [chartData, changeChartData] = useState('20,30,40,50');
+
+  const getPreviousTests = async () => {
+    try {
+      const value = await AsyncStorage.getItem('previousTests');
+      if (value !== null) {
+        return JSON.parse(value).mathsScores.join(',');
+      }
+    } catch (e) { }
+  };
+
+  (async function () {
+    changeChartData(await getPreviousTests());
+  })()
+
 
   // SPASH GOES HERE
 
@@ -254,17 +301,17 @@ export default function App() {
       switch (testTopicTitle.toLowerCase()) {
         case 'maths':
           changeTestTopicTitle('Verbal');
-          changeChartData([65, 69, 80, 87, 58, 41]);
+          //changeChartData([65, 69, 80, 87, 58, 41]);
           changeChartLabels(getLabels([65, 69, 80, 87, 58, 41]));
           break;
         case 'verbal':
           changeTestTopicTitle('Non-Verbal');
-          changeChartData([25, 40, 70, 80]);
+          //changeChartData([25, 40, 70, 80]);
           changeChartLabels(getLabels([25, 40, 70, 80]));
           break;
         case 'non-verbal':
           changeTestTopicTitle('Maths');
-          changeChartData([40, 50, 80]);
+          //changeChartData([40, 50, 80]);
           changeChartLabels(getLabels([40, 50, 80]));
           break;
       }
@@ -391,17 +438,19 @@ export default function App() {
   // PROGRESS TRACKER FUNCTIONALITY.
 
   //Statistics test data.
-  const [chartData, changeChartData] = useState([65, 69, 80, 87, 58, 41]);
+
   const [chartLabels, changeChartLabels] = useState(getLabels());
   function getLabels(param) {
-    let labels = [];
-    if (!param) {
-      param = chartData
-    }
-    for (let i = 1; i <= param.length; i++) {
-      labels.push('Test' + i);
-    }
-    return labels;
+    try {
+      let labels = [];
+      if (!param) {
+        param = 'chartData'
+      }
+      for (let i = 1; i <= param.length; i++) {
+        labels.push('Test' + i);
+      }
+      return labels;
+    } catch (e) { }
   };
 
   const [lineGraphDisplay, changeLineGraphDisplay] = useState('flex');
@@ -953,7 +1002,7 @@ export default function App() {
                 labels: chartLabels,
                 datasets: [
                   {
-                    data: chartData
+                    data: chartData.split(',')
                   }
                 ]
               }}
@@ -985,10 +1034,10 @@ export default function App() {
           <View style={statisticsStyles.barGraph}>
             <BarChart
               data={{
-                labels: ['Test #1', 'Test #2', 'Test #3'],
+                labels: chartLabels,
                 datasets: [
                   {
-                    data: chartData
+                    data: chartData.split(',')
                   }
                 ]
               }}
