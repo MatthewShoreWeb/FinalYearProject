@@ -54,41 +54,45 @@ export default function App() {
   const [navigationText, updateNavigationText] = useState('white');
 
   // Saves the new style preference to asynchronous storage.
-  async function updateStylePreferences(inputStyleArray) {
+  async function setStylePreferences(inputStyleArray) {
     try {
-      await AsyncStorage.setItem('style', ['#3A41C6', '#3D3BBB', '#4634A7', '#4C2C96', '#512888']);
+      await AsyncStorage.setItem('style', inputStyleArray);
     } catch (e) { }
   };
 
-  async function updateText(textColour) {
+  // Updates the stored value for text preferences.
+  async function setTextStorage(textColour) {
     try {
       await AsyncStorage.setItem('text', textColour);
     } catch (e) { }
   };
 
-  //updateStylePreferences(['#3A41C6', '#3D3BBB', '#4634A7', '#4C2C96', '#512888']);
-
   // Retrieves the style preferences from the asynchronous storage.
   const getStylePreferences = async () => {
     try {
-      const value = await AsyncStorage.getItem('text');
-      console.log(value);
+      const value = await AsyncStorage.getItem('style');
       if (value !== null) {
         return value;
       }
-    } catch (e) {
-   
-    }
-  }
+    } catch (e) { }
+  };
 
+  // Retrieves the text preferences from the asynchronous storage.
+  const getTextPreferences = async () => {
+    try {
+      const value = await AsyncStorage.getItem('text');
+      if (value !== null) {
+        return value;
+      }
+    } catch (e) { }
+  };
 
   (async function(){
+    updateNavigationText(await getTextPreferences());
+  })()
 
-    let result = await getStylePreferences();
-  
-    console.log('Woo done!', result);
-    updateNavigationText(result);
-    
+  (async function(){
+    updateColourScheme(await getStylePreferences());
   })()
 
   // SPASH GOES HERE
@@ -483,7 +487,7 @@ export default function App() {
   function updateColours(array, string) {
     updateColourScheme(array);
     updateNavigationText(string);
-    updateText(string);
+    setTextStorage(string);
     resetColours(array);
   };
 
