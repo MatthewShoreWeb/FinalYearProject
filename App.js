@@ -1,6 +1,6 @@
 // Todo:
 // Test functionality - feedback, timer, storage.
-// Options functionality.
+// Options functionality - change text size, erase stored data.
 // Progress tracker improvements.
 // Improve code quality and file structure.
 // Progress tracker components?
@@ -8,6 +8,7 @@
 // Reformat stylesheets.
 
 import React, { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // App components import.
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -33,12 +34,6 @@ let tempRecord = [];
 
 
 export default function App() {
-
-  //SETTINGS FUNCTIONALITY. This will need to be updated to work with persistent storage.
-  const [colourScheme, updateColourScheme] = useState(['#3A41C6', '#3D3BBB', '#4634A7', '#4C2C96', '#512888']);
-  const [navigationText, updateNavigationText] = useState('white');
-
-
   // DISPLAY STATES.
   // State changes for updating components in the app.
   const [header, setHeader] = useState('Home');
@@ -53,7 +48,51 @@ export default function App() {
   const [displayStatistics, changeStatisticsDisplay] = useState('none');
   const [displayTest, changeTestDisplay] = useState('none');
 
+
+  //SETTINGS FUNCTIONALITY. 
+  const [colourScheme, updateColourScheme] = useState(['#3A41C6', '#3D3BBB', '#4634A7', '#4C2C96', '#512888']);
+  const [navigationText, updateNavigationText] = useState('white');
+
+  // Saves the new style preference to asynchronous storage.
+  async function updateStylePreferences(inputStyleArray) {
+    try {
+      await AsyncStorage.setItem('style', ['#3A41C6', '#3D3BBB', '#4634A7', '#4C2C96', '#512888']);
+    } catch (e) { }
+  };
+
+  async function updateText(textColour) {
+    try {
+      await AsyncStorage.setItem('text', textColour);
+    } catch (e) { }
+  };
+
+  //updateStylePreferences(['#3A41C6', '#3D3BBB', '#4634A7', '#4C2C96', '#512888']);
+
+  // Retrieves the style preferences from the asynchronous storage.
+  const getStylePreferences = async () => {
+    try {
+      const value = await AsyncStorage.getItem('text');
+      console.log(value);
+      if (value !== null) {
+        return value;
+      }
+    } catch (e) {
+   
+    }
+  }
+
+
+  (async function(){
+
+    let result = await getStylePreferences();
+  
+    console.log('Woo done!', result);
+    updateNavigationText(result);
+    
+  })()
+
   // SPASH GOES HERE
+
 
   // NAVIGATION FUNCTIONALITY.
 
@@ -444,6 +483,7 @@ export default function App() {
   function updateColours(array, string) {
     updateColourScheme(array);
     updateNavigationText(string);
+    updateText(string);
     resetColours(array);
   };
 
