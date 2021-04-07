@@ -91,9 +91,9 @@ export default function App() {
     updateNavigationText(await getTextPreferences());
   })()
 
-  (async function(){
-    updateColourScheme(await getStylePreferences());
-  })()
+  // (async function(){
+  //   updateColourScheme(await getStylePreferences());
+  // })()
 
   // SPASH GOES HERE
 
