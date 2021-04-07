@@ -10,7 +10,8 @@ export default function ColourButton({ onPress, colour }) {
             backgroundColor: colour,
             height: '40px',
             width: '40px',
-            borderRadius: '50%'
+            borderRadius: '50%',
+            marginHorizontal: '2.5%'
         },
       
     });

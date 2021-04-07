@@ -272,7 +272,7 @@ export default function App() {
       // For a test we want to move to the next question regarless of if the answer is right.
       if (test) {
         setTimeout(function () {
-          resetColours();
+          resetColours(colourScheme);
           changeQuestion(loadQuestions());
           // Only tests have question numbers.
           changeQuestionNumber(questionNumber + 1)
@@ -292,7 +292,7 @@ export default function App() {
         // For a quiz we want to move to the next question only if the answer is right.
         if (question.correct === answer) {
           setTimeout(function () {
-            resetColours();
+            resetColours(colourScheme);
             changeQuestion(loadQuestions());
           }, 1000);
         }
@@ -442,11 +442,9 @@ export default function App() {
 
 
   function updateColours(array, string) {
-    let originalColour = colourScheme[0];
     updateColourScheme(array);
     updateNavigationText(string);
     resetColours(array);
-
   };
 
   // Stylesheet for splashscreen.
@@ -480,9 +478,11 @@ export default function App() {
       marginBottom: '5%'
     },
     colourContainer: {
-      width: '100%',
-      height: '10%',
+      marginHorizontal: 'auto',
+      width: '90%',
+      height: '20%',
       flexDirection: 'row',
+      flexWrap: 'wrap',
       justifyContent: 'space-evenly'
     },
     eraseDataButton: {
@@ -740,26 +740,54 @@ export default function App() {
       <View style={optionStyles.container}>
         <Text style={optionStyles.subheading}>Colour Scheme</Text>
         <View style={optionStyles.colourContainer}>
-          <ColourButton colour='#fcba03' onPress={function () {
-            updateColours(['#ebc807', '#f0ce13', '#ffd400', '#ffdd3c', '#ffea61'], 'black');
+          {/* Default - purple */}
+          <ColourButton colour='#3A41C6' onPress={function () {
+            updateColours(['#3A41C6', '#3D3BBB', '#4634A7', '#4C2C96', '#512888'], 'white');
           }} />
-          <ColourButton colour='#0388fc' onPress={function () {
+          {/* Blue */}
+          <ColourButton colour='#0000ff' onPress={function () {
             updateColours(['#0000ff', '#1f1fff', '#4949ff', '#7879ff', '#a3a3ff'], 'white');
           }} />
-          <ColourButton colour='#03fc39' onPress={function () {
-            updateColours(['#ebc807', '#f0ce13', '#ffd400', '#ffdd3c', '#ffea61'], 'white');
+          {/* Green */}
+          <ColourButton colour='#00563E' onPress={function () {
+            updateColours(['#00563E', '#006E50', '#008562', '#009D74', '#00B486'], 'white');
           }} />
-          <ColourButton colour='pink' onPress={function () {
+          {/* Pink */}
+          <ColourButton colour='#C63287' onPress={function () {
             updateColours(['#C63287', '#D44C9C', '#E366B1', '#F17FC5', '#FF99DA'], 'black');
           }} />
-          <ColourButton colour='black' onPress={function () {
+          {/* Red */}
+          <ColourButton colour='#ad1f0a' onPress={function () {
+            updateColours(['#ad1f0a', '#c6230f', '#de2514', '#ee1b10', '#ff4d50'], 'white');
+          }} />
+          {/* Orange */}
+          <ColourButton colour='#fd5602' onPress={function () {
+            updateColours(['#fd5602', '#fe6e00', '#ff8303', '#ffaf42', '#fedebe'], 'white');
+          }} />
+          {/* Gold */}
+          <ColourButton colour='#ebc807' onPress={function () {
+            updateColours(['#ebc807', '#f0ce13', '#ffd400', '#ffdd3c', '#ffea61'], 'black');
+          }} />
+          {/* Brown */}
+          <ColourButton colour='#C19A6B' onPress={function () {
+            updateColours(['#C19A6B', '#AA845A', '#946E4A', '#7D5839', '#664228'], 'white');
+          }} />
+          {/* Silver */}
+          <ColourButton colour='#CFCFCF' onPress={function () {
+            updateColours(['#CFCFCF', '#BEBEBE', '#ACACAC', '#9B9B9B', '#898989'], 'black');
+          }} />
+          {/* Black */}
+          <ColourButton colour='#000000' onPress={function () {
             updateColours(['#000000', '#090909', '#131313', '#1a1a1a', '#202020'], 'white');
           }} />
+
         </View>
 
-        <TouchableOpacity style={optionStyles.eraseDataButton}>
+
+
+        {/* <TouchableOpacity style={optionStyles.eraseDataButton}>
           <Text style={optionStyles.eraseText}>Erase Stored Data</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       {/* Default home page component. */}
