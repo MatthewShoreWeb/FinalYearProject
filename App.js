@@ -49,21 +49,11 @@ export default function App() {
   const [displayTest, changeTestDisplay] = useState('none');
 
   //STORAGE.
-
-  const [colourScheme, updateColourScheme] = useState(['#3A41C6', '#3D3BBB', '#4634A7', '#4C2C96', '#512888']);
-  const [navigationText, updateNavigationText] = useState('white');
-
   // Saves the new style preference to asynchronous storage.
-  async function setStylePreferences(inputStyleArray) {
+  async function setStylePreferences(inputStyleObject) {
     try {
-      await AsyncStorage.setItem('style', inputStyleArray);
-    } catch (e) { }
-  };
-
-  // Updates the stored value for text preferences.
-  async function setTextStorage(textColour) {
-    try {
-      await AsyncStorage.setItem('text', textColour);
+      let jsonObject = JSON.stringify(inputStyleObject);
+      await AsyncStorage.setItem('style', jsonObject);
     } catch (e) { }
   };
 
@@ -74,6 +64,31 @@ export default function App() {
       if (value !== null) {
         return value;
       }
+    } catch (e) { }
+  };
+
+  const [colourObject, updateColourObject] = useState({});
+  const [colourScheme, updateColourScheme] = useState([]);
+  const [navigationText, updateNavigationText] = useState('white');
+
+  (async function(){
+    updateColourObject(await getStylePreferences());
+  })()
+
+  useEffect(() => {
+    if (typeof colourObject === 'string') {
+      let jsonObject = JSON.parse(colourObject);
+      updateColourScheme(jsonObject[0].styles);
+    }
+  }, [colourObject]);
+
+  // setStylePreferences( [{
+  //     "styles": ['#3A41C6', '#3D3BBB', '#4634A7', '#4C2C96', '#512888']}]);
+
+   // Updates the stored value for text preferences.
+   async function setTextStorage(textColour) {
+    try {
+      await AsyncStorage.setItem('text', textColour);
     } catch (e) { }
   };
 
@@ -90,11 +105,6 @@ export default function App() {
   (async function () {
     updateNavigationText(await getTextPreferences());
   })()
-
-  // (async function(){
-  //   updateColourScheme(await getStylePreferences());
-  // })()
-
 
   //Progress tracker storage
   // Saves the new style preference to asynchronous storage.
@@ -133,8 +143,7 @@ export default function App() {
     try {
       const value = await AsyncStorage.getItem('previousTests');
       if (value !== null) {
-      
-        return value
+        return value;
       }
       
     } catch (e) { }
@@ -448,12 +457,18 @@ export default function App() {
 
   //Statistics test data.
 
-  const [chartLabels, changeChartLabels] = useState(getLabels());
+  const [chartLabels, changeChartLabels] = useState([]);
+  useEffect(() => {
+    try {
+      changeChartLabels(getLabels(JSON.parse(chartData)[0].mathsScores));
+    } catch (e) {}
+  }, [chartData]);
+  
   function getLabels(param) {
     try {
       let labels = [];
       if (!param) {
-        param = 'chartData'
+        param = testStore
       }
       for (let i = 1; i <= param.length; i++) {
         labels.push('Test' + i);
@@ -543,7 +558,8 @@ export default function App() {
 
 
   function updateColours(array, string) {
-    updateColourScheme(array);
+     setStylePreferences( [{
+      "styles": array}]);
     updateNavigationText(string);
     setTextStorage(string);
     resetColours(array);
@@ -882,7 +898,6 @@ export default function App() {
           <ColourButton colour='#000000' onPress={function () {
             updateColours(['#000000', '#090909', '#131313', '#1a1a1a', '#202020'], 'white');
           }} />
-
         </View>
 
 
