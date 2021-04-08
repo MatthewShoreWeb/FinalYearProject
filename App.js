@@ -105,35 +105,38 @@ export default function App() {
     } catch (e) { }
   };
 
-//   setPreviousTests( {
-//     "mathsScores": [
-//       10,
-//       90,
-//       10,
-//       90
-//   ],
-//   "verbalScores": [
-//       76,
-//       59,
-//       78,
-//       60
-//   ],
-//   "nonVerbalScores": [
-//       100,
-//       90,
-//       80,
-//       70
-//   ]
-// })
+  //   setPreviousTests( [{
+  //     "mathsScores": [
+  //       10,
+  //       90,
+  //       10,
+  //       90
+  //   ],
+  //   "verbalScores": [
+  //       76,
+  //       59,
+  //       78,
+  //       60
+  //   ],
+  //   "nonVerbalScores": [
+  //       100,
+  //       90,
+  //       80,
+  //       70
+  //   ]
+  // }])
 
-  const [chartData, changeChartData] = useState('20,30,40,50');
+  const [chartData, changeChartData] = useState({});
+  const [testStore, changeTestData] = useState([]);
 
   const getPreviousTests = async () => {
     try {
       const value = await AsyncStorage.getItem('previousTests');
       if (value !== null) {
-        return JSON.parse(value).mathsScores.join(',');
+      
+        return value
       }
+      
     } catch (e) { }
   };
 
@@ -141,6 +144,12 @@ export default function App() {
     changeChartData(await getPreviousTests());
   })()
 
+  useEffect(() => {
+    if (typeof chartData === 'string') {
+      let jsonObject = JSON.parse(chartData);
+      changeTestData(jsonObject[0].mathsScores);
+    }
+  }, [chartData]);
 
   // SPASH GOES HERE
 
@@ -296,23 +305,24 @@ export default function App() {
     } catch (e) { }
   };
 
+
   function onRightPress() {
     try {
       switch (testTopicTitle.toLowerCase()) {
         case 'maths':
           changeTestTopicTitle('Verbal');
-          //changeChartData([65, 69, 80, 87, 58, 41]);
-          changeChartLabels(getLabels([65, 69, 80, 87, 58, 41]));
+          changeTestData(JSON.parse(chartData)[0].verbalScores);
+          changeChartLabels(getLabels(JSON.parse(chartData)[0].verbalScores));
           break;
         case 'verbal':
           changeTestTopicTitle('Non-Verbal');
-          //changeChartData([25, 40, 70, 80]);
-          changeChartLabels(getLabels([25, 40, 70, 80]));
+          changeTestData(JSON.parse(chartData)[0].nonVerbalScores);
+          changeChartLabels(getLabels(JSON.parse(chartData)[0].nonVerbalScores));
           break;
         case 'non-verbal':
           changeTestTopicTitle('Maths');
-          //changeChartData([40, 50, 80]);
-          changeChartLabels(getLabels([40, 50, 80]));
+          changeTestData(JSON.parse(chartData)[0].mathsScores);
+          changeChartLabels(getLabels(JSON.parse(chartData)[0].mathsScores));
           break;
       }
     } catch (e) { }
@@ -373,7 +383,6 @@ export default function App() {
           };
 
           if (questionNumber === 4) {
-            console.log(tempRecord)
             updateTestRecording(tempRecord);
             changeTestFeedbackDisplay('flex');
           }
@@ -1002,7 +1011,7 @@ export default function App() {
                 labels: chartLabels,
                 datasets: [
                   {
-                    data: chartData.split(',')
+                    data: testStore
                   }
                 ]
               }}
@@ -1037,7 +1046,7 @@ export default function App() {
                 labels: chartLabels,
                 datasets: [
                   {
-                    data: chartData.split(',')
+                    data: testStore
                   }
                 ]
               }}
