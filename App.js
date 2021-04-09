@@ -69,7 +69,6 @@ export default function App() {
 
   const [colourObject, updateColourObject] = useState({});
   const [colourScheme, updateColourScheme] = useState([]);
-  const [navigationText, updateNavigationText] = useState('white');
 
   (async function(){
     updateColourObject(await getStylePreferences());
@@ -82,9 +81,7 @@ export default function App() {
     }
   }, [colourObject]);
 
-  // setStylePreferences( [{
-  //     "styles": ['#3A41C6', '#3D3BBB', '#4634A7', '#4C2C96', '#512888']}]);
-
+  const [navigationText, updateNavigationText] = useState('white');
    // Updates the stored value for text preferences.
    async function setTextStorage(textColour) {
     try {
@@ -219,7 +216,7 @@ export default function App() {
       if (displayOptions === 'flex') {
         optionsPressed();
       } else if (header.includes(' Test ')) {
-        testComplete(false, true);
+        changeBackPopup('flex');  
       } else {
         switch (header.toLowerCase()) {
           case 'quizzes':
@@ -284,6 +281,10 @@ export default function App() {
     changeColour4(colourArray[3]);
     changeColour5(colourArray[4]);
   };
+
+  useEffect(() => {
+    resetColours(colourScheme);
+  }, [colourScheme]);
 
   // Quiz question generator.
   let loadQuestions = function () {
@@ -409,25 +410,41 @@ export default function App() {
     } catch (e) { }
   };
 
-  // For when a test is exited or completed.
-  function testComplete() {
-    // reset Ui
-    setHeader('Tests');
-    changeTestFeedbackDisplay('none');
-    changeTestDisplay('none');
-    changeTestMenuDisplay('flex');
-
-    // write to db
-    // reset timer and questions.
+  // Timer state set initially to 1 hour.
+  const [timerState, changeTimer] = useState(new Date(3600 * 1000).toISOString().substr(11, 8));
+  let timeInterval;
+  
+  function testStarted() {
+    // Makes the timer tick at the right speed.
+    let timerVariable = 3600;
+    timeInterval = setInterval(function () {
+      changeTimer(new Date(timerVariable-- * 1000).toISOString().substr(11, 8));
+      if (timerVariable === 0) {
+        testComplete();
+      }
+    }, 1000);
   };
+
+ // For when a test is exited or completed.
+ function testComplete() {
+   clearInterval(timeInterval);
+   console.log('completed');
+  // reset Ui
+  setHeader('Tests');
+  changeTestFeedbackDisplay('none');
+  changeTestDisplay('none');
+  changeTestMenuDisplay('flex');
+
+  // write to db
+  // reset timer and questions.
+};
 
   const [questionNumber, changeQuestionNumber] = useState(1);
   const [displayBackPopup, changeBackPopup] = useState('none');
-  let wipeTimer = false;
 
   function yesPressBack() {
     changeBackPopup('none');
-    toTestMenu();
+    testComplete();
     changeQuestionNumber(1);
   };
 
@@ -435,22 +452,6 @@ export default function App() {
     changeBackPopup('none');
   };
 
-
-  // Timer state set initially to 1 hour.
-  const [timerState, changeTimer] = useState(new Date(3600 * 1000).toISOString().substr(11, 8));
-
-  function testStarted() {
-    // Makes the timer tick at the right speed.
-    let timerVariable = 3600;
-    let timeInterval = setInterval(function () {
-      timerVariable--;
-      changeTimer(new Date(timerVariable * 1000).toISOString().substr(11, 8));
-
-      if (timerVariable === 0) {
-        testComplete(true);
-      }
-    }, 1000);
-  };
 
 
   // PROGRESS TRACKER FUNCTIONALITY.
@@ -712,8 +713,6 @@ export default function App() {
       display: lineGraphDisplay
     },
     barGraph: {
-      marginVertical: 8,
-      borderRadius: 16,
       display: barGraphDisplay,
       backgroundColor: colourScheme[0]
     },
@@ -1033,11 +1032,15 @@ export default function App() {
               width={300} // from react-native
               height={220}
               yAxisSuffix='%'
+              fromZero={true}
               yAxisInterval={1} // optional, defaults to 1
               chartConfig={{
                 backgroundColor: colourScheme[0],
                 backgroundGradientFrom: "#3A41C6",
                 backgroundGradientTo: "#3A41C6",
+                fillShadowGradient: 'black',
+                fillShadowGradientOpacity: 1,
+                fromZero: true,
                 decimalPlaces: 0, // optional, defaults to 2dp
                 color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                 labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
@@ -1068,25 +1071,24 @@ export default function App() {
               width={300} // from react-native
               height={220}
               yAxisSuffix='%'
+              fillShadowGradient='black'
+              fromZero={true}
               yAxisInterval={1} // optional, defaults to 1
               chartConfig={{
-                backgroundColor: colourScheme[0],
+                backgroundColor: "red",
                 backgroundGradientFrom: "#3A41C6",
                 backgroundGradientTo: "#3A41C6",
+                barPercentage: 0.8,
+                barRadius: 1,
+                fillShadowGradient: 'black',
+                fillShadowGradientOpacity: 1,
                 decimalPlaces: 0, // optional, defaults to 2dp
-                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                color: (opacity = 0.5) => `rgba(255, 255, 255, ${opacity})`,
                 labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                 style: {
                   borderRadius: 16
-                },
-                propsForDots: {
-                  r: "6",
-                  strokeWidth: "2",
-                  stroke: "#ffa726"
                 }
               }}
-              bezier
-
             />
           </View>
         </View>
