@@ -3,15 +3,15 @@
 // Options functionality - change text size, erase stored data.
 // Progress tracker improvements.
 // Improve code quality and file structure.
-// Progress tracker components?
 // Test resets
 // Reformat stylesheets.
+// Remove animated splash packagejson
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // App components import.
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Animated } from 'react-native';
 import NavigationButton from './components/NavigationButton';
 import QuizButton from './components/QuizButton';
 import SubHeadingSelector from './components/SubHeadingSelector';
@@ -37,8 +37,7 @@ export default function App() {
   // DISPLAY STATES.
   // State changes for updating components in the app.
   const [header, setHeader] = useState('Home');
-  // const [headerDisplay, changeHeaderDisplay] = useState('none');
-  // const [splashDisplay, changeSplashDisplay] = useState('flex');
+  const [splashDisplay, changeSplashDisplay] = useState('flex');
   const [homeDisplay, changeHomeDisplay] = useState('flex');
   const [quizMenuDisplay, changeQuizMenuDisplay] = useState('none');
   const [testMenuDisplay, changeTestMenuDisplay] = useState('none');
@@ -70,7 +69,7 @@ export default function App() {
   const [colourObject, updateColourObject] = useState({});
   const [colourScheme, updateColourScheme] = useState([]);
 
-  (async function(){
+  (async function () {
     updateColourObject(await getStylePreferences());
   })()
 
@@ -82,8 +81,8 @@ export default function App() {
   }, [colourObject]);
 
   const [navigationText, updateNavigationText] = useState('white');
-   // Updates the stored value for text preferences.
-   async function setTextStorage(textColour) {
+  // Updates the stored value for text preferences.
+  async function setTextStorage(textColour) {
     try {
       await AsyncStorage.setItem('text', textColour);
     } catch (e) { }
@@ -142,7 +141,7 @@ export default function App() {
       if (value !== null) {
         return value;
       }
-      
+
     } catch (e) { }
   };
 
@@ -157,7 +156,19 @@ export default function App() {
     }
   }, [chartData]);
 
-  // SPASH GOES HERE
+  // SPASH FUNCTIONALITY
+  const fadeAnim = useRef(new Animated.Value(1)).current;
+  let splashTime = 311000;
+
+  // Will change fadeAnim value to 0 in 3 seconds
+  Animated.timing(fadeAnim, {
+    toValue: 0,
+    duration: splashTime
+  }).start();
+
+  setTimeout(function () {
+    changeSplashDisplay('none');
+  }, splashTime);
 
 
   // NAVIGATION FUNCTIONALITY.
@@ -216,7 +227,7 @@ export default function App() {
       if (displayOptions === 'flex') {
         optionsPressed();
       } else if (header.includes(' Test ')) {
-        changeBackPopup('flex');  
+        changeBackPopup('flex');
       } else {
         switch (header.toLowerCase()) {
           case 'quizzes':
@@ -413,7 +424,7 @@ export default function App() {
   // Timer state set initially to 1 hour.
   const [timerState, changeTimer] = useState(new Date(3600 * 1000).toISOString().substr(11, 8));
   let timeInterval;
-  
+
   function testStarted() {
     // Makes the timer tick at the right speed.
     let timerVariable = 3600;
@@ -425,19 +436,19 @@ export default function App() {
     }, 1000);
   };
 
- // For when a test is exited or completed.
- function testComplete() {
-   clearInterval(timeInterval);
-   console.log('completed');
-  // reset Ui
-  setHeader('Tests');
-  changeTestFeedbackDisplay('none');
-  changeTestDisplay('none');
-  changeTestMenuDisplay('flex');
+  // For when a test is exited or completed.
+  function testComplete() {
+    clearInterval(timeInterval);
+    console.log('completed');
+    // reset Ui
+    setHeader('Tests');
+    changeTestFeedbackDisplay('none');
+    changeTestDisplay('none');
+    changeTestMenuDisplay('flex');
 
-  // write to db
-  // reset timer and questions.
-};
+    // write to db
+    // reset timer and questions.
+  };
 
   const [questionNumber, changeQuestionNumber] = useState(1);
   const [displayBackPopup, changeBackPopup] = useState('none');
@@ -462,9 +473,9 @@ export default function App() {
   useEffect(() => {
     try {
       changeChartLabels(getLabels(JSON.parse(chartData)[0].mathsScores));
-    } catch (e) {}
+    } catch (e) { }
   }, [chartData]);
-  
+
   function getLabels(param) {
     try {
       let labels = [];
@@ -559,8 +570,9 @@ export default function App() {
 
 
   function updateColours(array, string) {
-     setStylePreferences( [{
-      "styles": array}]);
+    setStylePreferences([{
+      "styles": array
+    }]);
     updateNavigationText(string);
     setTextStorage(string);
     resetColours(array);
@@ -569,16 +581,19 @@ export default function App() {
   // Stylesheet for splashscreen.
   const splashStyle = StyleSheet.create({
     container: {
-      display: 'none',
+      display: splashDisplay,
       width: '100%',
       height: '100%',
-      backgroundColor: '#1528bd'
+      backgroundColor: '#966FD6',
+      zIndex: 999,
+      opacity: fadeAnim
     },
     text: {
       color: 'white',
       fontWeight: 'bold',
-      fontSize: 40,
-      textAlign: 'center'
+      fontSize: 35,
+      textAlign: 'center',
+      margin: 'auto'
     }
   });
 
@@ -842,9 +857,10 @@ export default function App() {
   return (
     <View style={styles.container}>
 
-      <View style={splashStyle.container} >
-        <Text style={splashStyle.text}>Set4SuccessTuition</Text>
-      </View>
+      <Animated.View style={splashStyle.container}>
+        <Text style={splashStyle.text}>Set4Success Tuition</Text>
+      </Animated.View>
+
 
       {/* Header component. */}
       <View style={headers.header}>
