@@ -1,5 +1,5 @@
 // Todo:
-// Test functionality - feedback, timer, storage.
+// Test functionality - timer.
 // Options functionality - change text size, erase stored data.
 // Progress tracker improvements.
 // Improve code quality and file structure.
@@ -111,7 +111,7 @@ export default function App() {
     } catch (e) { }
   };
 
-  //   setPreviousTests( [{
+  //   setTests( [{
   //     "mathsScores": [
   //       10,
   //       90,
@@ -447,12 +447,12 @@ export default function App() {
     changeTestMenuDisplay('flex');
 
     // write to db
-    
+
     let correctAns = [];
     for (let index = 0; index < tempRecord.length; index++) {
-        if (tempRecord[index].toLowerCase().includes('correct!')) {
-            correctAns.push('.');
-        }
+      if (tempRecord[index].toLowerCase().includes('correct!')) {
+        correctAns.push('.');
+      }
     };
     let testScore = ((correctAns.length / tempRecord.length) * 100);
     let temp = JSON.parse(chartData)[0].mathsScores;
@@ -590,6 +590,24 @@ export default function App() {
     updateNavigationText(string);
     setTextStorage(string);
     resetColours(array);
+  };
+
+  const [displayErasePopup, changeErasePopup] = useState('none');
+
+  function eraseDataFunction() {
+    changeErasePopup('none');
+    setTests([{
+      "mathsScores": [],
+      "verbalScores": [],
+      "nonVerbalScores": []
+    }]);
+
+    setStylePreferences([{
+      "styles": ['#3A41C6', '#3D3BBB', '#4634A7', '#4C2C96', '#512888']
+    }]);
+
+    setTextStorage('white');
+    updateNavigationText('white');
   };
 
   // Stylesheet for splashscreen.
@@ -884,7 +902,12 @@ export default function App() {
       </View>
 
       {/* Options */}
+      <Popup text={'This will erase all stored data including test scores, mistake quizzes and colour preferences. Are you sure you want to do this?'}
+        yesPress={eraseDataFunction} noPress={function () {
+          changeErasePopup('none');
+        }} display={displayErasePopup}></Popup>
       <View style={optionStyles.container}>
+
         <Text style={optionStyles.subheading}>Colour Scheme</Text>
         <View style={optionStyles.colourContainer}>
           {/* Default - purple */}
@@ -930,10 +953,11 @@ export default function App() {
         </View>
 
 
-
-        {/* <TouchableOpacity style={optionStyles.eraseDataButton}>
+        <TouchableOpacity style={optionStyles.eraseDataButton} onPress={function () {
+          changeErasePopup('flex');
+        }}>
           <Text style={optionStyles.eraseText}>Erase Stored Data</Text>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
 
       {/* Default home page component. */}
