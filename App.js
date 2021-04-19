@@ -104,7 +104,7 @@ export default function App() {
 
   //Progress tracker storage
   // Saves the new style preference to asynchronous storage.
-  async function setPreviousTests(testsObject) {
+  async function setTests(testsObject) {
     try {
       let jsonObject = JSON.stringify(testsObject);
       await AsyncStorage.setItem('previousTests', jsonObject);
@@ -158,7 +158,7 @@ export default function App() {
 
   // SPASH FUNCTIONALITY
   const fadeAnim = useRef(new Animated.Value(1)).current;
-  let splashTime = 311000;
+  let splashTime = 1;
 
   // Will change fadeAnim value to 0 in 3 seconds
   Animated.timing(fadeAnim, {
@@ -447,6 +447,20 @@ export default function App() {
     changeTestMenuDisplay('flex');
 
     // write to db
+    
+    let correctAns = [];
+    for (let index = 0; index < tempRecord.length; index++) {
+        if (tempRecord[index].toLowerCase().includes('correct!')) {
+            correctAns.push('.');
+        }
+    };
+    let testScore = ((correctAns.length / tempRecord.length) * 100);
+    let temp = JSON.parse(chartData)[0].mathsScores;
+    temp.push(testScore);
+    let obh = JSON.parse(chartData);
+    obh[0].mathsScores = temp;
+
+    setTests(obh);
     // reset timer and questions.
   };
 
