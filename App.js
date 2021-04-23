@@ -1,6 +1,6 @@
 // Todo:
 // Test functionality - timer.
-// Options functionality - change text size, erase stored data.
+// Options functionality - change text size
 // Progress tracker improvements.
 // Improve code quality and file structure.
 // Test resets
@@ -610,6 +610,59 @@ export default function App() {
     updateNavigationText('white');
   };
 
+
+  function getProgressTrackerText() {
+    function getAverage(arrayOfNumbers) {
+      let total = 0;
+      arrayOfNumbers.forEach(function (value) {
+        if (typeof value === 'number') {
+          total += value;
+        }
+      });
+      return total / (arrayOfNumbers.length || 1);
+    };
+
+    function loadText(average, topic) {
+      let text = 'You have scored an average of ' + average + '% in ' + topic + '. '
+      if (average === 100) {
+        return text + 'Well done! This is a perfect score.';
+      } else if (average > 70) {
+        return text + 'Well done! This is an excellent score.';
+      } else if (average > 60) {
+        return text + 'Well done! This is an good score. Keep on studying to to achieve as higher mark as possible!';
+      } else if (average >= 50) {
+        return text + "You know more than you don't! Keep trying and try to focus on the areas that you are not as good at.";
+      } else if (average < 50) {
+        return text + 'Keep on trying!.';
+      }
+    };
+
+    try {
+      let data = JSON.parse(chartData)[0];
+
+      if (typeof data === 'object') {
+        if (testTopicTitle.toLowerCase() === 'maths') {
+          return loadText(getAverage(data.mathsScores), 'Maths');
+        } else if (testTopicTitle === 'Verbal') {
+          return loadText(getAverage(data.verbalScores), 'Verbal');
+        } else if (testTopicTitle === 'Non-Verbal') {
+          return loadText(getAverage(data.nonVerbalScores), 'Non-Verbal');
+        }
+      }
+    } catch (e) { console.log(e) }
+  };
+
+  const [progressTrackerText, changeProgressTrackerText] = useState('');
+  useEffect(function () {
+    if (typeof chartData === 'string') {
+      changeProgressTrackerText(getProgressTrackerText());
+    }
+  }, [chartData]);
+
+  useEffect(function () {
+    changeProgressTrackerText(getProgressTrackerText());
+  }, [testTopicTitle]);
+
   // Stylesheet for splashscreen.
   const splashStyle = StyleSheet.create({
     container: {
@@ -765,7 +818,7 @@ export default function App() {
     },
     buttonContainer: {
       width: '100%',
-      height: '50%',
+      height: '7.5%',
       flexDirection: 'row',
       justifyContent: 'space-evenly',
       color: 'white'
@@ -776,6 +829,14 @@ export default function App() {
       height: 50,
       backgroundColor: colourScheme[0],
       borderRadius: 16
+    },
+    summaryContainer: {
+      width: '80%',
+      height: '30%',
+      margin: 'auto'
+    },
+    summaryText: {
+      fontWeight: 'bold'
     }
   });
 
@@ -1147,16 +1208,19 @@ export default function App() {
           </View>
         </View>
 
-
-
         <View style={statisticsStyles.buttonContainer}>
           <View style={statisticsStyles.button}><Text style={{ color: 'white', margin: 'auto', fontWeight: 'bold' }} onPress={changeGraph}>Line Graph</Text></View>
           <View style={statisticsStyles.button}><Text style={{ color: 'white', margin: 'auto', fontWeight: 'bold' }} onPress={changeGraph}>Bar Graph</Text></View>
         </View>
+        <View style={statisticsStyles.summaryContainer}>
+          <Text style={statisticsStyles.summaryText}>{progressTrackerText}</Text>
+        </View>
+
       </View>
 
+
+
       {/* Component for the about section. */}
-      {/* 'u2002' is the code for a bullet point, it is required to form an unordered list. */}
       <View style={aboutStyles.container}>
         <SubHeadingSelector text={aboutHeader} leftPress={aboutLeftPress} rightPress={aboutRightPress} colour={colourScheme[0]} textColour={navigationText}></SubHeadingSelector>
         <Text style={aboutStyles.text}>{aboutText}</Text>
