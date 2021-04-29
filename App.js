@@ -6,6 +6,7 @@
 // Test resets
 // Reformat stylesheets.
 // Remove animated splash packagejson
+// quiz accuracy
 
 import React, { useEffect, useState, useRef } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -27,10 +28,14 @@ import {
 } from "react-native-chart-kit";
 
 // Questions Test Data
-import testQuestions from './questions/testQuestions.json';
+import mathsQuiz from './questions/mathsQuiz.json';
+import verbalQuiz from './questions/verbalQuiz.json';
 
 // Change to storage.
 let tempRecord = [];
+let questionsToGet = '';
+
+
 
 
 export default function App() {
@@ -46,6 +51,19 @@ export default function App() {
   const [displayOptions, changeOptionsDisplay] = useState('none');
   const [displayStatistics, changeStatisticsDisplay] = useState('none');
   const [displayTest, changeTestDisplay] = useState('none');
+
+  useEffect(function () {
+    try {
+      switch (header.toLowerCase()) {
+        case 'maths quiz':
+          questionsToGet = 'mathsQuiz';
+          break;
+        case 'verbal quiz':
+          questionsToGet = 'verbalQuiz';
+          break;
+      }
+    } catch (e) { }
+  }, [header]);
 
   //STORAGE.
   // Saves the new style preference to asynchronous storage.
@@ -298,16 +316,35 @@ export default function App() {
   }, [colourScheme]);
 
   // Quiz question generator.
-  let loadQuestions = function () {
+  let loadQuizQuestions = function (type) {
     try {
+      let questions;
+      switch (type) {
+        case 'mathsQuiz':
+          questions = mathsQuiz;
+          console.log('hi');
+          break;
+        case 'verbalQuiz':
+          questions = verbalQuiz;
+          break;
+        case 'nonVerbalQuiz':
+          break;
+        case 'mathTest1':
+          break;
+      }
       // Generates a random key and accesses it from JSON.
-      let keys = Object.keys(testQuestions);
+      let keys = Object.keys(questions);
       let randomKey = keys[Math.floor(Math.random() * keys.length)]
-      return testQuestions[randomKey];
+      return questions[randomKey];
+
     } catch (e) { }
   };
 
   // TEST FUNCTIONALITY.
+  
+  let loadTestQuestions = function () {
+
+  };
 
   // Functions for changing the subject of the tests.
   function onLeftPress() {
@@ -379,7 +416,7 @@ export default function App() {
     }
   };
 
-  const [question, changeQuestion] = useState(loadQuestions());
+  const [question, changeQuestion] = useState([]);
   const [testTopicTitle, changeTestTopicTitle] = useState('Maths');
   const [testFeedbackDisplay, changeTestFeedbackDisplay] = useState('none');
   const [testRecording, updateTestRecording] = useState([]);
@@ -394,7 +431,7 @@ export default function App() {
       if (test) {
         setTimeout(function () {
           resetColours(colourScheme);
-          changeQuestion(loadQuestions());
+          changeQuestion(loadQuizQuestions());
           // Only tests have question numbers.
           changeQuestionNumber(questionNumber + 1)
           if (question.correct === answer) {
@@ -413,7 +450,7 @@ export default function App() {
         if (question.correct === answer) {
           setTimeout(function () {
             resetColours(colourScheme);
-            changeQuestion(loadQuestions());
+            changeQuestion(loadQuizQuestions(questionsToGet));
           }, 1000);
         }
       }
@@ -857,6 +894,23 @@ export default function App() {
     }
   });
 
+  const questionDescriptionStyles = StyleSheet.create({
+    container: {
+      display: multiChoiceQuestions,
+      height: '40%',
+      width: '100%',
+      position: 'absolute'
+    },
+    text: {
+      marginHorizontal: 'auto',
+      marginTop: '20%',
+      fontSize: 20,
+      width: '80%',
+      height: '40%',
+      textAlign: 'center'
+    }
+  });
+
 
   const styles = StyleSheet.create({
     test: {
@@ -894,12 +948,7 @@ export default function App() {
       position: 'absolute',
       bottom: 0
     },
-    questionDescription: {
-      display: multiChoiceQuestions,
-      position: 'absolute',
-      top: 40,
-      margin: 'auto'
-    },
+
     testbuttons: {
       display: multiChoiceQuestions,
     },
@@ -1036,9 +1085,13 @@ export default function App() {
           setHeader('Maths Quiz');
           changeQuizMenuDisplay('none');
           changeQuestionDisplay('flex');
+          changeQuestion(loadQuizQuestions('mathsQuiz'));
         }} />
         <NavigationButton text='Verbal' explainText='Lorem ipsum dolor sit amet, consectetur.' colour={colourScheme[2]} textColour={navigationText} onPress={function () {
           setHeader('Verbal Quiz');
+          changeQuizMenuDisplay('none');
+          changeQuestionDisplay('flex');
+          changeQuestion(loadQuizQuestions('verbalQuiz'));
         }} />
         <NavigationButton text='Non-Verbal' explainText='Lorem ipsum dolor sit amet, consectetur' colour={colourScheme[3]} textColour={navigationText} onPress={function () {
           setHeader('Non-Verbal Quiz');
@@ -1049,8 +1102,8 @@ export default function App() {
       </View>
       <View style={styles.quizContainer}>
 
-        <View style={styles.questionDescription}>
-          <Text style={{ fontWeight: 'bold', fontSize: 30, textAlign: 'center' }}>{question.description}</Text>
+        <View style={questionDescriptionStyles.container}>
+          <Text style={questionDescriptionStyles.text}>{question.description}</Text>
         </View>
 
 
