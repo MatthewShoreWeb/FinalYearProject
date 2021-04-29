@@ -31,11 +31,12 @@ import {
 import mathsQuiz from './questions/mathsQuiz.json';
 import verbalQuiz from './questions/verbalQuiz.json';
 
+import mathTest1 from './questions/tests/mathsTest_1.json';
+
 // Change to storage.
 let tempRecord = [];
 let questionsToGet = '';
-
-
+let testQuestionNumber = -1;
 
 
 export default function App() {
@@ -329,8 +330,6 @@ export default function App() {
           break;
         case 'nonVerbalQuiz':
           break;
-        case 'mathTest1':
-          break;
       }
       // Generates a random key and accesses it from JSON.
       let keys = Object.keys(questions);
@@ -341,9 +340,23 @@ export default function App() {
   };
 
   // TEST FUNCTIONALITY.
-  
-  let loadTestQuestions = function () {
 
+  let loadTestQuestions = function (test) {
+    testQuestionNumber = testQuestionNumber + 1;
+
+
+    console.log(testQuestionNumber);
+
+    try {
+      switch (test) {
+        case 'maths test 1':
+          return mathTest1[testQuestionNumber];
+        // case 'verbalQuiz':
+        //   return verbalQuiz[questionNumber];
+        // case 'nonVerbalQuiz':
+        //   break;
+      }
+    } catch (e) { }
   };
 
   // Functions for changing the subject of the tests.
@@ -431,7 +444,7 @@ export default function App() {
       if (test) {
         setTimeout(function () {
           resetColours(colourScheme);
-          changeQuestion(loadQuizQuestions());
+          changeQuestion(loadTestQuestions(header.toLowerCase(), true));
           // Only tests have question numbers.
           changeQuestionNumber(questionNumber + 1)
           if (question.correct === answer) {
@@ -896,7 +909,6 @@ export default function App() {
 
   const questionDescriptionStyles = StyleSheet.create({
     container: {
-      display: multiChoiceQuestions,
       height: '40%',
       width: '100%',
       position: 'absolute'
@@ -1133,6 +1145,7 @@ export default function App() {
         <SubHeadingSelector text={testTopicTitle} leftPress={onLeftPress} rightPress={onRightPress} colour={colourScheme[0]} textColour={navigationText}></SubHeadingSelector>
         <View style={testStyles.testNavButtons}>
           <NavigationButton text={testTopicTitle + ' Test 1'} colour={colourScheme[1]} textColour={navigationText} onPress={function () {
+            changeQuestion(loadTestQuestions('maths test 1'));
             toTests(testTopicTitle + ' Test 1');
           }} explainText={'Best score: - ' + getPreviousScore(testTopicTitle + '1') + '%.'} />
           <NavigationButton text={testTopicTitle + ' Test 2'} colour={colourScheme[2]} textColour={navigationText} onPress={function () {
@@ -1158,7 +1171,10 @@ export default function App() {
           <Text style={testStyles.secondaryHeaderText}>{timerState}</Text>
         </View>
 
-        <Text style={{ fontWeight: 'bold', fontSize: 30, textAlign: 'center' }}>{question.description}</Text>
+        {/* here be the tests */}
+        <View style={questionDescriptionStyles.container}>
+          <Text style={questionDescriptionStyles.text}>{question.description}</Text>
+        </View>
         <View style={testStyles.questions}>
           <QuizButton text={'A)  ' + question.A} colour={questionColour1} textColour={navigationText} onPress={function () {
             checkAnswer(question, 'A', true) ? changeColour1('#95F985') : changeColour1('#E45045');
