@@ -25,7 +25,7 @@ export default function Popup({ text, yesPress, noPress, display }) {
             backgroundColor: 'black'
         },
         text: {
-            fontWeight: 'bold',
+            fontFamily: 'Verdana',
             color: 'white',
             padding: 10
         }

@@ -12,8 +12,7 @@ export default function QuizButton({ text, onPress, colour, textColour }) {
             width: '100%'
         },
         buttonText: {
-            color: textColour,
-            fontWeight: 'bold',
+            color: textColour,  
             textTransform: 'uppercase',
             fontSize: 16,
             textAlign: 'center'

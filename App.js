@@ -32,6 +32,7 @@ import mathsQuiz from './questions/mathsQuiz.json';
 import verbalQuiz from './questions/verbalQuiz.json';
 
 import mathTest1 from './questions/tests/mathsTest_1.json';
+import mathTest2 from './questions/tests/mathsTest_2.json';
 
 // Change to storage.
 let tempRecord = [];
@@ -351,8 +352,8 @@ export default function App() {
       switch (test) {
         case 'maths test 1':
           return mathTest1[testQuestionNumber];
-        // case 'verbalQuiz':
-        //   return verbalQuiz[questionNumber];
+        case 'maths test 2':
+          return mathTest2[testQuestionNumber];
         // case 'nonVerbalQuiz':
         //   break;
       }
@@ -495,6 +496,7 @@ export default function App() {
     changeTestFeedbackDisplay('none');
     changeTestDisplay('none');
     changeTestMenuDisplay('flex');
+    testQuestionNumber = -1;
 
     // write to db
 
@@ -682,8 +684,10 @@ export default function App() {
         return text + 'Well done! This is an good score. Keep on studying to to achieve as higher mark as possible!';
       } else if (average >= 50) {
         return text + "You know more than you don't! Keep trying and try to focus on the areas that you are not as good at.";
-      } else if (average < 50) {
+      } else if (average < 50 && average > 0) {
         return text + 'Keep on trying!.';
+      } else if (average === 0) {
+        return text + 'Complete some tests to recieve some feedback.'
       }
     };
 
@@ -886,7 +890,7 @@ export default function App() {
       margin: 'auto'
     },
     summaryText: {
-      fontWeight: 'bold'
+      fontFamily: 'Verdana'
     }
   });
 
@@ -901,9 +905,9 @@ export default function App() {
     },
     text: {
       fontFamily: 'Verdana',
-      fontSize: 20,
-      fontWeight: 'bold',
-      paddingHorizontal: '7.5%'
+      fontSize: 15,
+      paddingHorizontal: '7.5%',
+      paddingVertical: '5%'
     }
   });
 
@@ -997,7 +1001,6 @@ export default function App() {
     },
     headerText: {
       color: navigationText,
-      fontWeight: 'bold',
       fontSize: 25
     },
     back: {
@@ -1149,6 +1152,7 @@ export default function App() {
             toTests(testTopicTitle + ' Test 1');
           }} explainText={'Best score: - ' + getPreviousScore(testTopicTitle + '1') + '%.'} />
           <NavigationButton text={testTopicTitle + ' Test 2'} colour={colourScheme[2]} textColour={navigationText} onPress={function () {
+            changeQuestion(loadTestQuestions('maths test 2'));
             toTests(testTopicTitle + ' Test 2');
           }} explainText={'Best score: - ' + getPreviousScore(testTopicTitle + '2') + '%.'} />
           <NavigationButton text={testTopicTitle + ' Test 3'} colour={colourScheme[3]} textColour={navigationText} onPress={function () {
@@ -1278,8 +1282,8 @@ export default function App() {
         </View>
 
         <View style={statisticsStyles.buttonContainer}>
-          <View style={statisticsStyles.button}><Text style={{ color: 'white', margin: 'auto', fontWeight: 'bold' }} onPress={changeGraph}>Line Graph</Text></View>
-          <View style={statisticsStyles.button}><Text style={{ color: 'white', margin: 'auto', fontWeight: 'bold' }} onPress={changeGraph}>Bar Graph</Text></View>
+          <View style={statisticsStyles.button}><Text style={{ color: 'white', margin: 'auto', fontFamily: 'Verdana' }} onPress={changeGraph}>Line Graph</Text></View>
+          <View style={statisticsStyles.button}><Text style={{ color: 'white', margin: 'auto', fontFamily: 'Verdana' }} onPress={changeGraph}>Bar Graph</Text></View>
         </View>
         <View style={statisticsStyles.summaryContainer}>
           <Text style={statisticsStyles.summaryText}>{progressTrackerText}</Text>

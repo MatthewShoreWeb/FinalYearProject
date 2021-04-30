@@ -14,7 +14,6 @@ export default function SubHeadingSelector({ text, leftPress, rightPress, colour
             paddingHorizontal: '8%'
         },
         text: {
-            fontWeight: 'bold',
             color: textColour,
             fontSize: 20
         }

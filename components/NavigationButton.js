@@ -12,7 +12,6 @@ export default function NavigationButton({ text, explainText, onPress, colour, p
         },
         buttonText: {
             color: textColour,
-            fontWeight: 'bold',
             textTransform: 'uppercase',
             fontSize: 20,
             textAlign: 'center',
