@@ -791,7 +791,7 @@ export default function App() {
       height: '10%',
       width: '50%',
       marginHorizontal: '25%',
-      borderRadius: 40
+      borderRadius: 40,
     },
     sliderContainer: {
       height: '30%',
@@ -804,7 +804,7 @@ export default function App() {
     eraseText: {
       color: 'white',
       fontWeight: 'bold',
-      fontSize: 20 * textSize,
+      fontSize: 15 * textSize,
       margin: 'auto'
     }
   });
