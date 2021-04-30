@@ -10,6 +10,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Slider from '@react-native-community/slider';
 
 // App components import.
 import { StyleSheet, Text, TouchableOpacity, View, Animated } from 'react-native';
@@ -53,6 +54,8 @@ export default function App() {
   const [displayOptions, changeOptionsDisplay] = useState('none');
   const [displayStatistics, changeStatisticsDisplay] = useState('none');
   const [displayTest, changeTestDisplay] = useState('none');
+
+  const [textSize, changeTextSize] = useState(1);
 
   useEffect(function () {
     try {
@@ -660,6 +663,7 @@ export default function App() {
 
     setTextStorage('white');
     updateNavigationText('white');
+    changeTextSize(1);
   };
 
 
@@ -745,8 +749,8 @@ export default function App() {
       display: displayOptions
     },
     subheading: {
-      fontWeight: 'bold',
-      fontSize: 30,
+      fontFamily: 'Verdana',
+      fontSize: 20 * textSize,
       textAlign: 'center',
       marginBottom: '5%'
     },
@@ -765,10 +769,18 @@ export default function App() {
       marginHorizontal: '25%',
       borderRadius: 40
     },
+    sliderContainer: {
+      height: '30%',
+      width: '80%',
+      marginHorizontal: 'auto'
+    },
+    slider: {
+
+    },
     eraseText: {
       color: 'white',
       fontWeight: 'bold',
-      fontSize: 20,
+      fontSize: 20 * textSize,
       margin: 'auto'
     }
   });
@@ -836,7 +848,7 @@ export default function App() {
     secondaryHeaderText: {
       color: navigationText,
       fontWeight: 'bold',
-      fontSize: 25,
+      fontSize: 25 * textSize,
       paddingHorizontal: 10
     },
     questions: {
@@ -905,7 +917,7 @@ export default function App() {
     },
     text: {
       fontFamily: 'Verdana',
-      fontSize: 15,
+      fontSize: 15 * textSize,
       paddingHorizontal: '7.5%',
       paddingVertical: '5%'
     }
@@ -1033,7 +1045,7 @@ export default function App() {
         }} display={displayErasePopup}></Popup>
       <View style={optionStyles.container}>
 
-        <Text style={optionStyles.subheading}>Colour Scheme</Text>
+        <Text style={optionStyles.subheading}>Select a colour scheme:</Text>
         <View style={optionStyles.colourContainer}>
           {/* Default - purple */}
           <ColourButton colour='#3A41C6' onPress={function () {
@@ -1077,7 +1089,22 @@ export default function App() {
           }} />
         </View>
 
-
+        <Text style={optionStyles.subheading}>Adjust the text size:</Text>
+        <View style={optionStyles.sliderContainer}>
+          <Slider
+            style={optionStyles.slider}
+            minimumValue={0.8}
+            maximumValue={1.2}
+            minimumTrackTintColor='#3A41C6'
+            maximumTrackTintColor='black'
+            onSlidingComplete={function (sliderValue) {
+              if (sliderValue !== 0) {
+                console.log(sliderValue.toFixed(1));
+                changeTextSize(sliderValue.toFixed(1));
+              }
+            }}
+          />
+        </View>
         <TouchableOpacity style={optionStyles.eraseDataButton} onPress={function () {
           changeErasePopup('flex');
         }}>
@@ -1096,19 +1123,19 @@ export default function App() {
       {/* Menu for selecting what quiz you would like to do. */}
       <View style={navigationStyles.quizzes}>
         <Text style={styles.topText}></Text>
-        <NavigationButton text='Maths' explainText='Lorem ipsum dolor sit amet, consectetur.' colour={colourScheme[1]} textColour={navigationText} onPress={function () {
+        <NavigationButton text='Maths' explainText='Practice your maths skills!.' colour={colourScheme[1]} textColour={navigationText} onPress={function () {
           setHeader('Maths Quiz');
           changeQuizMenuDisplay('none');
           changeQuestionDisplay('flex');
           changeQuestion(loadQuizQuestions('mathsQuiz'));
         }} />
-        <NavigationButton text='Verbal' explainText='Lorem ipsum dolor sit amet, consectetur.' colour={colourScheme[2]} textColour={navigationText} onPress={function () {
+        <NavigationButton text='Verbal' explainText='Practice your verbal reasoning skills!' colour={colourScheme[2]} textColour={navigationText} onPress={function () {
           setHeader('Verbal Quiz');
           changeQuizMenuDisplay('none');
           changeQuestionDisplay('flex');
           changeQuestion(loadQuizQuestions('verbalQuiz'));
         }} />
-        <NavigationButton text='Non-Verbal' explainText='Lorem ipsum dolor sit amet, consectetur' colour={colourScheme[3]} textColour={navigationText} onPress={function () {
+        <NavigationButton text='Non-Verbal' explainText='Practice your non-verbal reasoning skills!' colour={colourScheme[3]} textColour={navigationText} onPress={function () {
           setHeader('Non-Verbal Quiz');
         }} />
         <NavigationButton text='Mistakes' explainText='Practice the questions you have been having difficulty with.' colour={colourScheme[4]} textColour={navigationText} onPress={function () {
