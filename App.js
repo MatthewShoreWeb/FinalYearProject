@@ -55,8 +55,6 @@ export default function App() {
   const [displayStatistics, changeStatisticsDisplay] = useState('none');
   const [displayTest, changeTestDisplay] = useState('none');
 
-  const [textSize, changeTextSize] = useState(1);
-
   useEffect(function () {
     try {
       switch (header.toLowerCase()) {
@@ -192,6 +190,31 @@ export default function App() {
   setTimeout(function () {
     changeSplashDisplay('none');
   }, splashTime);
+
+
+  //Slider saving
+
+  async function setTextSize(size) {
+    try {;
+      await AsyncStorage.setItem('textSize', size);
+    } catch (e) { }
+  };
+
+  const [textSize, changeTextSize] = useState(1);
+
+  const getTextSize = async () => {
+    try {
+      const value = await AsyncStorage.getItem('textSize');
+      if (value !== null) {
+        return value;
+      }
+
+    } catch (e) { }
+  };
+
+  (async function () {
+    changeTextSize(await getTextSize());
+  })()
 
 
   // NAVIGATION FUNCTIONALITY.
@@ -664,6 +687,7 @@ export default function App() {
     setTextStorage('white');
     updateNavigationText('white');
     changeTextSize(1);
+    setTextSize(1);
   };
 
 
@@ -1098,9 +1122,10 @@ export default function App() {
             minimumTrackTintColor='#3A41C6'
             maximumTrackTintColor='black'
             onSlidingComplete={function (sliderValue) {
-              if (sliderValue !== 0) {
-                console.log(sliderValue.toFixed(1));
+              if (sliderValue !== 0) {  
                 changeTextSize(sliderValue.toFixed(1));
+                //Save to storage.
+                setTextSize(sliderValue.toFixed(1));
               }
             }}
           />
