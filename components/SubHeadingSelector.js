@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 
-export default function SubHeadingSelector({ text, leftPress, rightPress, colour, textColour }) {
+export default function SubHeadingSelector({ text, leftPress, rightPress, colour, textColour, textSize }) {
 
     const styles = StyleSheet.create({
         container: {
@@ -15,7 +15,7 @@ export default function SubHeadingSelector({ text, leftPress, rightPress, colour
         },
         text: {
             color: textColour,
-            fontSize: 20
+            fontSize: 20 * textSize
         }
     });
     

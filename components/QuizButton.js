@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 
 
-export default function QuizButton({ text, onPress, colour, textColour }) {
+export default function QuizButton({ text, onPress, colour, textColour, textSize }) {
 
     const styles = StyleSheet.create({
         button: {
@@ -14,7 +14,7 @@ export default function QuizButton({ text, onPress, colour, textColour }) {
         buttonText: {
             color: textColour,  
             textTransform: 'uppercase',
-            fontSize: 16,
+            fontSize: 16 * textSize,
             textAlign: 'center'
         }
     });
