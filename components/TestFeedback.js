@@ -4,7 +4,7 @@ import Panel from './PanelDropDown'
 
 // Component to display test feedback. 
 // Takes a JSON object, string and function as parameters.
-export default function TestFeedback({ data, display, testCompleteFunction }) {
+export default function TestFeedback({ data, display }) {
 
 
     function getScore() {
@@ -37,17 +37,21 @@ export default function TestFeedback({ data, display, testCompleteFunction }) {
     let topMessage = getMessage();
 
     // Generates text for each question based on the input.
-    function generateText() {
+    function generateText(string, header) {
         try {
-            let text = '';
-            for (let index = 0; index < data.questions.length; index++) {
-                text = text + data.questions[index] + '\n';
-            };
-            return text;
+            string = string.split('/')
+            if (header) {
+                if (string[1].split(' ').pop() === string[2].split(' ').pop()) {
+                    return 'correct. Well done!';
+                } else {
+                    return 'incorrect. Keep trying!'
+                }
+            } else {
+            string = string[0] + '\n' + 'You put: ' + string[1] + '\n' + 'Correct ans: ' + string[2];
+            return string;
+            }
         } catch (e) { }
     };
-
-    let feedbackText = generateText();
 
     const styles = StyleSheet.create({
         container: {
@@ -58,26 +62,34 @@ export default function TestFeedback({ data, display, testCompleteFunction }) {
             bottom: 0,
             backgroundColor: 'white'
         },
-        button: {
-            width: 150,
-            height: 50,
-            backgroundColor: 'yellow',
-            margin: 'auto'
+        topTextContainer: {
+            width: '100%',
+            height: '20%',
+            backgroundColor: '#3D3BBB'
         },
-        buttonText: {
-            margin: 'auto'
+        text: {
+            marginTop: 15,
+            textAlign: 'center',
+            fontFamily: 'Verdana',
+            color: 'white'
         }
     });  
 
     return (
         <ScrollView style={styles.container}>
             <View style={styles.topTextContainer}>
-                <Text>{topMessage}</Text>
+                <Text style={styles.text}>{'topMessage'}</Text>
             </View>
-        <Panel header={'Question 1'} text={data[0]} display={display}></Panel>
-        <Panel header={'Question 2'} text={data[1]} display={display}></Panel>
-        <Panel header={'Question 3'} text={data[2]} display={display}></Panel>
-        <Panel header={'Question 4'} text={data[3]} display={display}></Panel>
+        <Panel header={'Question 1 was ' + generateText(data[0], true)} text={generateText(data[0])} display={display}></Panel>
+        <Panel header={'Question 2 was ' + generateText(data[1], true)} text={generateText(data[1])} display={display}></Panel>
+        <Panel header={'Question 3 was ' + generateText(data[2], true)} text={generateText(data[2])} display={display}></Panel>
+        <Panel header={'Question 4 was ' + generateText(data[3], true)} text={generateText(data[3])} display={display}></Panel>
+        <Panel header={'Question 5 was ' + generateText(data[4], true)} text={generateText(data[4])} display={display}></Panel>
+        <Panel header={'Question 6 was ' + generateText(data[5], true)} text={generateText(data[5])} display={display}></Panel>
+        <Panel header={'Question 7 was ' + generateText(data[6], true)} text={generateText(data[6])} display={display}></Panel>
+        <Panel header={'Question 8 was ' + generateText(data[7], true)} text={generateText(data[7])} display={display}></Panel>
+        <Panel header={'Question 9 was ' + generateText(data[8], true)} text={generateText(data[8])} display={display}></Panel>
+        <Panel header={'Question 10 was ' + generateText(data[9], true)} text={generateText(data[9])} display={display}></Panel>
         </ScrollView>
     )
 }

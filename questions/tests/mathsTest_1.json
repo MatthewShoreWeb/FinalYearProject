@@ -1,7 +1,13 @@
 [
-    {"description": "1test", "A": "134.49", "B": "282.43", "C": "185.49", "D": "184.94", "E": "184.49", "correct": "E"},
-    {"description": "2test", "A": "16,2714", "B": "10,62714", "C": "112,3014", "D": "1,726,014", "E": "2,230,014", "correct": "D"},
-    {"description": "3test", "A": "2,434", "B": "538", "C": "2,436", "D": "2,444", "E": "2,433", "correct": "A"},
-    {"description": "4test", "A": "78,616", "B": "92,008", "C": "565", "D": "78,615", "E": "78,161", "correct": "A"},
-    {"description": "5test", "A": "363.375", "B": "3,633.75", "C": "363,375", "D": "36,337.5", "E": "363.753", "correct": "A"}
+    {"description": "233.46 – 48.97 = ?", "A": "134.49", "B": "282.43", "C": "185.49", "D": "184.94", "E": "184.49", "correct": "E"},
+    {"description": "Increase one million and fifty thousand by six hundred and seventy thousand and fourteen", "A": "16,2714", "B": "10,62714", "C": "112,3014", "D": "1,726,014", "E": "2,230,014", "correct": "D"},
+    {"description": "Decrease four million and seven by four hundred and ninety six thousand and eleven", "A": "2,434", "B": "538", "C": "2,436", "D": "2,444", "E": "2,433", "correct": "A"},
+    {"description": "248 x 317 = ?", "A": "78,616", "B": "92,008", "C": "565", "D": "78,615", "E": "78,161", "correct": "A"},
+    {"description": "14.25 x 25.5 = ?", "A": "363.375", "B": "3,633.75", "C": "363,375", "D": "36,337.5", "E": "363.753", "correct": "A"},
+    {"description": "233.46 – 48.97 = ?", "A": "134.49", "B": "282.43", "C": "185.49", "D": "184.94", "E": "184.49", "correct": "E"},
+    {"description": "Increase one million and fifty thousand by six hundred and seventy thousand and fourteen", "A": "16,2714", "B": "10,62714", "C": "112,3014", "D": "1,726,014", "E": "2,230,014", "correct": "D"},
+    {"description": "Decrease four million and seven by four hundred and ninety six thousand and eleven", "A": "2,434", "B": "538", "C": "2,436", "D": "2,444", "E": "2,433", "correct": "A"},
+    {"description": "248 x 317 = ?", "A": "78,616", "B": "92,008", "C": "565", "D": "78,615", "E": "78,161", "correct": "A"},
+    {"description": "14.25 x 25.5 = ?", "A": "363.375", "B": "3,633.75", "C": "363,375", "D": "36,337.5", "E": "363.753", "correct": "A"},
+    {"description": "14.25 x 25.5 = ?", "A": "363.375", "B": "3,633.75", "C": "363,375", "D": "36,337.5", "E": "363.753", "correct": "A"}
 ]

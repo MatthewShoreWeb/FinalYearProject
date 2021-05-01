@@ -6,7 +6,9 @@ export default function NavigationButton({ text, header, textColour, textSize, d
 
     const styles = StyleSheet.create({
         panelContainer: {
-
+            borderBottomStyle: 'solid',
+            borderBottomColor: 'white',
+            borderBottomWidth: 3,
             backgroundColor: '#3A41C6',
             height: 10,
             width: '100%'
@@ -15,7 +17,8 @@ export default function NavigationButton({ text, header, textColour, textSize, d
             fontFamily: 'Verdana',
             color: 'white',
             fontSize: 12,
-            textAlign: 'center'
+            textAlign: 'center',
+            padding: 5
         }
     });
 

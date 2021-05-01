@@ -458,10 +458,10 @@ export default function App() {
   const [question, changeQuestion] = useState([]);
   const [testTopicTitle, changeTestTopicTitle] = useState('Maths');
   const [testFeedbackDisplay, changeTestFeedbackDisplay] = useState('none');
- 
+
   const [testRecording, updateTestRecording] = useState([]);
-   
- 
+
+
 
   function checkAnswer(question, answer, test) {
     try {
@@ -472,12 +472,9 @@ export default function App() {
           changeQuestion(loadTestQuestions(header.toLowerCase(), true));
           // Only tests have question numbers.
           changeQuestionNumber(questionNumber + 1)
-          console.log(question.description + '/' + question.correct)
-        
           tempRecord.push(question.description + '/' + question.correct + '/' + answer);
-        
-          if (questionNumber === 4) {
-            console.log(tempRecord);
+
+          if (questionNumber === 10) {
             updateTestRecording(tempRecord);
             changeTestFeedbackDisplay('flex');
           }
@@ -496,15 +493,16 @@ export default function App() {
   };
 
   // Timer state set initially to 1 hour.
-  const [timerState, changeTimer] = useState(new Date(3600 * 1000).toISOString().substr(11, 8));
+  const [timerState, changeTimer] = useState(new Date(600 * 1000).toISOString().substr(11, 8));
   let timeInterval;
 
   function testStarted() {
     // Makes the timer tick at the right speed.
-    let timerVariable = 3600;
+    let timerVariable = 600;
     timeInterval = setInterval(function () {
       changeTimer(new Date(timerVariable-- * 1000).toISOString().substr(11, 8));
       if (timerVariable === 0) {
+        timeInterval.clearInterval();
         testComplete();
       }
     }, 1000);
@@ -523,11 +521,14 @@ export default function App() {
     // write to db
 
     let correctAns = [];
-    for (let index = 0; index < tempRecord.length; index++) {
-      if (tempRecord[index].toLowerCase().includes('correct!')) {
-        correctAns.push('.');
+    tempRecord.forEach(function (item) {
+      item = item.split('/');
+      if (item[1].split(' ').pop() === item[2].split(' ').pop()) {
+        correctAns.push('.')
       }
-    };
+    })
+
+    //REDO this
     let testScore = ((correctAns.length / tempRecord.length) * 100);
     let temp = JSON.parse(chartData)[0].mathsScores;
     temp.push(testScore);
@@ -799,7 +800,6 @@ export default function App() {
     },
     eraseText: {
       color: 'white',
-      fontWeight: 'bold',
       fontSize: 15 * textSize,
       margin: 'auto'
     }
@@ -867,15 +867,22 @@ export default function App() {
     },
     secondaryHeaderText: {
       color: navigationText,
-      fontWeight: 'bold',
-      fontSize: 25 * textSize,
-      paddingHorizontal: 10
+      fontSize: 20 * textSize,
+      paddingHorizontal: 10,
+      marginVertical: 'auto'
     },
     questions: {
       height: '50%',
       width: '100%',
       bottom: 0,
       position: 'absolute'
+    },
+    completeButton: {
+      width: '60%',
+      height: '40%',
+      backgroundColor: colourScheme[0],
+      display: testFeedbackDisplay,
+      margin: 'auto'
     }
   });
 
@@ -974,7 +981,6 @@ export default function App() {
       justifyContent: 'center',
     },
     topText: {
-      fontWeight: 'bold',
       fontSize: 30 * textSize
     },
     options: {
@@ -1038,7 +1044,6 @@ export default function App() {
     back: {
       color: navigationText,
       fontSize: 60,
-      fontWeight: 'bold'
     }
   });
 
@@ -1217,7 +1222,7 @@ export default function App() {
       <View style={testStyles.questionsContainer}>
         <Popup text='Going back will end your test are you sure you want to do this?' yesPress={yesPressBack} noPress={noPressBack} display={displayBackPopup} />
         <View style={testStyles.secondaryHeader}>
-          <Text style={testStyles.secondaryHeaderText}>Question {questionNumber}/50 </Text>
+          <Text style={testStyles.secondaryHeaderText}>Question {questionNumber}/10 </Text>
           <Text style={testStyles.secondaryHeaderText}>{timerState}</Text>
         </View>
 
@@ -1243,9 +1248,12 @@ export default function App() {
         </View>
 
 
-      
         <TestFeedback data={testRecording} display={testFeedbackDisplay} testCompleteFunction={testComplete}></TestFeedback>
-
+        <View style={{ bottom: 0, width: '100%', height: '20%', display: testFeedbackDisplay, position: 'absolute' }}>
+          <TouchableOpacity style={testStyles.completeButton} onPress={testComplete}>
+            <Text style={{ margin: 'auto', color: 'white', fontFamily: 'Verdana' }}>Finish Test</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Progress Tracker */}
