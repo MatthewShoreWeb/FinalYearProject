@@ -1,6 +1,5 @@
 // Todo:
 // Test functionality - timer.
-// Options functionality - change text size
 // Progress tracker improvements.
 // Improve code quality and file structure.
 // Test resets
@@ -12,6 +11,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Slider from '@react-native-community/slider';
 
+
 // App components import.
 import { StyleSheet, Text, TouchableOpacity, View, Animated } from 'react-native';
 import NavigationButton from './components/NavigationButton';
@@ -20,6 +20,7 @@ import SubHeadingSelector from './components/SubHeadingSelector';
 import Popup from './components/Popup';
 import ColourButton from './components/ColourSchemeButton';
 import TestFeedback from './components/TestFeedback';
+
 
 import lastTestScores from './storage/lastTestScores.json';
 
@@ -195,7 +196,8 @@ export default function App() {
   //Slider saving
 
   async function setTextSize(size) {
-    try {;
+    try {
+      ;
       await AsyncStorage.setItem('textSize', size);
     } catch (e) { }
   };
@@ -350,7 +352,6 @@ export default function App() {
       switch (type) {
         case 'mathsQuiz':
           questions = mathsQuiz;
-          console.log('hi');
           break;
         case 'verbalQuiz':
           questions = verbalQuiz;
@@ -371,8 +372,6 @@ export default function App() {
   let loadTestQuestions = function (test) {
     testQuestionNumber = testQuestionNumber + 1;
 
-
-    console.log(testQuestionNumber);
 
     try {
       switch (test) {
@@ -459,11 +458,10 @@ export default function App() {
   const [question, changeQuestion] = useState([]);
   const [testTopicTitle, changeTestTopicTitle] = useState('Maths');
   const [testFeedbackDisplay, changeTestFeedbackDisplay] = useState('none');
+ 
   const [testRecording, updateTestRecording] = useState([]);
-  let testData = {
-    "score": 22.5,
-    "questions": testRecording
-  };
+   
+ 
 
   function checkAnswer(question, answer, test) {
     try {
@@ -474,13 +472,12 @@ export default function App() {
           changeQuestion(loadTestQuestions(header.toLowerCase(), true));
           // Only tests have question numbers.
           changeQuestionNumber(questionNumber + 1)
-          if (question.correct === answer) {
-            tempRecord.push('Question ' + questionNumber + ' was correct!');
-          } else {
-            tempRecord.push('Question ' + questionNumber + ' was incorrect, you put: ' + answer + '. Answer: ' + question.correct);
-          };
-
+          console.log(question.description + '/' + question.correct)
+        
+          tempRecord.push(question.description + '/' + question.correct + '/' + answer);
+        
           if (questionNumber === 4) {
+            console.log(tempRecord);
             updateTestRecording(tempRecord);
             changeTestFeedbackDisplay('flex');
           }
@@ -516,7 +513,6 @@ export default function App() {
   // For when a test is exited or completed.
   function testComplete() {
     clearInterval(timeInterval);
-    console.log('completed');
     // reset Ui
     setHeader('Tests');
     changeTestFeedbackDisplay('none');
@@ -1046,10 +1042,8 @@ export default function App() {
     }
   });
 
-
   return (
     <View style={styles.container}>
-
       <Animated.View style={splashStyle.container}>
         <Text style={splashStyle.text}>Set4Success Tuition</Text>
       </Animated.View>
@@ -1122,7 +1116,7 @@ export default function App() {
             minimumTrackTintColor='#3A41C6'
             maximumTrackTintColor='black'
             onSlidingComplete={function (sliderValue) {
-              if (sliderValue !== 0) {  
+              if (sliderValue !== 0) {
                 changeTextSize(sliderValue.toFixed(1));
                 //Save to storage.
                 setTextSize(sliderValue.toFixed(1));
@@ -1140,9 +1134,9 @@ export default function App() {
       {/* Default home page component. */}
       <View style={navigationStyles.home}>
         <NavigationButton text='Practice Quizzes' explainText='Practice topics at your own pace.' onPress={toQuizMenu} colour={colourScheme[1]} textColour={navigationText} textSize={textSize} />
-        <NavigationButton text='Timed Tests' explainText='Take a timed test to test your abilities.' onPress={toTestMenu} colour={colourScheme[2]} textColour={navigationText} textSize={textSize}/>
-        <NavigationButton text='Progress Tracker' explainText='Track your past performance and see how you have improved.' onPress={toStatsMenu} colour={colourScheme[3]} textColour={navigationText} textSize={textSize}/>
-        <NavigationButton text='About' explainText='Additional information for using the app.' onPress={toAboutPage} colour={colourScheme[4]} textColour={navigationText} textSize={textSize}/>
+        <NavigationButton text='Timed Tests' explainText='Take a timed test to test your abilities.' onPress={toTestMenu} colour={colourScheme[2]} textColour={navigationText} textSize={textSize} />
+        <NavigationButton text='Progress Tracker' explainText='Track your past performance and see how you have improved.' onPress={toStatsMenu} colour={colourScheme[3]} textColour={navigationText} textSize={textSize} />
+        <NavigationButton text='About' explainText='Additional information for using the app.' onPress={toAboutPage} colour={colourScheme[4]} textColour={navigationText} textSize={textSize} />
       </View>
 
       {/* Menu for selecting what quiz you would like to do. */}
@@ -1249,7 +1243,9 @@ export default function App() {
         </View>
 
 
-        <TestFeedback data={testData} display={testFeedbackDisplay} testCompleteFunction={testComplete}></TestFeedback>
+      
+        <TestFeedback data={testRecording} display={testFeedbackDisplay} testCompleteFunction={testComplete}></TestFeedback>
+
       </View>
 
       {/* Progress Tracker */}

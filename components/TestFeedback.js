@@ -1,17 +1,20 @@
-import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, Text, ScrollView } from 'react-native';
+import Panel from './PanelDropDown'
 
 // Component to display test feedback. 
 // Takes a JSON object, string and function as parameters.
-export default function TestFeedback({data, display, testCompleteFunction}) {
+export default function TestFeedback({ data, display, testCompleteFunction }) {
+
+
     function getScore() {
         let correctAns = [];
-        for (let index = 0; index < data.questions.length; index++) {
-            if (data.questions[index].toLowerCase().includes('correct!')) {
+        for (let index = 0; index < data.length; index++) {
+            if (data[1].toLowerCase().includes('correct!')) {
                 correctAns.push('.');
             }
         };
-
+       
         return (correctAns.length / data.questions.length) * 100;
     };
 
@@ -48,34 +51,34 @@ export default function TestFeedback({data, display, testCompleteFunction}) {
 
     const styles = StyleSheet.create({
         container: {
-          display: display,
-          width: '100%',
-          height: '100%',
-          position: 'absolute',
-          bottom: 0,
-          backgroundColor: 'white'
-        },
-        text: {
-          fontWeight: 'bold',
-          marginLeft: '5%'
+            display: display,
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            bottom: 0,
+            backgroundColor: 'white'
         },
         button: {
             width: 150,
             height: 50,
             backgroundColor: 'yellow',
             margin: 'auto'
-        }, 
+        },
         buttonText: {
             margin: 'auto'
         }
-      });
- 
+    });  
+
     return (
-        <View style={styles.container}>
-            <Text style={styles.text}>{topMessage}</Text>
-            <Text style={styles.text}>{feedbackText}</Text>
-            <View style={styles.button}><Text style={styles.buttonText} onPress={testCompleteFunction}>Complete Test</Text></View>
-        </View>
+        <ScrollView style={styles.container}>
+            <View style={styles.topTextContainer}>
+                <Text>{topMessage}</Text>
+            </View>
+        <Panel header={'Question 1'} text={data[0]} display={display}></Panel>
+        <Panel header={'Question 2'} text={data[1]} display={display}></Panel>
+        <Panel header={'Question 3'} text={data[2]} display={display}></Panel>
+        <Panel header={'Question 4'} text={data[3]} display={display}></Panel>
+        </ScrollView>
     )
 }
 

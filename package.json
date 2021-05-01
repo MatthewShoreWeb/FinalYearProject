@@ -18,7 +18,9 @@
     "react-native-animated-splash-screen": "^2.0.5",
     "react-native-chart-kit": "^6.11.0",
     "react-native-css-vh-vw": "^1.0.5",
+    "react-native-drop-down-item": "^1.1.0",
     "react-native-fs": "^2.17.0",
+    "react-native-panel": "^1.0.4",
     "react-native-svg": "^12.1.0",
     "react-native-unordered-list": "^1.0.4",
     "react-native-web": "^0.15.5"
