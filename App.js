@@ -56,6 +56,41 @@ export default function App() {
   const [displayStatistics, changeStatisticsDisplay] = useState('none');
   const [displayTest, changeTestDisplay] = useState('none');
 
+  // TODO: could all be 1 function
+  async function setBestTestScores(bestTestScores) {
+    try {
+      let jsonObject = JSON.stringify(bestTestScores);
+      await AsyncStorage.setItem('bestTestScores', jsonObject);
+    } catch (e) { }
+  };
+
+  // Retrieves the style preferences from the asynchronous storage.
+  const getBestTestScores = async () => {
+    try {
+      const value = await AsyncStorage.getItem('bestTestScores');
+      if (value !== null) {
+        return value;
+      }
+    } catch (e) { }
+  };
+
+  const [bestTestScores, changeBestTestScores] = useState({});
+  const [currentScores, changeCurrentScores] = useState([1, 2, 3, 4]);
+
+  (async function () {
+    changeBestTestScores(await getBestTestScores());
+  })()
+
+  useEffect(function () {
+    try {
+      if (typeof bestTestScores === 'string') {
+
+        changeCurrentScores(JSON.parse(bestTestScores).mathsScores);
+      }
+    } catch (e) { }
+  }, [bestTestScores]);
+
+
   useEffect(function () {
     try {
       switch (header.toLowerCase()) {
@@ -197,7 +232,7 @@ export default function App() {
 
   async function setTextSize(size) {
     try {
-      ;
+
       await AsyncStorage.setItem('textSize', size);
     } catch (e) { }
   };
@@ -217,7 +252,6 @@ export default function App() {
   (async function () {
     changeTextSize(await getTextSize());
   })()
-
 
   // NAVIGATION FUNCTIONALITY.
 
@@ -427,37 +461,53 @@ export default function App() {
 
   // TODO IMPROVE EFFICIENCY
   function getPreviousScore(testTitle) {
-    switch (testTitle.toLowerCase()) {
-      case 'maths1':
-        return lastTestScores.mathsScores[0];
-      case 'maths2':
-        return lastTestScores.mathsScores[1];
-      case 'maths3':
-        return lastTestScores.mathsScores[2];
-      case 'maths4':
-        return lastTestScores.mathsScores[3];
-      case 'verbal1':
-        return lastTestScores.verbalScores[0];
-      case 'verbal2':
-        return lastTestScores.verbalScores[1];
-      case 'verbal3':
-        return lastTestScores.verbalScores[2];
-      case 'verbal4':
-        return lastTestScores.verbalScores[3];
-      case 'non-verbal1':
-        return lastTestScores.nonVerbalScores[0];
-      case 'non-verbal2':
-        return lastTestScores.nonVerbalScores[1];
-      case 'non-verbal3':
-        return lastTestScores.nonVerbalScores[2];
-      case 'non-verbal4':
-        return lastTestScores.nonVerbalScores[3];
+
+    try {
+      switch (testTitle.toLowerCase()) {
+        case 'maths1':
+          return bestTestScores.mathsScores[0] || 1;
+        case 'maths2':
+          return bestTestScores.mathsScores[1] || 1;
+        case 'maths3':
+          return bestTestScores.mathsScores[2] || 1;
+        case 'maths4':
+          return bestTestScores.mathsScores[3] || 1;
+        case 'verbal1':
+          return bestTestScores.verbalScores[0] || 1;
+        case 'verbal2':
+          return bestTestScores.verbalScores[1] || 1;
+        case 'verbal3':
+          return bestTestScores.verbalScores[2] || 1;
+        case 'verbal4':
+          return bestTestScores.verbalScores[3] || 1;
+        case 'non-verbal1':
+          return bestTestScores.nonVerbalScores[0] || 1;
+        case 'non-verbal2':
+          return bestTestScores.nonVerbalScores[1] || 1;
+        case 'non-verbal3':
+          return bestTestScores.nonVerbalScores[2] || 1;
+        case 'non-verbal4':
+          return bestTestScores.nonVerbalScores[3] || 1;
+      }
+    } catch (e) {
+      return 1;
     }
   };
 
   const [question, changeQuestion] = useState([]);
   const [testTopicTitle, changeTestTopicTitle] = useState('Maths');
   const [testFeedbackDisplay, changeTestFeedbackDisplay] = useState('none');
+  useEffect(function () {
+    try {
+      if (testTopicTitle.toLowerCase() === 'maths') {
+        changeCurrentScores(JSON.parse(bestTestScores).mathsScores);
+      } else if (testTopicTitle.toLowerCase() === 'verbal') {
+        changeCurrentScores(JSON.parse(bestTestScores).verbalScores);
+      } else if (testTopicTitle.toLowerCase() === 'non-verbal') {
+        changeCurrentScores(JSON.parse(bestTestScores).nonVerbalScores);
+      }
+    } catch (e) { }
+  }, [testTopicTitle])
 
   const [testRecording, updateTestRecording] = useState([]);
 
@@ -1201,17 +1251,17 @@ export default function App() {
           <NavigationButton text={testTopicTitle + ' Test 1'} colour={colourScheme[1]} textColour={navigationText} textSize={textSize} onPress={function () {
             changeQuestion(loadTestQuestions('maths test 1'));
             toTests(testTopicTitle + ' Test 1');
-          }} explainText={'Best score: - ' + getPreviousScore(testTopicTitle + '1') + '%.'} />
+          }} explainText={'Best score: - ' + currentScores[0] + '%.'} />
           <NavigationButton text={testTopicTitle + ' Test 2'} colour={colourScheme[2]} textColour={navigationText} textSize={textSize} onPress={function () {
             changeQuestion(loadTestQuestions('maths test 2'));
             toTests(testTopicTitle + ' Test 2');
-          }} explainText={'Best score: - ' + getPreviousScore(testTopicTitle + '2') + '%.'} />
+          }} explainText={'Best score: - ' + currentScores[1] + '%.'} />
           <NavigationButton text={testTopicTitle + ' Test 3'} colour={colourScheme[3]} textColour={navigationText} textSize={textSize} onPress={function () {
             toTests(testTopicTitle + ' Test 3');
-          }} explainText={'Best score: - ' + getPreviousScore(testTopicTitle + '3') + '%.'} />
+          }} explainText={'Best score: - ' + currentScores[2] + '%.'} />
           <NavigationButton text={testTopicTitle + ' Test 4'} colour={colourScheme[4]} textColour={navigationText} textSize={textSize} onPress={function () {
             toTests(testTopicTitle + ' Test 4');
-          }} explainText={'Best score: - ' + getPreviousScore(testTopicTitle + '4') + '%.'} />
+          }} explainText={'Best score: - ' + currentScores[3] + '%.'} />
         </View>
       </View>
 
