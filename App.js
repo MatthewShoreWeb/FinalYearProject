@@ -21,9 +21,6 @@ import Popup from './components/Popup';
 import ColourButton from './components/ColourSchemeButton';
 import TestFeedback from './components/TestFeedback';
 
-
-import lastTestScores from './storage/lastTestScores.json';
-
 import {
   LineChart,
   BarChart
@@ -77,7 +74,10 @@ export default function App() {
   const [bestTestScores, changeBestTestScores] = useState({});
   const [currentScores, changeCurrentScores] = useState([1, 2, 3, 4]);
 
+ 
+
   (async function () {
+    //setBestTestScores({mathsScores:[1,2,3,4], verbalScores:[1,2,3,4],nonVerbalScores:[1,2,3,4]})
     changeBestTestScores(await getBestTestScores());
   })()
 
@@ -459,41 +459,6 @@ export default function App() {
     } catch (e) { }
   };
 
-  // TODO IMPROVE EFFICIENCY
-  function getPreviousScore(testTitle) {
-
-    try {
-      switch (testTitle.toLowerCase()) {
-        case 'maths1':
-          return bestTestScores.mathsScores[0] || 1;
-        case 'maths2':
-          return bestTestScores.mathsScores[1] || 1;
-        case 'maths3':
-          return bestTestScores.mathsScores[2] || 1;
-        case 'maths4':
-          return bestTestScores.mathsScores[3] || 1;
-        case 'verbal1':
-          return bestTestScores.verbalScores[0] || 1;
-        case 'verbal2':
-          return bestTestScores.verbalScores[1] || 1;
-        case 'verbal3':
-          return bestTestScores.verbalScores[2] || 1;
-        case 'verbal4':
-          return bestTestScores.verbalScores[3] || 1;
-        case 'non-verbal1':
-          return bestTestScores.nonVerbalScores[0] || 1;
-        case 'non-verbal2':
-          return bestTestScores.nonVerbalScores[1] || 1;
-        case 'non-verbal3':
-          return bestTestScores.nonVerbalScores[2] || 1;
-        case 'non-verbal4':
-          return bestTestScores.nonVerbalScores[3] || 1;
-      }
-    } catch (e) {
-      return 1;
-    }
-  };
-
   const [question, changeQuestion] = useState([]);
   const [testTopicTitle, changeTestTopicTitle] = useState('Maths');
   const [testFeedbackDisplay, changeTestFeedbackDisplay] = useState('none');
@@ -510,8 +475,6 @@ export default function App() {
   }, [testTopicTitle])
 
   const [testRecording, updateTestRecording] = useState([]);
-
-
 
   function checkAnswer(question, answer, test) {
     try {
@@ -754,6 +717,13 @@ export default function App() {
     updateNavigationText('white');
     changeTextSize(1);
     setTextSize(1);
+
+    setBestTestScores({
+    mathsScores:[0, 0, 0, 0], 
+    verbalScores:[0, 0, 0, 0], 
+    nonVerbalScores:[0, 0, 0, 0]
+  })
+    
   };
 
 
