@@ -560,7 +560,9 @@ export default function App() {
 
   // For when a test is exited or completed.
   function testComplete() {
-    clearInterval(timeInterval);
+    //ici
+
+
     // reset Ui
     setHeader('Tests');
     changeTestFeedbackDisplay('none');
@@ -586,6 +588,23 @@ export default function App() {
     obh[0].mathsScores = temp;
 
     setTests(obh);
+    let testNumber = parseInt(header.split(' ').pop());
+    let tempArray = currentScores;
+    let testType = header.split(' ')[0];
+    if (tempArray[testNumber - 1] < testScore) {
+      tempArray[testNumber - 1] = testScore;
+      let testObj = JSON.parse(bestTestScores);
+
+      if (testType === 'Maths') {
+        testObj.mathsScores = tempArray;
+      } else if (testType === 'Verbal') {
+        testObj.verbalScores = tempArray;
+      } else if (testType === 'Non-verbal') {
+        testObj.nonVerbalScores = tempArray;
+      }
+
+      setBestTestScores(testObj);
+    }
     // reset timer and questions.
   };
 
