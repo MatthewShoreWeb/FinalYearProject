@@ -710,7 +710,7 @@ export default function App() {
       } else if (average >= 50) {
         return text + "You know more than you don't! Keep trying and try to focus on the areas that you are not as good at.";
       } else if (average < 50 && average > 0) {
-        return text + 'Keep on trying!.';
+        return text + 'Keep on trying!';
       } else if (average === 0) {
         return text + 'Complete some tests to recieve some feedback.'
       }
@@ -1147,7 +1147,7 @@ export default function App() {
       {/* Menu for selecting what quiz you would like to do. */}
       <View style={navigationStyles.quizzes}>
         <Text style={styles.topText}></Text>
-        <NavigationButton text='Maths' explainText='Practice your maths skills!.' colour={colourScheme[1]} textColour={navigationText} textSize={textSize} onPress={function () {
+        <NavigationButton text='Maths' explainText='Practice your maths skills!' colour={colourScheme[1]} textColour={navigationText} textSize={textSize} onPress={function () {
           setHeader('Maths Quiz');
           changeQuizMenuDisplay('none');
           changeQuestionDisplay('flex');
