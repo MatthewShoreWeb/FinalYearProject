@@ -1,4 +1,4 @@
-# Computer Science Dissertation
+# Computer Science Dissertation 
 ## What?
 Educational App.  
 ## Why?
