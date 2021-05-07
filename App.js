@@ -11,7 +11,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Slider from '@react-native-community/slider';
 
-
 // App components import.
 import { StyleSheet, Text, TouchableOpacity, View, Animated } from 'react-native';
 import NavigationButton from './components/NavigationButton';
@@ -74,7 +73,7 @@ export default function App() {
   const [bestTestScores, changeBestTestScores] = useState({});
   const [currentScores, changeCurrentScores] = useState([1, 2, 3, 4]);
 
- 
+
 
   (async function () {
     //setBestTestScores({mathsScores:[1,2,3,4], verbalScores:[1,2,3,4],nonVerbalScores:[1,2,3,4]})
@@ -254,6 +253,27 @@ export default function App() {
   })()
 
   // NAVIGATION FUNCTIONALITY.
+
+  // Incase of break
+  //   setTests([{
+  //     "mathsScores": [],
+  //     "verbalScores": [],
+  //     "nonVerbalScores": []
+  //   }]);
+
+  //   setStylePreferences([{
+  //     "styles": ['#3A41C6', '#3D3BBB', '#4634A7', '#4C2C96', '#512888']
+  //   }]);
+
+  //   setTextStorage('white');
+  //   setTextSize(1);
+
+  //   setBestTestScores({
+  //   mathsScores:[0, 0, 0, 0], 
+  //   verbalScores:[0, 0, 0, 0], 
+  //   nonVerbalScores:[0, 0, 0, 0]
+  // })
+
 
   // General function for hiding all elements.
   function hideAll() {
@@ -626,6 +646,17 @@ export default function App() {
     } catch (e) { }
   };
 
+  // Help text.
+  const aboutGeneralText = 'Hello, thank you for using this app. This app is designed to help individuals study material found in the 11+ or similar level.';
+  const aboutQuizText = 'You can do a quiz in a chosen subject by selecting the quizzes option on the main menu. ' +
+    'Quizzes are designed to allow for casual practice at your own pace. The results of quizzes are not recorded however, ' +
+    'mistakes you make here will go into a personalised quiz which you can take to practice the questions you have previously got wrong.';
+  const aboutTestText = 'You can also do tests by selecting the tests option in the main menu. ' +
+    'Tests are a series of 50 set questions which you will recieve marked feedback for.' +
+    'The results of tests are displayed on the test selection menu and in the progress tracker.';
+  const aboutProgressTrackerText = 'The progress tracker is a tool which allows you to track your performance.' +
+    'The results from the tests you have done are displayed here in graphs so you can clearly see how you have been improving.';
+
   // ABOUT PAGE FUCNTIONALITY.
   const [aboutHeader, changeAboutHeader] = useState('General');
   const [aboutText, changeAboutText] = useState(aboutGeneralText);
@@ -678,18 +709,6 @@ export default function App() {
     } catch (e) { }
   };
 
-  // Help text.
-  const aboutGeneralText = 'Hello, thank you for using this app. This app is designed to help individuals study material found in the 11+ or similar level.';
-  const aboutQuizText = 'You can do a quiz in a chosen subject by selecting the quizzes option on the main menu. ' +
-    'Quizzes are designed to allow for casual practice at your own pace. The results of quizzes are not recorded however, ' +
-    'mistakes you make here will go into a personalised quiz which you can take to practice the questions you have previously got wrong.';
-  const aboutTestText = 'You can also do tests by selecting the tests option in the main menu. ' +
-    'Tests are a series of 50 set questions which you will recieve marked feedback for.' +
-    'The results of tests are displayed on the test selection menu and in the progress tracker.';
-  const aboutProgressTrackerText = 'The progress tracker is a tool which allows you to track your performance.' +
-    'The results from the tests you have done are displayed here in graphs so you can clearly see how you have been improving.';
-
-
   function updateColours(array, string) {
     setStylePreferences([{
       "styles": array
@@ -719,11 +738,11 @@ export default function App() {
     setTextSize(1);
 
     setBestTestScores({
-    mathsScores:[0, 0, 0, 0], 
-    verbalScores:[0, 0, 0, 0], 
-    nonVerbalScores:[0, 0, 0, 0]
-  })
-    
+      mathsScores: [0, 0, 0, 0],
+      verbalScores: [0, 0, 0, 0],
+      nonVerbalScores: [0, 0, 0, 0]
+    })
+
   };
 
 
