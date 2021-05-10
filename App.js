@@ -6,6 +6,7 @@
 // Reformat stylesheets.
 // Remove animated splash packagejson
 // quiz accuracy
+// clear interval breaks
 
 import React, { useEffect, useState, useRef } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -98,6 +99,9 @@ export default function App() {
           break;
         case 'verbal quiz':
           questionsToGet = 'verbalQuiz';
+          break;
+        case 'mistakes':
+          questionsToGet = 'mistakes'
           break;
       }
     } catch (e) { }
@@ -211,6 +215,57 @@ export default function App() {
       changeTestData(jsonObject[0].mathsScores);
     }
   }, [chartData]);
+
+
+  //MISTAKES QUIZ
+  const [mistakesData, changeMistakesData] = useState({});
+  const [mistakesLength, changeMistakesLength] = useState(0)
+
+  async function setMistakes(mistakeObj) {
+    try {
+      let jsonObject = JSON.stringify(mistakeObj);
+      await AsyncStorage.setItem('mistakes', jsonObject);
+    } catch (e) { }
+  };
+
+  // setMistakes([
+  //   { "description": "Mistake 1", "A": "134.49", "B": "282.43", "C": "185.49", "D": "184.94", "E": "184.49", "correct": "E" },
+  //   { "description": "Mistake 2", "A": "16,2714", "B": "10,62714", "C": "112,3014", "D": "1,726,014", "E": "2,230,014", "correct": "D" },
+  //   { "description": "Mistake 3", "A": "2,434", "B": "538", "C": "2,436", "D": "2,444", "E": "2,433", "correct": "A" }])
+
+  const getPreviousMistakes = async () => {
+    try {
+      const value = await AsyncStorage.getItem('mistakes');
+      if (value !== null) {
+        return value;
+      }
+
+    } catch (e) { }
+  };
+
+
+  (async function () {
+    changeMistakesData(await getPreviousMistakes() || {});
+  })()
+
+
+  useEffect(() => {
+    try {
+      changeMistakesLength(JSON.parse(mistakesData).length);
+      if (header.toLowerCase() === 'mistakes') {
+        if (mistakesData.length !== 0) {
+          setTimeout(function () {
+            resetColours(colourScheme);
+            changeQuestion(loadQuizQuestions(questionsToGet));
+          }, 1000);
+        } else {
+          toQuizMenu();
+        }
+      }
+
+    } catch (e) { }
+  }, [mistakesData]);
+
 
   // SPASH FUNCTIONALITY
   const fadeAnim = useRef(new Animated.Value(1)).current;
@@ -380,6 +435,11 @@ export default function App() {
 
 
   // QUIZ FUNCTIONALITY.
+  useEffect(function () {
+    if (question.description === '') {
+      console.log('hi');
+    }
+  }, [question])
 
   const [questionColour1, changeColour1] = useState(colourScheme[0]);
   const [questionColour2, changeColour2] = useState(colourScheme[1]);
@@ -399,25 +459,37 @@ export default function App() {
     resetColours(colourScheme);
   }, [colourScheme]);
 
+
   // Quiz question generator.
   let loadQuizQuestions = function (type) {
     try {
-      let questions;
-      switch (type) {
-        case 'mathsQuiz':
-          questions = mathsQuiz;
-          break;
-        case 'verbalQuiz':
-          questions = verbalQuiz;
-          break;
-        case 'nonVerbalQuiz':
-          break;
+      if (type) {
+        let questions;
+        switch (type) {
+          case 'mathsQuiz':
+            questions = mathsQuiz;
+            break;
+          case 'verbalQuiz':
+            questions = verbalQuiz;
+            break;
+          case 'nonVerbalQuiz':
+            break;
+          case 'mistakes':
+            questions = JSON.parse(mistakesData);
+            break;
+        }
+        if (type !== 'mistakes') {
+          // Generates a random key and accesses it from JSON.
+          let keys = Object.keys(questions);
+          let randomKey = keys[Math.floor(Math.random() * keys.length)]
+          return questions[randomKey] || { "description": "", "": "", "B": "", "C": "", "": "", "": "", "correct": "" };
+        } else {
+          //Change TODO
+          return questions[0] || { "description": "", "": "", "B": "", "C": "", "": "", "": "", "correct": "" };
+        }
+      } else {
+        return { "description": "", "": "", "B": "", "C": "", "": "", "": "", "correct": "" };
       }
-      // Generates a random key and accesses it from JSON.
-      let keys = Object.keys(questions);
-      let randomKey = keys[Math.floor(Math.random() * keys.length)]
-      return questions[randomKey];
-
     } catch (e) { }
   };
 
@@ -425,8 +497,6 @@ export default function App() {
 
   let loadTestQuestions = function (test) {
     testQuestionNumber = testQuestionNumber + 1;
-
-
     try {
       switch (test) {
         case 'maths test 1':
@@ -514,11 +584,27 @@ export default function App() {
         }, 1000);
       } else {
         // For a quiz we want to move to the next question only if the answer is right.
+        let tempMistake = JSON.parse(mistakesData);
         if (question.correct === answer) {
-          setTimeout(function () {
-            resetColours(colourScheme);
-            changeQuestion(loadQuizQuestions(questionsToGet));
-          }, 1000);
+          if (header.toLowerCase() === 'mistakes') {
+            for (let index = 0; index < tempMistake.length; index++) {
+              if (tempMistake[index].description === question.description) {
+                tempMistake.splice(index, 1);
+                setMistakes(tempMistake);
+              }
+            }
+          } else {
+            console.log('hi');
+            setTimeout(function () {
+              resetColours(colourScheme);
+              changeQuestion(loadQuizQuestions(questionsToGet));
+            }, 1000);
+          }
+        } else {
+          if (header.toLowerCase() !== 'mistakes') {
+            tempMistake.push(question);
+            setMistakes(tempMistake)
+          }
         }
       }
       return question.correct === answer;
@@ -1220,8 +1306,13 @@ export default function App() {
         <NavigationButton text='Non-Verbal' explainText='Practice your non-verbal reasoning skills!' colour={colourScheme[3]} textColour={navigationText} textSize={textSize} onPress={function () {
           setHeader('Non-Verbal Quiz');
         }} />
-        <NavigationButton text='Mistakes' explainText='Practice the questions you have been having difficulty with.' colour={colourScheme[4]} textColour={navigationText} textSize={textSize} onPress={function () {
-          setHeader('Mistakes');
+        <NavigationButton text='Mistakes' explainText={'Practice the questions you have been having difficulty with! \n Current mistakes: ' + mistakesLength} colour={colourScheme[4]} textColour={navigationText} textSize={textSize} onPress={function () {
+          if (mistakesLength > 0) {
+            setHeader('Mistakes');
+            changeQuizMenuDisplay('none');
+            changeQuestionDisplay('flex');
+            changeQuestion(loadQuizQuestions('mistakes'));
+          }
         }} />
       </View>
       <View style={styles.quizContainer}>
