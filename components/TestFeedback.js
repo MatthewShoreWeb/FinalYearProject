@@ -78,7 +78,7 @@ export default function TestFeedback({ data, display }) {
     return (
         <ScrollView style={styles.container}>
             <View style={styles.topTextContainer}>
-                <Text style={styles.text}>{'topMessage'}</Text>
+                <Text style={styles.text}>{'You scored 60%, well done. Keep practicing your mistakes.'}</Text>
             </View>
         <Panel header={'Question 1 was ' + generateText(data[0], true)} text={generateText(data[0])} display={display}></Panel>
         <Panel header={'Question 2 was ' + generateText(data[1], true)} text={generateText(data[1])} display={display}></Panel>
