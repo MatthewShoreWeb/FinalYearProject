@@ -4,6 +4,13 @@ import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 
 export default function Popup({ text, yesPress, noPress, display }) {
 
+    let yes = 'Yes';
+    let noDisplay = 'flex';
+    if (text.includes('Mistakes')) {
+        yes = 'Ok';
+        noDisplay = 'none';
+    }
+
     const styles = StyleSheet.create({
         container: {
             margin: 'auto',
@@ -36,9 +43,13 @@ export default function Popup({ text, yesPress, noPress, display }) {
             <Text style={styles.text}>{text}</Text>
             <View style={styles.buttonContainer}>
                 <TouchableOpacity style={styles.button} onPress={yesPress}>
-                    <Text style={styles.text}>Yes</Text>
+                    <Text style={styles.text}>{yes}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={noPress}>
+                <TouchableOpacity style={{
+                      width: '20%',
+                      backgroundColor: 'black',
+                      display: noDisplay
+                }} onPress={noPress}>
                     <Text style={styles.text}>No</Text>
                 </TouchableOpacity>
             </View>

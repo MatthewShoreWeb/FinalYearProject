@@ -73,6 +73,7 @@ export default function App() {
 
   const [bestTestScores, changeBestTestScores] = useState({});
   const [currentScores, changeCurrentScores] = useState([1, 2, 3, 4]);
+  const [mistakePopup, changeMistakePopup] = useState('none');
 
 
 
@@ -1281,6 +1282,7 @@ export default function App() {
       </View>
 
       {/* Default home page component. */}
+      <Popup text='You have no mistakes currently. Mistakes you make in quizzes will appear here.' display={mistakePopup} yesPress={function () {changeMistakePopup('none');}}></Popup>
       <View style={navigationStyles.home}>
         <NavigationButton text='Practice Quizzes' explainText='Practice topics at your own pace.' onPress={toQuizMenu} colour={colourScheme[1]} textColour={navigationText} textSize={textSize} />
         <NavigationButton text='Timed Tests' explainText='Take a timed test to test your abilities.' onPress={toTestMenu} colour={colourScheme[2]} textColour={navigationText} textSize={textSize} />
@@ -1312,6 +1314,8 @@ export default function App() {
             changeQuizMenuDisplay('none');
             changeQuestionDisplay('flex');
             changeQuestion(loadQuizQuestions('mistakes'));
+          } else {
+            changeMistakePopup('flex');
           }
         }} />
       </View>
