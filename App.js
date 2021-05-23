@@ -32,6 +32,7 @@ import verbalQuiz from './questions/verbalQuiz.json';
 
 import mathTest1 from './questions/tests/mathsTest_1.json';
 import mathTest2 from './questions/tests/mathsTest_2.json';
+import { reset } from 'expo/build/AR';
 
 // Change to storage.
 let tempRecord = [];
@@ -381,6 +382,11 @@ export default function App() {
 
   // Works out what page to go to when the back button is pressed.
   function backButtonPressed() {
+
+    try {
+      resetColours(colourScheme);
+    } catch (e) { console.log(e); }
+
     try {
       if (displayOptions === 'flex') {
         optionsPressed();
@@ -423,7 +429,7 @@ export default function App() {
           case 'tests':
             toTestMenu();
             break;
-          case 'stats':
+          case 'progress tracker':
             toStatsMenu()
             break;
           case 'about':
@@ -566,7 +572,6 @@ export default function App() {
   }, [testTopicTitle])
 
   const [testRecording, updateTestRecording] = useState([]);
-
   function checkAnswer(question, answer, test) {
     try {
       // For a test we want to move to the next question regarless of if the answer is right.
@@ -595,7 +600,6 @@ export default function App() {
               }
             }
           } else {
-            console.log('hi');
             setTimeout(function () {
               resetColours(colourScheme);
               changeQuestion(loadQuizQuestions(questionsToGet));
@@ -622,7 +626,6 @@ export default function App() {
     timeInterval = setInterval(function () {
       changeTimer(new Date(timerVariable-- * 1000).toISOString().substr(11, 8));
       if (timerVariable === 0) {
-        timeInterval.clearInterval();
         testComplete();
       }
     }, 1000);
@@ -734,15 +737,19 @@ export default function App() {
   };
 
   // Help text.
-  const aboutGeneralText = 'Hello, thank you for using this app. This app is designed to help individuals study material found in the 11+ or similar level.';
+  const aboutGeneralText = 'Hello, thank you for taking the time to use this app. This app is designed to help you prepare for your 11+ exams. \n\n' + 
+  'By clicking on the selector above you can learn more about what functionality each part of the app contains. \n\n'
+  +'Each page has a header at the top which tells you what page you are currently on. By clicking the arrow at the top left you can go back to the previous page. On the top right there is a button which enables you to access the settings for the app.' + 
+  '\n\nThis app does not collect any personal information. Only data which is relevant to the functioning of the app such as question data is captured. You can erase all the captured data at anytime from the settings screen.';
   const aboutQuizText = 'You can do a quiz in a chosen subject by selecting the quizzes option on the main menu. ' +
     'Quizzes are designed to allow for casual practice at your own pace. The results of quizzes are not recorded however, ' +
     'mistakes you make here will go into a personalised quiz which you can take to practice the questions you have previously got wrong.';
   const aboutTestText = 'You can also do tests by selecting the tests option in the main menu. ' +
-    'Tests are a series of 50 set questions which you will recieve marked feedback for.' +
-    'The results of tests are displayed on the test selection menu and in the progress tracker.';
+    'Tests are a series of 10 set questions which you will recieve marked feedback for. ' +
+    '\nThe results of tests are displayed in the progress tracker. The best score you have achieved in each test is displayed in the corresponding menu button for that test.';
   const aboutProgressTrackerText = 'The progress tracker is a tool which allows you to track your performance.' +
-    'The results from the tests you have done are displayed here in graphs so you can clearly see how you have been improving.';
+    'The results from the tests you have done are displayed here in graphs so you can clearly see how you have been improving.' + 
+    '\nYou have a choice of either displaying the data as a line graph or a bar chart. A description is provided below the chart to provide further information.';
 
   // ABOUT PAGE FUCNTIONALITY.
   const [aboutHeader, changeAboutHeader] = useState('General');
@@ -830,6 +837,7 @@ export default function App() {
       nonVerbalScores: [0, 0, 0, 0]
     })
 
+    setMistakes([])
   };
 
 
@@ -1282,7 +1290,7 @@ export default function App() {
       </View>
 
       {/* Default home page component. */}
-      <Popup text='You have no mistakes currently. Mistakes you make in quizzes will appear here.' display={mistakePopup} yesPress={function () {changeMistakePopup('none');}}></Popup>
+      <Popup text='You have no mistakes currently. Mistakes you make in quizzes will appear here.' display={mistakePopup} yesPress={function () { changeMistakePopup('none'); }}></Popup>
       <View style={navigationStyles.home}>
         <NavigationButton text='Practice Quizzes' explainText='Practice topics at your own pace.' onPress={toQuizMenu} colour={colourScheme[1]} textColour={navigationText} textSize={textSize} />
         <NavigationButton text='Timed Tests' explainText='Take a timed test to test your abilities.' onPress={toTestMenu} colour={colourScheme[2]} textColour={navigationText} textSize={textSize} />
@@ -1432,8 +1440,8 @@ export default function App() {
               yAxisInterval={1} // optional, defaults to 1
               chartConfig={{
                 backgroundColor: colourScheme[0],
-                backgroundGradientFrom: "#3A41C6",
-                backgroundGradientTo: "#3A41C6",
+                backgroundGradientFrom: colourScheme[0],
+                backgroundGradientTo: colourScheme[0],
                 fillShadowGradient: 'black',
                 fillShadowGradientOpacity: 1,
                 fromZero: true,
