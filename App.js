@@ -436,6 +436,10 @@ export default function App() {
             toAboutPage()
             break;
         }
+
+        if (header.toLowerCase().includes('quiz') && !header.toLowerCase().includes('quizzes')) {
+          changeQuestionDisplay('flex');
+        }
       }
     } catch (e) { }
   };
@@ -626,15 +630,13 @@ export default function App() {
     timeInterval = setInterval(function () {
       changeTimer(new Date(timerVariable-- * 1000).toISOString().substr(11, 8));
       if (timerVariable === 0) {
-        testComplete();
+        testComplete(true);
       }
     }, 1000);
   };
 
   // For when a test is exited or completed.
-  function testComplete() {
-    //ici
-
+  function testComplete(complete) {
 
     // reset Ui
     setHeader('Tests');
@@ -643,40 +645,41 @@ export default function App() {
     changeTestMenuDisplay('flex');
     testQuestionNumber = -1;
 
-    // write to db
+    if (complete) {
+      // write to db
+      let correctAns = [];
+      tempRecord.forEach(function (item) {
+        item = item.split('/');
+        if (item[1].split(' ').pop() === item[2].split(' ').pop()) {
+          correctAns.push('.')
+        }
+      })
 
-    let correctAns = [];
-    tempRecord.forEach(function (item) {
-      item = item.split('/');
-      if (item[1].split(' ').pop() === item[2].split(' ').pop()) {
-        correctAns.push('.')
+      //REDO this
+      let testScore = ((correctAns.length / tempRecord.length) * 100);
+      let temp = JSON.parse(chartData)[0].mathsScores;
+      temp.push(testScore);
+      let obh = JSON.parse(chartData);
+      obh[0].mathsScores = temp;
+
+      setTests(obh);
+      let testNumber = parseInt(header.split(' ').pop());
+      let tempArray = currentScores;
+      let testType = header.split(' ')[0];
+      if (tempArray[testNumber - 1] < testScore) {
+        tempArray[testNumber - 1] = testScore;
+        let testObj = JSON.parse(bestTestScores);
+
+        if (testType === 'Maths') {
+          testObj.mathsScores = tempArray;
+        } else if (testType === 'Verbal') {
+          testObj.verbalScores = tempArray;
+        } else if (testType === 'Non-verbal') {
+          testObj.nonVerbalScores = tempArray;
+        }
+
+        setBestTestScores(testObj);
       }
-    })
-
-    //REDO this
-    let testScore = ((correctAns.length / tempRecord.length) * 100);
-    let temp = JSON.parse(chartData)[0].mathsScores;
-    temp.push(testScore);
-    let obh = JSON.parse(chartData);
-    obh[0].mathsScores = temp;
-
-    setTests(obh);
-    let testNumber = parseInt(header.split(' ').pop());
-    let tempArray = currentScores;
-    let testType = header.split(' ')[0];
-    if (tempArray[testNumber - 1] < testScore) {
-      tempArray[testNumber - 1] = testScore;
-      let testObj = JSON.parse(bestTestScores);
-
-      if (testType === 'Maths') {
-        testObj.mathsScores = tempArray;
-      } else if (testType === 'Verbal') {
-        testObj.verbalScores = tempArray;
-      } else if (testType === 'Non-verbal') {
-        testObj.nonVerbalScores = tempArray;
-      }
-
-      setBestTestScores(testObj);
     }
     // reset timer and questions.
   };
@@ -686,15 +689,13 @@ export default function App() {
 
   function yesPressBack() {
     changeBackPopup('none');
-    testComplete();
+    testComplete(false);
     changeQuestionNumber(1);
   };
 
   function noPressBack() {
     changeBackPopup('none');
   };
-
-
 
   // PROGRESS TRACKER FUNCTIONALITY.
 
@@ -737,10 +738,10 @@ export default function App() {
   };
 
   // Help text.
-  const aboutGeneralText = 'Hello, thank you for taking the time to use this app. This app is designed to help you prepare for your 11+ exams. \n\n' + 
-  'By clicking on the selector above you can learn more about what functionality each part of the app contains. \n\n'
-  +'Each page has a header at the top which tells you what page you are currently on. By clicking the arrow at the top left you can go back to the previous page. On the top right there is a button which enables you to access the settings for the app.' + 
-  '\n\nThis app does not collect any personal information. Only data which is relevant to the functioning of the app such as question data is captured. You can erase all the captured data at anytime from the settings screen.';
+  const aboutGeneralText = 'Hello, thank you for taking the time to use this app. This app is designed to help you prepare for your 11+ exams. \n\n' +
+    'By clicking on the selector above you can learn more about what functionality each part of the app contains. \n\n'
+    + 'Each page has a header at the top which tells you what page you are currently on. By clicking the arrow at the top left you can go back to the previous page. On the top right there is a button which enables you to access the settings for the app.' +
+    '\n\nThis app does not collect any personal information. Only data which is relevant to the functioning of the app such as question data is captured. You can erase all the captured data at anytime from the settings screen.';
   const aboutQuizText = 'You can do a quiz in a chosen subject by selecting the quizzes option on the main menu. ' +
     'Quizzes are designed to allow for casual practice at your own pace. The results of quizzes are not recorded however, ' +
     'mistakes you make here will go into a personalised quiz which you can take to practice the questions you have previously got wrong.';
@@ -748,7 +749,7 @@ export default function App() {
     'Tests are a series of 10 set questions which you will recieve marked feedback for. ' +
     '\nThe results of tests are displayed in the progress tracker. The best score you have achieved in each test is displayed in the corresponding menu button for that test.';
   const aboutProgressTrackerText = 'The progress tracker is a tool which allows you to track your performance.' +
-    'The results from the tests you have done are displayed here in graphs so you can clearly see how you have been improving.' + 
+    'The results from the tests you have done are displayed here in graphs so you can clearly see how you have been improving.' +
     '\nYou have a choice of either displaying the data as a line graph or a bar chart. A description is provided below the chart to provide further information.';
 
   // ABOUT PAGE FUCNTIONALITY.
@@ -1333,9 +1334,6 @@ export default function App() {
           <Text style={questionDescriptionStyles.text}>{question.description}</Text>
         </View>
 
-
-        {/* <Popup display={displaySkipPopup} text='Are you sure you want to skip the question?' />
-        <View onPress={displayPopup} style={styles.test} text='SKIPPP'></View> */}
         <View style={quizStyles.container}>
           <QuizButton text={'A)  ' + question.A} colour={questionColour1} textColour={navigationText} textSize={textSize} onPress={function () {
             checkAnswer(question, 'A') ? changeColour1('#95F985') : changeColour1('#E45045');
