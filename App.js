@@ -1,11 +1,8 @@
 // Todo:
 // Test functionality - timer.
-// Progress tracker improvements.
 // Improve code quality and file structure.
 // Test resets
 // Reformat stylesheets.
-// Remove animated splash packagejson
-// quiz accuracy
 // clear interval breaks
 
 import React, { useEffect, useState, useRef } from 'react';
@@ -32,7 +29,6 @@ import verbalQuiz from './questions/verbalQuiz.json';
 
 import mathTest1 from './questions/tests/mathsTest_1.json';
 import mathTest2 from './questions/tests/mathsTest_2.json';
-import { reset } from 'expo/build/AR';
 
 // Change to storage.
 let tempRecord = [];
@@ -526,12 +522,18 @@ export default function App() {
       switch (testTopicTitle.toLowerCase()) {
         case 'maths':
           changeTestTopicTitle('Non-Verbal');
+          changeTestData(JSON.parse(chartData)[0].nonVerbalScores);
+          changeChartLabels(getLabels(JSON.parse(chartData)[0].nonVerbalScores));
           break;
         case 'verbal':
           changeTestTopicTitle('Maths');
+          changeTestData(JSON.parse(chartData)[0].mathsScores);
+          changeChartLabels(getLabels(JSON.parse(chartData)[0].mathsScores));
           break;
         case 'non-verbal':
           changeTestTopicTitle('Verbal');
+          changeTestData(JSON.parse(chartData)[0].verbalScores);
+          changeChartLabels(getLabels(JSON.parse(chartData)[0].verbalScores));
           break;
       }
     } catch (e) { }
@@ -611,8 +613,19 @@ export default function App() {
           }
         } else {
           if (header.toLowerCase() !== 'mistakes') {
-            tempMistake.push(question);
-            setMistakes(tempMistake)
+            let push = true;
+            if (tempMistake.length > 0) {
+              for (let index = 0; index < tempMistake.length; index++) {    
+                if (question.description === tempMistake[index].description) {
+                  push = false;
+                }
+              }
+            }
+            if (push === true) {
+              tempMistake.push(question);
+              setMistakes(tempMistake)
+              push = true;
+            }
           }
         }
       }
@@ -622,10 +635,9 @@ export default function App() {
 
   // Timer state set initially to 1 hour.
   const [timerState, changeTimer] = useState(new Date(600 * 1000).toISOString().substr(11, 8));
-  let timeInterval;
 
+  let timeInterval;
   function testStarted() {
-    // Makes the timer tick at the right speed.
     let timerVariable = 600;
     timeInterval = setInterval(function () {
       changeTimer(new Date(timerVariable-- * 1000).toISOString().substr(11, 8));
@@ -633,16 +645,21 @@ export default function App() {
         testComplete(true);
       }
     }, 1000);
+
   };
+
+
+
+
 
   // For when a test is exited or completed.
   function testComplete(complete) {
-
     // reset Ui
     setHeader('Tests');
     changeTestFeedbackDisplay('none');
     changeTestDisplay('none');
     changeTestMenuDisplay('flex');
+    changeQuestionNumber(1);
     testQuestionNumber = -1;
 
     if (complete) {
@@ -677,7 +694,6 @@ export default function App() {
         } else if (testType === 'Non-verbal') {
           testObj.nonVerbalScores = tempArray;
         }
-
         setBestTestScores(testObj);
       }
     }
@@ -700,7 +716,6 @@ export default function App() {
   // PROGRESS TRACKER FUNCTIONALITY.
 
   //Statistics test data.
-
   const [chartLabels, changeChartLabels] = useState([]);
   useEffect(() => {
     try {
@@ -841,7 +856,6 @@ export default function App() {
     setMistakes([])
   };
 
-
   function getProgressTrackerText() {
     function getAverage(arrayOfNumbers) {
       let total = 0;
@@ -854,7 +868,7 @@ export default function App() {
     };
 
     function loadText(average, topic) {
-      let text = 'You have scored an average of ' + average + '% in ' + topic + '. '
+      let text = 'You have scored an average of ' + average.toFixed(1) + '% in ' + topic + '. The pass mark for the exam is 70%. '
       if (average === 100) {
         return text + 'Well done! This is a perfect score.';
       } else if (average > 70) {
@@ -938,7 +952,7 @@ export default function App() {
       justifyContent: 'space-evenly'
     },
     eraseDataButton: {
-      backgroundColor: '#ff1447',
+      backgroundColor: colourScheme[0],
       height: '10%',
       width: '50%',
       marginHorizontal: '25%',
@@ -949,11 +963,8 @@ export default function App() {
       width: '80%',
       marginHorizontal: 'auto'
     },
-    slider: {
-
-    },
     eraseText: {
-      color: 'white',
+      color: navigationText,
       fontSize: 15 * textSize,
       margin: 'auto'
     }
@@ -1112,7 +1123,7 @@ export default function App() {
     },
     text: {
       marginHorizontal: 'auto',
-      marginTop: '20%',
+      marginTop: '10%',
       fontSize: 20 * textSize,
       width: '80%',
       height: '40%',
@@ -1216,7 +1227,7 @@ export default function App() {
       </View>
 
       {/* Options */}
-      <Popup text={'This will erase all stored data including test scores, mistake quizzes and colour preferences. Are you sure you want to do this?'}
+      <Popup colourArray={colourScheme} textColour={navigationText} text={'This will erase all stored data including test scores, mistake quizzes and colour preferences. Are you sure you want to do this?'}
         yesPress={eraseDataFunction} noPress={function () {
           changeErasePopup('none');
         }} display={displayErasePopup}></Popup>
@@ -1291,7 +1302,7 @@ export default function App() {
       </View>
 
       {/* Default home page component. */}
-      <Popup text='You have no mistakes currently. Mistakes you make in quizzes will appear here.' display={mistakePopup} yesPress={function () { changeMistakePopup('none'); }}></Popup>
+      <Popup colourArray={colourScheme} textColour={navigationText} text='You have no mistakes currently. Mistakes you make in quizzes will appear here.' display={mistakePopup} yesPress={function () { changeMistakePopup('none'); }}></Popup>
       <View style={navigationStyles.home}>
         <NavigationButton text='Practice Quizzes' explainText='Practice topics at your own pace.' onPress={toQuizMenu} colour={colourScheme[1]} textColour={navigationText} textSize={textSize} />
         <NavigationButton text='Timed Tests' explainText='Take a timed test to test your abilities.' onPress={toTestMenu} colour={colourScheme[2]} textColour={navigationText} textSize={textSize} />
@@ -1379,7 +1390,7 @@ export default function App() {
       {/* Test component */}
 
       <View style={testStyles.questionsContainer}>
-        <Popup text='Going back will end your test are you sure you want to do this?' yesPress={yesPressBack} noPress={noPressBack} display={displayBackPopup} />
+        <Popup colourArray={colourScheme} textColour={navigationText} text='Going back will end your test are you sure you want to do this?' yesPress={yesPressBack} noPress={noPressBack} display={displayBackPopup} />
         <View style={testStyles.secondaryHeader}>
           <Text style={testStyles.secondaryHeaderText}>Question {questionNumber}/10 </Text>
           <Text style={testStyles.secondaryHeaderText}>{timerState}</Text>
@@ -1407,10 +1418,10 @@ export default function App() {
         </View>
 
 
-        <TestFeedback data={testRecording} display={testFeedbackDisplay} testCompleteFunction={testComplete}></TestFeedback>
+        <TestFeedback data={testRecording} display={testFeedbackDisplay} testCompleteFunction={testComplete} colourArray={colourScheme} text={navigationText}></TestFeedback>
         <View style={{ bottom: 0, width: '100%', height: '20%', display: testFeedbackDisplay, position: 'absolute' }}>
           <TouchableOpacity style={testStyles.completeButton} onPress={testComplete}>
-            <Text style={{ margin: 'auto', color: 'white', fontFamily: 'Verdana' }}>Finish Test</Text>
+            <Text style={{ margin: 'auto', color: 'white', fontFamily: 'Verdana', borderRadius: 30 }}>Finish Test</Text>
           </TouchableOpacity>
         </View>
       </View>

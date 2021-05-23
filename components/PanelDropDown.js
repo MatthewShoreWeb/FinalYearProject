@@ -2,28 +2,28 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Panel from 'react-native-panel';
 
-export default function NavigationButton({ text, header, textColour, textSize, display }) {
+export default function NavigationButton({ text, header, colour, textColour }) {
 
     const styles = StyleSheet.create({
         panelContainer: {
             borderTopStyle: 'solid',
             borderTopColor: 'white',
             borderTopWidth: 1.5,
-            backgroundColor: '#3A41C6',
+            backgroundColor: colour,
             height: 45,
             width: '100%',
-            color: 'white'
+            color: textColour
         },
         panelText: {
             fontFamily: 'Verdana',
-            color: 'white',
+            color: textColour,
             fontSize: 12,
             textAlign: 'center',
             padding: 5
         },
         panelTitle: {
             fontFamily: 'Verdana',
-            color: 'white',
+            color: textColour,
             fontSize: 12,
             margin: 'auto',
             padding: 5

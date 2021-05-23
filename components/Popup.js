@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 
 
-export default function Popup({ text, yesPress, noPress, display }) {
+export default function Popup({ text, yesPress, noPress, display, colourArray, textColour }) {
 
     let yes = 'Yes';
     let noDisplay = 'flex';
@@ -15,13 +15,14 @@ export default function Popup({ text, yesPress, noPress, display }) {
         container: {
             margin: 'auto',
             width: '70%',
-            height: '25%',
-            backgroundColor: '#3A41C6',
+            height: '20%',
+            backgroundColor: colourArray[0],
             display: display,
             borderStyle: 'solid',
             borderWidth: 3,
             borderColor: 'black',
-            zIndex: 999
+            zIndex: 999,
+            borderRadius: 10
         },
         buttonContainer: {
             flexDirection: 'row',
@@ -29,12 +30,14 @@ export default function Popup({ text, yesPress, noPress, display }) {
         },
         button: {
             width: '20%',
-            backgroundColor: 'black'
+            backgroundColor: colourArray[3],
+            borderRadius: 40
         },
         text: {
             fontFamily: 'Verdana',
-            color: 'white',
-            padding: 10
+            color: textColour,
+            padding: 10,
+            textAlign: 'center'
         }
     });
 
@@ -47,8 +50,9 @@ export default function Popup({ text, yesPress, noPress, display }) {
                 </TouchableOpacity>
                 <TouchableOpacity style={{
                       width: '20%',
-                      backgroundColor: 'black',
-                      display: noDisplay
+                      backgroundColor: colourArray[3],
+                      display: noDisplay,
+                      borderRadius: 40,
                 }} onPress={noPress}>
                     <Text style={styles.text}>No</Text>
                 </TouchableOpacity>

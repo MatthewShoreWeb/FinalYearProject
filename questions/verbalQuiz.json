@@ -1,7 +1,7 @@
 [
-    {"description": "1", "A": "134.49", "B": "282.43", "C": "185.49", "D": "184.94", "E": "184.49", "correct": "E"},
-    {"description": "2", "A": "16,2714", "B": "10,62714", "C": "112,3014", "D": "1,726,014", "E": "2,230,014", "correct": "D"},
-    {"description": "3", "A": "2,434", "B": "538", "C": "2,436", "D": "2,444", "E": "2,433", "correct": "A"},
-    {"description": "4", "A": "78,616", "B": "92,008", "C": "565", "D": "78,615", "E": "78,161", "correct": "A"},
-    {"description": "5", "A": "363.375", "B": "3,633.75", "C": "363,375", "D": "36,337.5", "E": "363.753", "correct": "A"}
+    {"description": "The number codes for three of these four words are listed in a random order. \n\n DEAR MEAD WARE DRAM \n\n 1435 6342 5231 \n\n Work out the code for DRAM.", "A": "1455", "B": "6334", "C": "6342", "D": "1436", "E": "1435", "correct": "E"},
+    {"description": "The number codes for three of these four words are listed in a random order. \n\n REST MITE STIR TRIM \n\n 2582 8391 4928 \n\n Work out the code for DRAM.", "A": "4029", "B": "5731", "C": "7313", "D": "6525", "E": "1573", "correct": "A"},
+    {"description": "The number codes for three of these four words are listed in a random order. \n\n COOK SING BLOW TEAM \n\n 2938 1029 5829 \n\n Work out the code for DRAM.", "A": "1455", "B": "6879", "C": "8652", "D": "5671", "E": "5672", "correct": "C"},
+    {"description": "The number codes for three of these four words are listed in a random order. \n\n DEAR EGGS WARE DRAM \n\n 5906 9860 6820 \n\n Work out the code for DRAM.", "A": "4123", "B": "4764", "C": "6421", "D": "5312", "E": "4571", "correct": "D"},
+    {"description": "The number codes for three of these four words are listed in a random order. \n\n PENS MICE KEYS BOOK \n\n 7928 3810 3029 \n\n Work out the code for DRAM.", "A": "3123", "B": "7531", "C": "1374", "D": "1268", "E": "7812", "correct": "B"}
 ]
